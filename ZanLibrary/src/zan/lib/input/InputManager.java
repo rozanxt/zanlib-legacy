@@ -159,14 +159,12 @@ public class InputManager {
 		IM_MOUSE_HIDDEN   = 0x34002,
 		IM_MOUSE_DISABLED = 0x34003;
 	
-	private static ArrayList<WindowInput> windowInputs;
+	private static final ArrayList<WindowInput> windowInputs = new ArrayList<WindowInput>();
 	
 	private static long currentWindow;
 	
-	public static void init() {
-		windowInputs = new ArrayList<WindowInput>();
-		currentWindow = 0L;
-	}
+	public static void init() {}
+	public static void destroy() {}
 	
 	public static boolean setWindow(long window) {
 		if (window == currentWindow) return false;
@@ -199,8 +197,8 @@ public class InputManager {
 	
 	public static void invokeKeys(int key, int state, int mods) {getWindow(currentWindow).invokeKeys(key, state, mods);}
 	public static void invokeKeys(long window, int key, int state, int mods) {getWindow(window).invokeKeys(key, state, mods);}
-	public static void invokeChars(int ch) {getWindow(currentWindow).invokeChars(ch);}
-	public static void invokeChars(long window, int ch) {getWindow(window).invokeChars(ch);}
+	public static void invokeChars(char ch) {getWindow(currentWindow).invokeChars(ch);}
+	public static void invokeChars(long window, char ch) {getWindow(window).invokeChars(ch);}
 	public static void invokeMouseButtons(int button, int state, int mods) {getWindow(currentWindow).invokeMouseButtons(button, state, mods);}
 	public static void invokeMouseButtons(long window, int button, int state, int mods) {getWindow(window).invokeMouseButtons(button, state, mods);}
 	public static void invokeMousePos(double mouseX, double mouseY) {getWindow(currentWindow).invokeMousePos(mouseX, mouseY);}

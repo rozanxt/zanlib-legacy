@@ -74,8 +74,8 @@ public class WindowInput {
 		keyEvent.setMods(mods);
 	}
 	
-	public void invokeChars(int ch) {
-		charEvents.add((char)ch);
+	public void invokeChars(char ch) {
+		charEvents.add(ch);
 	}
 	
 	public void invokeMouseButtons(int key, int state, int mods) {
