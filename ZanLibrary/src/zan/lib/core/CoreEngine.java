@@ -38,7 +38,7 @@ public abstract class CoreEngine {
 	private GLFWWindowIconifyCallback windowIconifyCallback;
 	private GLFWWindowFocusCallback windowFocusCallback;
 	
-	// CORE VARIABLES
+	// WINDOW VARIABLES
 	
 	private String SCR_TITLE = "";
 	
@@ -52,17 +52,19 @@ public abstract class CoreEngine {
 	private int SCR_WIDTH = WIN_WIDTH;
 	private int SCR_HEIGHT = WIN_HEIGHT;
 	
+	// WINDOW FLAGS
+	
 	private boolean SCR_VISIBLE = true;
-	private boolean SCR_ICONIFY = false;
+	private boolean SCR_MINIMIZE = false;
 	private boolean SCR_FULL = false;
 	private boolean SCR_CROP = false;
 	
 	private int SWAP_INTERVAL = 0;
 	
-	private int SCR_RESIZABLE = GL_FALSE;
-	private int SCR_DECORATED = GL_TRUE;
-	private int SCR_FLOATING = GL_FALSE;
-	private int SCR_AUTOICONIFY = GL_TRUE;
+	private boolean SCR_RESIZABLE = false;
+	private boolean SCR_DECORATED = true;
+	private boolean SCR_FLOATING = false;
+	private boolean SCR_AUTOMINIMIZE = true;
 	
 	private boolean REQ_WINDOW_RESET = false;
 	
@@ -145,10 +147,10 @@ public abstract class CoreEngine {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 		glfwWindowHint(GLFW_FOCUSED, GL_TRUE);
-		glfwWindowHint(GLFW_RESIZABLE, SCR_RESIZABLE);
-		glfwWindowHint(GLFW_DECORATED, SCR_DECORATED);
-		glfwWindowHint(GLFW_FLOATING, SCR_FLOATING);
-		glfwWindowHint(GLFW_AUTO_ICONIFY, SCR_AUTOICONIFY);
+		glfwWindowHint(GLFW_RESIZABLE, SCR_RESIZABLE ? GL_TRUE : GL_FALSE);
+		glfwWindowHint(GLFW_DECORATED, SCR_DECORATED ? GL_TRUE : GL_FALSE);
+		glfwWindowHint(GLFW_FLOATING, SCR_FLOATING ? GL_TRUE : GL_FALSE);
+		glfwWindowHint(GLFW_AUTO_ICONIFY, SCR_AUTOMINIMIZE ? GL_TRUE : GL_FALSE);
 		
 		if (SCR_FULL) {
 			if (SCR_CROP) {
@@ -271,10 +273,10 @@ public abstract class CoreEngine {
 		});
 		glfwSetWindowIconifyCallback(window, windowIconifyCallback = new GLFWWindowIconifyCallback() {
 			@Override
-			public void invoke(long window, int iconify) {
+			public void invoke(long window, int minimize) {
 				if (initialized) {
-					SCR_ICONIFY = (iconify == GL_TRUE);
-					onWindowIconify(window, (iconify == GL_TRUE));
+					SCR_MINIMIZE = (minimize == GL_TRUE);
+					onWindowMinimize(window, (minimize == GL_TRUE));
 				}
 			}
 		});
@@ -290,8 +292,8 @@ public abstract class CoreEngine {
 		if (!SCR_FULL) glfwSetWindowPos(window, SCR_X, SCR_Y);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(SWAP_INTERVAL);
+		if (SCR_MINIMIZE) glfwIconifyWindow(window);
 		if (SCR_VISIBLE) glfwShowWindow(window);
-		if (SCR_ICONIFY) glfwIconifyWindow(window);
 	}
 	
 	private void resetWindow() {
@@ -418,31 +420,31 @@ public abstract class CoreEngine {
 	}
 	public void toggleVisible() {setVisible(!isVisible());}
 	
-	public void setIconify(boolean iconify) {
-		SCR_ICONIFY = iconify;
+	public void setMinimize(boolean minimize) {
+		SCR_MINIMIZE = minimize;
 		if (initialized) {
-			if (SCR_ICONIFY) glfwIconifyWindow(window);
+			if (SCR_MINIMIZE) glfwIconifyWindow(window);
 			else glfwRestoreWindow(window);
 		}
 	}
-	public void toggleIconify() {setIconify(!isIconified());}
+	public void toggleMinimize() {setMinimize(!isMinimized());}
 	
 	/** @deprecated No implementation of this method yet. */
 	public void setFocus(boolean focused) {}
 	/** @deprecated No implementation of this method yet. */
 	public void toggleFocus() {}
 	
-	public void setResizable(boolean resizable) {SCR_RESIZABLE = resizable ? GL_TRUE : GL_FALSE; REQ_WINDOW_RESET = true;}
-	public void toggleResizable() {setResizable((SCR_RESIZABLE == 0));}
+	public void setResizable(boolean resizable) {SCR_RESIZABLE = resizable; REQ_WINDOW_RESET = true;}
+	public void toggleResizable() {setResizable(!SCR_RESIZABLE);}
 	
-	public void setDecorated(boolean decorated) {SCR_DECORATED = decorated ? GL_TRUE : GL_FALSE; REQ_WINDOW_RESET = true;}
-	public void toggleDecorated() {setDecorated((SCR_DECORATED == 0));}
+	public void setDecorated(boolean decorated) {SCR_DECORATED = decorated; REQ_WINDOW_RESET = true;}
+	public void toggleDecorated() {setDecorated(!SCR_DECORATED);}
 	
-	public void setFloating(boolean floating) {SCR_FLOATING = floating ? GL_TRUE : GL_FALSE; REQ_WINDOW_RESET = true;}
-	public void toggleFloating() {setFloating((SCR_FLOATING == 0));}
+	public void setFloating(boolean floating) {SCR_FLOATING = floating; REQ_WINDOW_RESET = true;}
+	public void toggleFloating() {setFloating(!SCR_FLOATING);}
 	
-	public void setAutoIconify(boolean autoiconify) {SCR_AUTOICONIFY = autoiconify ? GL_TRUE : GL_FALSE; REQ_WINDOW_RESET = true;}
-	public void toggleAutoIconify() {setAutoIconify((SCR_AUTOICONIFY == 0));}
+	public void setAutoMinimize(boolean autominimize) {SCR_AUTOMINIMIZE = autominimize; REQ_WINDOW_RESET = true;}
+	public void toggleAutoMinimize() {setAutoMinimize(!SCR_AUTOMINIMIZE);}
 	
 	// TIMING METHODS
 	
@@ -467,7 +469,7 @@ public abstract class CoreEngine {
 	protected void onWindowResize(int width, int height) {}
 	protected void onScreenResize(int width, int height) {}
 	protected void onWindowMove(int posX, int posY) {}
-	protected void onWindowIconify(boolean iconify) {}
+	protected void onWindowMinimize(boolean minimize) {}
 	protected void onWindowFocus(boolean focus) {}
 	
 	protected void onKey(long window, int key, int state, int mods, int scancode) {if (this.window == window) onKey(key, state, mods, scancode);}
@@ -482,7 +484,7 @@ public abstract class CoreEngine {
 	protected void onWindowResize(long window, int width, int height) {if (this.window == window) onWindowResize(width, height);}
 	protected void onScreenResize(long window, int width, int height) {if (this.window == window) onScreenResize(width, height);}
 	protected void onWindowMove(long window, int posX, int posY) {if (this.window == window) onWindowMove(posX, posY);}
-	protected void onWindowIconify(long window, boolean iconify) {if (this.window == window) onWindowIconify(iconify);}
+	protected void onWindowMinimize(long window, boolean minimize) {if (this.window == window) onWindowMinimize(minimize);}
 	protected void onWindowFocus(long window, boolean focus) {if (this.window == window) onWindowFocus(focus);}
 	
 	// GETTERS
@@ -512,12 +514,12 @@ public abstract class CoreEngine {
 	public boolean isVSync() {return !(SWAP_INTERVAL == 0);}
 	
 	public boolean isVisible() {return (glfwGetWindowAttrib(window, GLFW_VISIBLE) == GL_TRUE);}
-	public boolean isIconified() {return (glfwGetWindowAttrib(window, GLFW_ICONIFIED) == GL_TRUE);}
+	public boolean isMinimized() {return (glfwGetWindowAttrib(window, GLFW_ICONIFIED) == GL_TRUE);}
 	public boolean isFocused() {return (glfwGetWindowAttrib(window, GLFW_FOCUSED) == GL_TRUE);}
 	public boolean isResizable() {return (glfwGetWindowAttrib(window, GLFW_RESIZABLE) == GL_TRUE);}
 	public boolean isDecorated() {return (glfwGetWindowAttrib(window, GLFW_DECORATED) == GL_TRUE);}
 	public boolean isFloating() {return (glfwGetWindowAttrib(window, GLFW_FLOATING) == GL_TRUE);}
-	public boolean isAutoIconify() {return (glfwGetWindowAttrib(window, GLFW_AUTO_ICONIFY) == GL_TRUE);}
+	public boolean isAutoMinimize() {return (glfwGetWindowAttrib(window, GLFW_AUTO_ICONIFY) == GL_TRUE);}
 	
 	public double getTime() {return glfwGetTime();}
 	public long getTime(int resolution) {return (long)(glfwGetTime()*Math.pow(10, resolution));}
