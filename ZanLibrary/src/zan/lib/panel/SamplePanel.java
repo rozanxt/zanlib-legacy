@@ -2,31 +2,37 @@ package zan.lib.panel;
 
 import static org.lwjgl.opengl.GL11.*;
 import zan.lib.core.CoreEngine;
-import zan.lib.input.InputManager;
+import zan.lib.util.ViewPort;
 
 public class SamplePanel extends BasePanel {
 	
 	private CoreEngine core;
 	
+	private ViewPort viewPort;
+	
 	public SamplePanel(CoreEngine core) {
 		this.core = core;
+		viewPort = new ViewPort(0, 0, core.getScreenWidth(), core.getScreenHeight());
 	}
 	
 	@Override
-	public void init() {}
+	public void init() {
+		viewPort.setHeightInterval(2f);
+		viewPort.setOrigin(0.5f, 0.5f);
+	}
 	
 	@Override
 	public void destroy() {}
 	
 	@Override
-	public void update(double time) {
-		if (InputManager.isKeyReleased(InputManager.IM_KEY_ESCAPE)) core.close();
-		else if (InputManager.isKeyReleased(InputManager.IM_KEY_F11)) core.toggleFullScreen();
-	}
+	public void update(double time) {}
 	
 	@Override
 	public void render(double ip) {
-		glLoadIdentity();
+		ViewPort.show(viewPort);
+		ViewPort.project2D(viewPort);
+		
+		glPushMatrix();
 		glRotatef((float)(core.getTicks()+ip)*2f, 0f, 0f, 1f);
 		glBegin(GL_TRIANGLES);
 			glColor3f(1f, 0f, 0f);
@@ -36,6 +42,12 @@ public class SamplePanel extends BasePanel {
 			glColor3f(0f, 0f, 1f);
 			glVertex3f(0f, 0.6f, 0f);
 		glEnd();
+		glPopMatrix();
+	}
+	
+	@Override
+	public void onScreenResize(int width, int height) {
+		viewPort.setViewPort(0, 0, width, height);
 	}
 	
 }

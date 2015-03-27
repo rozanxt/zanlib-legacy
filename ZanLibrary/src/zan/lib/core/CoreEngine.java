@@ -59,12 +59,12 @@ public abstract class CoreEngine {
 	private boolean SCR_FULL = false;
 	private boolean SCR_CROP = false;
 	
-	private int SWAP_INTERVAL = 0;
-	
 	private boolean SCR_RESIZABLE = false;
 	private boolean SCR_DECORATED = true;
 	private boolean SCR_FLOATING = false;
 	private boolean SCR_AUTOMINIMIZE = true;
+	
+	private int SWAP_INTERVAL = 0;
 	
 	private boolean REQ_WINDOW_RESET = false;
 	
@@ -86,7 +86,7 @@ public abstract class CoreEngine {
 	
 	// RUN METHOD
 	
-	public void run() {
+	protected void run() {
 		try {
 			init();
 			loop();
@@ -138,6 +138,9 @@ public abstract class CoreEngine {
 		createWindow();
 		initInput();
 		initWindow();
+		
+		GLContext.createFromCurrent();
+		initGL();
 		
 		REQ_WINDOW_RESET = false;
 		initialized = true;
@@ -244,7 +247,7 @@ public abstract class CoreEngine {
 		glfwSetWindowSizeCallback(window, windowSizeCallback = new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				if (initialized) {
+				if (initialized && !SCR_FULL) {
 					WIN_WIDTH = width;
 					WIN_HEIGHT = height;
 					onWindowResize(window, width, height);
@@ -254,7 +257,7 @@ public abstract class CoreEngine {
 		glfwSetFramebufferSizeCallback(window, framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
-				if (initialized) {
+				if (initialized && !SCR_FULL) {
 					SCR_WIDTH = width;
 					SCR_HEIGHT = height;
 					onScreenResize(window, width, height);
@@ -264,7 +267,7 @@ public abstract class CoreEngine {
 		glfwSetWindowPosCallback(window, windowPosCallback = new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long window, int posX, int posY) {
-				if (initialized) {
+				if (initialized && !SCR_FULL) {
 					SCR_X = posX;
 					SCR_Y = posY;
 					onWindowMove(window, posX, posY);
@@ -296,20 +299,32 @@ public abstract class CoreEngine {
 		if (SCR_VISIBLE) glfwShowWindow(window);
 	}
 	
+	private void initGL() {
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glClearColor(0f, 0f, 0f, 0f);
+	}
+	
 	private void resetWindow() {
 		glfwDestroyWindow(window);
 		createWindow();
 		initInput();
 		initWindow();
+		initGL();
+		
+		onWindowResize(window, WIN_WIDTH, WIN_HEIGHT);
+		onScreenResize(window, SCR_WIDTH, SCR_HEIGHT);
+		onWindowMove(window, SCR_X, SCR_Y);
+		onWindowMinimize(window, isMinimized());
+		onWindowFocus(window, isFocused());
+		
 		REQ_WINDOW_RESET = false;
 	}
 	
 	// MAIN LOOP
 	
 	private void loop() {
-		GLContext.createFromCurrent();
-		glClearColor(0f, 0f, 0f, 0f);
-		
 		double nextTick, nextFrame;
 		nextTick = nextFrame = getTime();
 		int frameCount = 0;
@@ -348,15 +363,6 @@ public abstract class CoreEngine {
 	
 	private void render(double ip) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-        
-        float ratio = SCR_WIDTH / (float) SCR_HEIGHT;
-        
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(-ratio, ratio, -1f, 1f, -1f, 1f);
-        glMatrixMode(GL_MODELVIEW);
         
         panel.render(ip);
         
@@ -502,12 +508,15 @@ public abstract class CoreEngine {
 	
 	public int getWindowWidth() {return WIN_WIDTH;}
 	public int getWindowHeight() {return WIN_HEIGHT;}
+	public double getWindowRatio() {return (double)WIN_WIDTH/(double)WIN_HEIGHT;}
 	
 	public int getMonitorWidth() {return MNT_WIDTH;}
 	public int getMonitorHeight() {return MNT_HEIGHT;}
+	public double getMonitorRatio() {return (double)MNT_WIDTH/(double)MNT_HEIGHT;}
 	
 	public int getScreenWidth() {return SCR_WIDTH;}
 	public int getScreenHeight() {return SCR_HEIGHT;}
+	public double getScreenRatio() {return (double)SCR_WIDTH/(double)SCR_HEIGHT;}
 	
 	public boolean isFullScreen() {return (glfwGetWindowMonitor(window) == glfwGetPrimaryMonitor());}
 	public boolean isScreenCrop() {return SCR_CROP;}
