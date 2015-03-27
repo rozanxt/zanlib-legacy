@@ -166,17 +166,18 @@ public class InputManager {
 	public static void init() {}
 	public static void destroy() {}
 	
-	public static boolean setWindow(long window) {
-		if (window == currentWindow) return false;
+	public static WindowInput setWindow(long window) {
+		if (window == currentWindow) return null;
 		for (int i=0;i<windowInputs.size();i++) {
-			if (window == windowInputs.get(i).getWindow()) {
+			WindowInput windowInput = windowInputs.get(i);
+			if (window == windowInput.getWindow()) {
 				currentWindow = window;
-				return true;
+				return windowInput;
 			}
 		}
 		windowInputs.add(new WindowInput(window));
 		currentWindow = window;
-		return true;
+		return windowInputs.get(windowInputs.size()-1);
 	}
 	
 	private static WindowInput getWindow(long window) {

@@ -1,8 +1,13 @@
 package zan.lib.core;
 
 import zan.lib.input.InputManager;
-import zan.lib.panel.SamplePanel;
+//import zan.lib.panel.SamplePanel;
 
+/** Sample main class for ZanLibrary
+ * 
+ * @author Rozan I. Rosandi
+ *
+ */
 public class SampleCore extends CoreEngine {
 	
 	@Override
@@ -16,12 +21,12 @@ public class SampleCore extends CoreEngine {
 		getPanel().onScreenResize(width, height);
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		SampleCore core = new SampleCore();
 		core.setTitle("Sample Title");
 		core.setScreenSize(800, 600);
 		core.setPanel(new SamplePanel(core));
 		core.run();
-	}
+	}*/
 	
 }

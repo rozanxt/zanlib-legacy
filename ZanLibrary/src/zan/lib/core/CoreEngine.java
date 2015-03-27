@@ -87,6 +87,7 @@ public abstract class CoreEngine {
 	// RUN METHOD
 	
 	protected void run() {
+		if (initialized) return;
 		try {
 			init();
 			loop();

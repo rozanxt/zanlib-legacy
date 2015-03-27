@@ -4,6 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 import zan.lib.core.CoreEngine;
 import zan.lib.util.ViewPort;
 
+/** Sample panel for ZanLibrary
+ * 
+ * @author Rozan I. Rosandi
+ *
+ */
 public class SamplePanel extends BasePanel {
 	
 	private CoreEngine core;
