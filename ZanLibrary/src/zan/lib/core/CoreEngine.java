@@ -464,20 +464,20 @@ public abstract class CoreEngine {
 	
 	// CALLBACK METHODS
 	
-	protected void onKey(int key, int state, int mods, int scancode) {}
-	protected void onChar(char ch) {}
-	protected void onMouseButton(int button, int state, int mods) {}
-	protected void onMouseMove(double mouseX, double mouseY) {}
-	protected void onMouseScroll(double scrollX, double scrollY) {}
-	protected void onMouseEnter(boolean mouseEnter) {}
+	protected void onKey(int key, int state, int mods, int scancode) {if (panel != null) panel.onKey(key, state, mods, scancode);}
+	protected void onChar(char ch) {if (panel != null) panel.onChar(ch);}
+	protected void onMouseButton(int button, int state, int mods) {if (panel != null) panel.onMouseButton(button, state, mods);}
+	protected void onMouseMove(double mouseX, double mouseY) {if (panel != null) panel.onMouseMove(mouseX, mouseY);}
+	protected void onMouseScroll(double scrollX, double scrollY) {if (panel != null) panel.onMouseScroll(scrollX, scrollY);}
+	protected void onMouseEnter(boolean mouseEnter) {if (panel != null) panel.onMouseEnter(mouseEnter);}
 	
-	protected void onWindowClose() {}
-	protected void onWindowRefresh() {}
-	protected void onWindowResize(int width, int height) {}
-	protected void onScreenResize(int width, int height) {}
-	protected void onWindowMove(int posX, int posY) {}
-	protected void onWindowMinimize(boolean minimize) {}
-	protected void onWindowFocus(boolean focus) {}
+	protected void onWindowClose() {if (panel != null) panel.onWindowClose();}
+	protected void onWindowRefresh() {if (panel != null) panel.onWindowRefresh();}
+	protected void onWindowResize(int width, int height) {if (panel != null) panel.onWindowResize(width, height);}
+	protected void onScreenResize(int width, int height) {if (panel != null) panel.onScreenResize(width, height);}
+	protected void onWindowMove(int posX, int posY) {if (panel != null) panel.onWindowMove(posX, posY);}
+	protected void onWindowMinimize(boolean minimize) {if (panel != null) panel.onWindowMinimize(minimize);}
+	protected void onWindowFocus(boolean focus) {if (panel != null) panel.onWindowFocus(focus);}
 	
 	protected void onKey(long window, int key, int state, int mods, int scancode) {if (this.window == window) onKey(key, state, mods, scancode);}
 	protected void onChar(long window, char ch) {if (this.window == window) onChar(ch);}
