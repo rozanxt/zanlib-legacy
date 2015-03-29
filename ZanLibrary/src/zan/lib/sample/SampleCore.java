@@ -1,7 +1,7 @@
-package zan.lib.core;
+package zan.lib.sample;
 
+import zan.lib.core.CoreEngine;
 import zan.lib.input.InputManager;
-//import zan.lib.panel.SamplePanel;
 
 /** Sample main class for ZanLibrary
  * 
@@ -17,12 +17,12 @@ public class SampleCore extends CoreEngine {
 		super.onKey(key, state, mods, scancode);
 	}
 	
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		SampleCore core = new SampleCore();
 		core.setTitle("Sample Title");
 		core.setScreenSize(800, 600);
 		core.setPanel(new SamplePanel(core));
 		core.run();
-	}*/
+	}
 	
 }

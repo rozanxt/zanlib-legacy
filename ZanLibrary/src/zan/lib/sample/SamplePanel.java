@@ -1,7 +1,8 @@
-package zan.lib.panel;
+package zan.lib.sample;
 
 import static org.lwjgl.opengl.GL11.*;
 import zan.lib.core.CoreEngine;
+import zan.lib.panel.BasePanel;
 import zan.lib.util.ViewPort;
 
 /** Sample panel for ZanLibrary
