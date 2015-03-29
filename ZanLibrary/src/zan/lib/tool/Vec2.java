@@ -17,14 +17,14 @@ public class Vec2 {
 	public double length2() {return x*x+y*y;}
 	
 	public Vec2 normalize() {
-		double len = length();
-		set(x/len, y/len);
+		double len = 1.0/length();
+		set(x*len, y*len);
 		return this;
 	}
 	public Vec2 normalize(Vec2 dest) {
-		double len = length();
-		if (dest == null) return new Vec2(x/len, y/len);
-		dest.set(x/len, y/len);
+		double len = 1.0/length();
+		if (dest == null) return new Vec2(x*len, y*len);
+		dest.set(x*len, y*len);
 		return dest;
 	}
 	

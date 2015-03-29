@@ -33,7 +33,7 @@ public class Mat22 {
 	}
 	
 	public Mat22 inverse() {
-		double idet = 1f/(m00*m11-m01*m10);
+		double idet = 1.0/(m00*m11-m01*m10);
 		double s00 = m11; double s01 = -m01;
 		double s10 = -m10; double s11 = m00;
 		set(s00, s01, s10, s11);
@@ -41,7 +41,7 @@ public class Mat22 {
 		return this;
 	}
 	public Mat22 inverse(Mat22 dest) {
-		double idet = 1f/(m00*m11-m01*m10);
+		double idet = 1.0/(m00*m11-m01*m10);
 		double s00 = m11; double s01 = -m01;
 		double s10 = -m10; double s11 = m00;
 		if (dest == null) {
