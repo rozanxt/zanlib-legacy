@@ -2,6 +2,7 @@ package zan.lib.sample;
 
 import static org.lwjgl.opengl.GL11.*;
 import zan.lib.core.CoreEngine;
+import zan.lib.gfx.TextureManager;
 import zan.lib.panel.BasePanel;
 import zan.lib.util.ViewPort;
 
@@ -23,8 +24,10 @@ public class SamplePanel extends BasePanel {
 	
 	@Override
 	public void init() {
-		viewPort.setHeightInterval(2f);
+		viewPort.setHeightInterval(6f);
 		viewPort.setOrigin(0.5f, 0.5f);
+		
+		TextureManager.loadTexture("sample_texture", "res/img/sample_image.png");
 	}
 	
 	@Override
@@ -38,17 +41,23 @@ public class SamplePanel extends BasePanel {
 		ViewPort.show(viewPort);
 		ViewPort.project2D(viewPort);
 		
+		glEnable(GL_TEXTURE_2D);
 		glPushMatrix();
 		glRotatef((float)(core.getTicks()+ip)*2f, 0f, 0f, 1f);
-		glBegin(GL_TRIANGLES);
-			glColor3f(1f, 0f, 0f);
-			glVertex3f(-0.6f, -0.4f, 0f);
-			glColor3f(0f, 1f, 0f);
-			glVertex3f(0.6f, -0.4f, 0f);
-			glColor3f(0f, 0f, 1f);
-			glVertex3f(0f, 0.6f, 0f);
+		glColor4f(1f, 1f, 1f, 1f);
+		glBindTexture(GL_TEXTURE_2D, TextureManager.getTextureID("sample_texture"));
+		glBegin(GL_QUADS);
+			glTexCoord2f(0f, 1f);
+			glVertex2f(-2f, -1f);
+			glTexCoord2f(1f, 1f);
+			glVertex2f(2f, -1f);
+			glTexCoord2f(1f, 0f);
+			glVertex2f(2f, 1f);
+			glTexCoord2f(0f, 0f);
+			glVertex2f(-2f, 1f);
 		glEnd();
 		glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
 	}
 	
 	@Override

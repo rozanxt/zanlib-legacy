@@ -27,10 +27,10 @@ public class ViewPort {
 		this.viewPortY = viewPortY;
 		this.viewPortW = viewPortW;
 		this.viewPortH = viewPortH;
-		calculateRatio();
+		calcRatio();
 	}
 	
-	public void setHeightInterval(float heightInterval) {this.heightInterval = heightInterval; calculateRatio();}
+	public void setHeightInterval(float heightInterval) {this.heightInterval = heightInterval; calcRatio();}
 	public void setOrigin(float originX, float originY) {this.originX = originX; this.originY = originY;}
 	public void setOriginX(float originX) {this.originX = originX;}
 	public void setOriginY(float originY) {this.originY = originY;}
@@ -38,7 +38,7 @@ public class ViewPort {
 	public void setOffsetX(float offsetX) {this.offsetX = offsetX;}
 	public void setOffsetY(float offsetY) {this.offsetY = offsetY;}
 	
-	private void calculateRatio() {
+	private void calcRatio() {
 		viewPortRatio = (float)viewPortW/(float)viewPortH;
 		screenToVirtualRatio = heightInterval/(float)viewPortH;
 		virtualToScreenRatio = (float)viewPortH/heightInterval;

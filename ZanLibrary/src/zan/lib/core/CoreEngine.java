@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
+import zan.lib.gfx.TextureManager;
 import zan.lib.input.InputManager;
 import zan.lib.panel.BasePanel;
 import static org.lwjgl.glfw.Callbacks.*;
@@ -101,6 +102,8 @@ public abstract class CoreEngine {
 	// CLEANUP
 	
 	private void destroy() {
+		InputManager.destroy();
+		TextureManager.destroy();
 		glfwDestroyWindow(window);
 		keyCallback.release();
 		charCallback.release();
@@ -136,18 +139,21 @@ public abstract class CoreEngine {
 		if (SCR_X == -1) SCR_X = (MNT_WIDTH-WIN_WIDTH)/2;
 		if (SCR_Y == -1) SCR_Y = (MNT_HEIGHT-WIN_HEIGHT)/2;
 		
-		createWindow();
+		createWindow(NULL);
 		initInput();
 		initWindow();
 		
 		GLContext.createFromCurrent();
+		TextureManager.init();
 		initGL();
+		
+		panel.init();
 		
 		REQ_WINDOW_RESET = false;
 		initialized = true;
 	}
 	
-	private void createWindow() {
+	private void createWindow(long previousWindow) {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 		glfwWindowHint(GLFW_FOCUSED, GL_TRUE);
@@ -164,11 +170,11 @@ public abstract class CoreEngine {
 				SCR_WIDTH = MNT_WIDTH;
 				SCR_HEIGHT = MNT_HEIGHT;
 			}
-			window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, SCR_TITLE, glfwGetPrimaryMonitor(), NULL);
+			window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, SCR_TITLE, glfwGetPrimaryMonitor(), previousWindow);
 		} else {
 			SCR_WIDTH = WIN_WIDTH;
 			SCR_HEIGHT = WIN_HEIGHT;
-			window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, SCR_TITLE, NULL, NULL);
+			window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, SCR_TITLE, NULL, previousWindow);
 		}
 		
 		if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
@@ -301,15 +307,16 @@ public abstract class CoreEngine {
 	}
 	
 	private void initGL() {
-		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glClearColor(0f, 0f, 0f, 0f);
 	}
 	
 	private void resetWindow() {
-		glfwDestroyWindow(window);
-		createWindow();
+		long previousWindow = window;
+		createWindow(window);
+		glfwDestroyWindow(previousWindow);
+		
 		initInput();
 		initWindow();
 		initGL();
@@ -380,9 +387,9 @@ public abstract class CoreEngine {
 	// SETTERS
 	
 	public void setPanel(BasePanel panel) {
-		if (this.panel != null) this.panel.destroy();
+		if (initialized && this.panel != null) this.panel.destroy();
 		this.panel = panel;
-		panel.init();
+		if (initialized) panel.init();
 	}
 	
 	public void setTitle(String title) {
