@@ -41,7 +41,7 @@ public class TextureManager {
 	public static int loadTexture(String texture, String filename) {
 		if (textureStore.containsKey(texture)) {
 			System.err.println(LOGNAME + "Error loading texture:\n " + texture + " is already used");
-			return 0;
+			return getTextureID(texture);
 		}
 		
 		int textureID = createTexture(filename);
