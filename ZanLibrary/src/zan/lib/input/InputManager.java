@@ -159,15 +159,15 @@ public class InputManager {
 		IM_MOUSE_HIDDEN   = 0x34002,
 		IM_MOUSE_DISABLED = 0x34003;
 	
-	private static final ArrayList<WindowInput> windowInputs = new ArrayList<WindowInput>();
+	private static ArrayList<WindowInput> windowInputs;
 	
 	private static long currentWindow;
 	
-	public static void init() {}
-	public static void destroy() {}
+	public static void init() {windowInputs = new ArrayList<WindowInput>();}
+	public static void destroy() {windowInputs.clear();}
 	
 	public static WindowInput setWindow(long window) {
-		if (window == currentWindow) return null;
+		if (window == currentWindow || window == 0) return null;
 		for (int i=0;i<windowInputs.size();i++) {
 			WindowInput windowInput = windowInputs.get(i);
 			if (window == windowInput.getWindow()) {
@@ -178,6 +178,14 @@ public class InputManager {
 		windowInputs.add(new WindowInput(window));
 		currentWindow = window;
 		return windowInputs.get(windowInputs.size()-1);
+	}
+	
+	public static WindowInput destroyWindow(long window) {
+		for (int i=0;i<windowInputs.size();i++) {
+			WindowInput windowInput = windowInputs.get(i);
+			if (window == windowInput.getWindow()) return windowInputs.remove(i);
+		}
+		return null;
 	}
 	
 	private static WindowInput getWindow(long window) {

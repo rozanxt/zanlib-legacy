@@ -140,17 +140,33 @@ public abstract class CoreEngine {
 		if (SCR_Y == -1) SCR_Y = (MNT_HEIGHT-WIN_HEIGHT)/2;
 		
 		createWindow(NULL);
-		initInput();
+		initManager();
+		initInput(NULL);
 		initWindow();
 		
 		GLContext.createFromCurrent();
-		TextureManager.init();
 		initGL();
 		
 		panel.init();
 		
 		REQ_WINDOW_RESET = false;
 		initialized = true;
+	}
+	
+	private void resetWindow() {
+		long previousWindow = window;
+		createWindow(previousWindow);
+		initInput(previousWindow);
+		initWindow();
+		initGL();
+		
+		onWindowResize(window, WIN_WIDTH, WIN_HEIGHT);
+		onScreenResize(window, SCR_WIDTH, SCR_HEIGHT);
+		onWindowMove(window, SCR_X, SCR_Y);
+		onWindowMinimize(window, isMinimized());
+		onWindowFocus(window, isFocused());
+		
+		REQ_WINDOW_RESET = false;
 	}
 	
 	private void createWindow(long previousWindow) {
@@ -178,11 +194,17 @@ public abstract class CoreEngine {
 		}
 		
 		if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
+		if (previousWindow != NULL) glfwDestroyWindow(previousWindow);
 	}
 	
-	private void initInput() {
+	private void initManager() {
 		InputManager.init();
+		TextureManager.init();
+	}
+	
+	private void initInput(long previousWindow) {
 		InputManager.setWindow(window);
+		if (previousWindow != NULL) InputManager.destroyWindow(previousWindow);
 		
 		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
 			@Override
@@ -310,24 +332,6 @@ public abstract class CoreEngine {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glClearColor(0f, 0f, 0f, 0f);
-	}
-	
-	private void resetWindow() {
-		long previousWindow = window;
-		createWindow(window);
-		glfwDestroyWindow(previousWindow);
-		
-		initInput();
-		initWindow();
-		initGL();
-		
-		onWindowResize(window, WIN_WIDTH, WIN_HEIGHT);
-		onScreenResize(window, SCR_WIDTH, SCR_HEIGHT);
-		onWindowMove(window, SCR_X, SCR_Y);
-		onWindowMinimize(window, isMinimized());
-		onWindowFocus(window, isFocused());
-		
-		REQ_WINDOW_RESET = false;
 	}
 	
 	// MAIN LOOP

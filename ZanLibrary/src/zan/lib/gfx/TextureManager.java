@@ -45,9 +45,7 @@ public class TextureManager {
 		}
 		
 		int textureID = createTexture(filename);
-		if (textureID != 0) {
-			textureStore.put(texture, new Integer(textureID));
-		}
+		if (textureID != 0) textureStore.put(texture, new Integer(textureID));
 		return textureID;
 	}
 	

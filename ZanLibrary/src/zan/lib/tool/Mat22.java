@@ -85,6 +85,7 @@ public class Mat22 {
 		dest.set(s00, s01, s10, s11);
 		return dest;
 	}
+	
 	public static Mat22 sub(Mat22 left, Mat22 right, Mat22 dest) {
 		double s00 = left.m00 - right.m00;
 		double s01 = left.m01 - right.m01;

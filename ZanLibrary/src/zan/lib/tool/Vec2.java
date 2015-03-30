@@ -55,6 +55,7 @@ public class Vec2 {
 		dest.set(sx, sy);
 		return dest;
 	}
+	
 	public static Vec2 sub(Vec2 left, Vec2 right, Vec2 dest) {
 		double sx = left.x - right.x;
 		double sy = left.y - right.y;
@@ -66,9 +67,11 @@ public class Vec2 {
 	public static double dot(Vec2 left, Vec2 right) {
 		return left.x*right.x + left.y*right.y;
 	}
+	
 	public static double cross(Vec2 left, Vec2 right) {
 		return left.x*right.y - left.y*right.x;
 	}
+	
 	public static Vec2 cross(Vec2 vector, double scalar, Vec2 dest) {
 		double sx = scalar*vector.y;
 		double sy = -scalar*vector.x;
@@ -76,6 +79,7 @@ public class Vec2 {
 		dest.set(sx, sy);
 		return dest;
 	}
+	
 	public static Vec2 cross(double scalar, Vec2 vector, Vec2 dest) {
 		double sx = -scalar*vector.y;
 		double sy = scalar*vector.x;
