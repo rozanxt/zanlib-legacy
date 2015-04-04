@@ -40,10 +40,10 @@ public class RefinedTest extends BasePanel {
 		vertexObject.setShaderProgram(new ShaderProgram("res/shader/sample.gvs", "res/shader/sample.gfs"));
 		
 		final float[] ver = {
-			-100f, -100f,
-			100f, -100f,
-			100f, 100f,
-			-100f, 100f
+			-100f, -100f, 0f,
+			100f, -100f, 0f,
+			100f, 100f, 0f,
+			-100f, 100f, 0f
 		};
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(ver.length);
 		vertices.put(ver);

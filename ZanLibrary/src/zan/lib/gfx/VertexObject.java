@@ -37,13 +37,13 @@ public class VertexObject {
 	
 	public void render(double ip) {
 		shaderProgram.bind();
-		shaderProgram.setColor(1f, 0f, 0f, 1f);
-		glEnableClientState(GL_VERTEX_ARRAY);
+		shaderProgram.setColor(1f, 0.5f, 0f, 1f);
+		shaderProgram.enableVertexPointer();
 			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-			glVertexPointer(2, GL_FLOAT, 0, 0);
+			shaderProgram.setVertexPointer(3, 0, 0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, 0);
-		glDisableClientState(GL_VERTEX_ARRAY);
+		shaderProgram.disableVertexPointer();
 		shaderProgram.unbind();
 	}
 	

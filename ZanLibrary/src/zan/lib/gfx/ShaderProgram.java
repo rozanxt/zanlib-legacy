@@ -9,10 +9,12 @@ public class ShaderProgram {
 	
 	private int programID;
 	
+	private int vertexPosID;
 	private int colorID;
 	
 	public ShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
 		programID = 0;
+		vertexPosID = 0;
 		colorID = 0;
 		loadProgram(vertexShaderPath, fragmentShaderPath);
 	}
@@ -23,6 +25,13 @@ public class ShaderProgram {
 	public void destroy() {
 		glDeleteShader(programID);
 		programID = 0;
+	}
+	
+	public void enableVertexPointer() {glEnableVertexAttribArray(vertexPosID);}
+	public void disableVertexPointer() {glDisableVertexAttribArray(vertexPosID);}
+	
+	public void setVertexPointer(int size, int stride, long pointerOffset) {
+		glVertexAttribPointer(vertexPosID, size, GL_FLOAT, false, stride, 0);
 	}
 	
 	public void setColor(float r, float g, float b, float a) {
@@ -40,6 +49,9 @@ public class ShaderProgram {
 			destroy();
 			return false;
 		}
+		
+		vertexPosID = glGetAttribLocation(programID, "vertexPos");
+		if (vertexPosID == -1) System.err.println("vertexPos" + " is not a valid GLSL program variable!");
 		
 		colorID = glGetUniformLocation(programID, "color");
 		if (colorID == -1) System.err.println("color" + " is not a valid GLSL program variable!");
