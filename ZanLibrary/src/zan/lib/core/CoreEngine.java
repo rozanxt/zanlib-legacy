@@ -8,6 +8,7 @@ import org.lwjgl.opengl.*;
 import zan.lib.gfx.TextureManager;
 import zan.lib.input.InputManager;
 import zan.lib.panel.BasePanel;
+
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -143,8 +144,6 @@ public abstract class CoreEngine {
 		initManager();
 		initInput(NULL);
 		initWindow();
-		
-		GLContext.createFromCurrent();
 		initGL();
 		
 		panel.init();
@@ -321,17 +320,19 @@ public abstract class CoreEngine {
 	}
 	
 	private void initWindow() {
-		if (!SCR_FULL) glfwSetWindowPos(window, SCR_X, SCR_Y);
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(SWAP_INTERVAL);
+		if (!SCR_FULL) glfwSetWindowPos(window, SCR_X, SCR_Y);
 		if (SCR_MINIMIZE) glfwIconifyWindow(window);
 		if (SCR_VISIBLE) glfwShowWindow(window);
 	}
 	
 	private void initGL() {
+		GLContext.createFromCurrent();
 		glEnable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glClearColor(0f, 0f, 0f, 0f);
+		glClearColor(0f, 0f, 0f, 1f);
 	}
 	
 	// MAIN LOOP
@@ -375,10 +376,10 @@ public abstract class CoreEngine {
 	
 	private void render(double ip) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        panel.render(ip);
-        
-        glfwSwapBuffers(window);
+		
+		panel.render(ip);
+		
+		glfwSwapBuffers(window);
 	}
 	
 	private void check() {
