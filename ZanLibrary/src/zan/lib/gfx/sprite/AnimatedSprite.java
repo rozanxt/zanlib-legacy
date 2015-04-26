@@ -1,23 +1,31 @@
-package zan.lib.gfx;
+package zan.lib.gfx.sprite;
 
 import java.util.ArrayList;
 
+import zan.lib.gfx.ShaderProgram;
+import zan.lib.gfx.obj.SpriteObject;
+
 public class AnimatedSprite extends BaseSprite {
 	
-	private ArrayList<RawSprite> sprites;
+	private ArrayList<SpriteObject> sprites;
 	
 	private double ticks;
 	private double framePeriod;
 	private double nextFrame;
 	private int currentFrame;
 	
-	public AnimatedSprite(ArrayList<RawSprite> sprites) {
+	public AnimatedSprite(ArrayList<SpriteObject> sprites) {
 		super();
 		this.sprites = sprites;
 		ticks = 0.0;
 		framePeriod = 1.0;
 		nextFrame = 0.0;
 		currentFrame = 0;
+	}
+	
+	@Override
+	public void destroy() {
+		for (int i=0;i<sprites.size();i++) sprites.get(i).destroy();
 	}
 	
 	public void setCurrentFrame(int currentFrame) {this.currentFrame = currentFrame;}
@@ -33,6 +41,9 @@ public class AnimatedSprite extends BaseSprite {
 		}
 	}
 	
-	public void draw() {sprites.get(currentFrame).draw();}
+	@Override
+	public void draw(ShaderProgram sp) {
+		sprites.get(currentFrame).render(sp);
+	}
 	
 }

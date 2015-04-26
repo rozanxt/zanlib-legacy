@@ -19,7 +19,6 @@ import org.lwjgl.opengl.GL12;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TextureManager {
-	private static final String LOGNAME = "TextureManager :: ";
 	
 	private static HashMap<String, Integer> textureStore;
 	
@@ -40,7 +39,7 @@ public class TextureManager {
 	
 	public static int loadTexture(String texture, String filename) {
 		if (textureStore.containsKey(texture)) {
-			System.err.println(LOGNAME + "Error loading texture:\n " + texture + " is already used");
+			System.err.println("Error loading texture:\n " + texture + " is already used");
 			return getTextureID(texture);
 		}
 		
@@ -62,7 +61,7 @@ public class TextureManager {
 			g2d.dispose();
 			return genTexture(bi);
 		} catch(IOException e) {
-			System.err.println(LOGNAME + "Error loading texture for " + filename + ":\n " + e); 
+			System.err.println("Error loading texture for " + filename + ":\n " + e); 
 			return 0;
 		}
 	}
@@ -113,7 +112,7 @@ public class TextureManager {
 	
 	public static int getTextureID(String texture) {
 		if (!isTextureLoaded(texture)) {
-			System.err.println(LOGNAME + "No texture stored under " + texture);  
+			System.err.println("No texture stored under " + texture);  
 			return 0;
 		}
 		return textureStore.get(texture);

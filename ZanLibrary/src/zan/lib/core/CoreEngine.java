@@ -14,11 +14,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-/** A framework for simple Java game development.
- * 
- * @author Rozan I. Rosandi
- *
- */
 public abstract class CoreEngine {
 	
 	// CALLBACK CLASSES
@@ -72,10 +67,18 @@ public abstract class CoreEngine {
 	
 	// TIMING VARIABLES
 	
+	public static final int SM_NONE = 0;
+	public static final int SM_FREE = 1;
+	public static final int SM_TARGET = 2;
+	private int SLEEP_MODE = SM_FREE;
+	
 	private long ticks = 0L;
 	private double fps = 0.0;
-	private double TICKS_PER_SECOND = 50.0;
-	private double DELTA_TIME = (1.0/TICKS_PER_SECOND);
+	private double TARGET_FPS = 120.0;
+	private double DELTA_FPS = (1.0/TARGET_FPS);
+	private double TARGET_TPS = 50.0;
+	private double DELTA_TPS = (1.0/TARGET_TPS);
+	private int SLEEP_DURATION = 2;
 	private int MAX_FRAME_SKIP = 5;
 	
 	// WINDOW & PANEL
@@ -329,9 +332,6 @@ public abstract class CoreEngine {
 	
 	private void initGL() {
 		GLContext.createFromCurrent();
-		glEnable(GL_BLEND);
-		glDisable(GL_DEPTH_TEST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glClearColor(0f, 0f, 0f, 1f);
 	}
 	
@@ -354,7 +354,7 @@ public abstract class CoreEngine {
 				
 				ticks++;
 				frameSkip++;
-				nextTick += DELTA_TIME;
+				nextTick += DELTA_TPS;
 			}
 			
 			// FPS counter
@@ -365,7 +365,8 @@ public abstract class CoreEngine {
 				nextFrame += 1.0;
 			}
 			
-			render((time+DELTA_TIME-nextTick)/(DELTA_TIME));
+			render((time+DELTA_TPS-nextTick)/(DELTA_TPS));
+			sleep(time);
 			check();
 		}
 	}
@@ -380,6 +381,20 @@ public abstract class CoreEngine {
 		panel.render(ip);
 		
 		glfwSwapBuffers(window);
+	}
+	
+	private void sleep(double time) {
+		if (SLEEP_MODE == SM_FREE) {
+			Thread.yield();
+			try {Thread.sleep(SLEEP_DURATION);}
+			catch (InterruptedException e) {}
+		} else if (SLEEP_MODE == SM_TARGET) {
+			double now = getTime();
+			while (now - time < DELTA_FPS) {
+				Thread.yield();
+				now = getTime();
+			}
+		}
 	}
 	
 	private void check() {
@@ -467,11 +482,18 @@ public abstract class CoreEngine {
 	
 	// TIMING METHODS
 	
-	public void setTPS(double tps) {
-		TICKS_PER_SECOND = tps;
-		DELTA_TIME = (1.0/TICKS_PER_SECOND);
+	public void setSleepMode(int mode) {SLEEP_MODE = mode;}
+	
+	public void setTargetFPS(double fps) {
+		TARGET_FPS = fps;
+		DELTA_FPS = (1.0/TARGET_FPS);
+	}
+	public void setTargetTPS(double tps) {
+		TARGET_TPS = tps;
+		DELTA_TPS = (1.0/TARGET_TPS);
 	}
 	
+	public void setSleepDuration(int duration) {SLEEP_DURATION = duration;}
 	public void setMaxFrameSkip(int mfs) {MAX_FRAME_SKIP = mfs;}
 	
 	// CALLBACK METHODS
@@ -547,8 +569,12 @@ public abstract class CoreEngine {
 	public long getTime(int resolution) {return (long)(glfwGetTime()*Math.pow(10, resolution));}
 	public long getTicks() {return ticks;}
 	public double getFPS() {return fps;}
-	public double getTPS() {return TICKS_PER_SECOND;}
-	public double getDeltaTime() {return DELTA_TIME;}
+	public double getTargetFPS() {return TARGET_FPS;}
+	public double getDeltaFPS() {return DELTA_FPS;}
+	public double getTargetTPS() {return TARGET_TPS;}
+	public double getDeltaTPS() {return DELTA_TPS;}
+	public int getSleepMode() {return SLEEP_MODE;}
+	public int getSleepDuration() {return SLEEP_DURATION;}
 	public int getMaxFrameSkip() {return MAX_FRAME_SKIP;}
 	
 }

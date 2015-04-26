@@ -1,7 +1,0 @@
-#version 330 core
-
-in vec3 vertexPos;
-
-void main() {
-	gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * vec4(vertexPos.x, vertexPos.y, vertexPos.z, 1.0);
-}

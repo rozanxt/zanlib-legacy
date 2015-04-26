@@ -3,11 +3,6 @@ package zan.lib.sample;
 import zan.lib.core.CoreEngine;
 import static zan.lib.input.InputManager.*;
 
-/** Sample main class for ZanLibrary
- * 
- * @author Rozan I. Rosandi
- *
- */
 public class SampleCore extends CoreEngine {
 	
 	@Override
@@ -20,7 +15,7 @@ public class SampleCore extends CoreEngine {
 	public static void main(String[] args) {
 		SampleCore core = new SampleCore();
 		core.setTitle("Sample Test");
-		core.setPanel(new RefinedTest(core));
+		core.setPanel(new SamplePanel(core));
 		core.run();
 	}
 	

@@ -5,9 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Utility {
-	private static final String LOGNAME = "Utility :: ";
-	
-	private Utility() {}
 	
 	public static String readFileAsString(String path) {
 		StringBuilder content = new StringBuilder();
@@ -19,7 +16,7 @@ public class Utility {
 			}
 			br.close();
 		} catch (IOException e) {
-			System.err.println(LOGNAME + "Error reading file: " + path + ":\n" + e);
+			System.err.println("Error reading file: " + path + ":\n" + e);
 		}
 		return content.toString();
 	}
