@@ -3,10 +3,10 @@ package zan.lib.sample;
 import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.obj.VertexObject;
-import zan.lib.gfx.obj.VertexState;
 import zan.lib.gfx.view.ViewPort2D;
 import zan.lib.math.matrix.MatUtil;
 import zan.lib.panel.BasePanel;
+import zan.lib.util.Utility;
 import static org.lwjgl.opengl.GL11.*;
 
 public class SamplePanel extends BasePanel {
@@ -15,7 +15,6 @@ public class SamplePanel extends BasePanel {
 	private ViewPort2D viewPort;
 	
 	private VertexObject vObject;
-	private VertexState vState;
 	
 	private double vTick;
 	
@@ -40,8 +39,6 @@ public class SamplePanel extends BasePanel {
 		vObject.setNumCoords(2);
 		vObject.setDrawMode(GL_TRIANGLE_FAN);
 		
-		vState = new VertexState();
-		
 		vTick = 0.0;
 	}
 	
@@ -54,7 +51,6 @@ public class SamplePanel extends BasePanel {
 	@Override
 	public void update(double time) {
 		vTick += 3.0;
-		vState.amendState();
 	}
 	
 	@Override
@@ -63,11 +59,13 @@ public class SamplePanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		vState.setState(shaderProgram.getStackMatrix());
-		vState.multMatrix(MatUtil.translationMat44D(0.0, 0.0, 0.0));
-		vState.multMatrix(MatUtil.rotationMat44D(vTick, 0.0, 1.0, 1.0));
-		vState.multMatrix(MatUtil.scaleMat44D(1.0, 1.0, 1.0));
-		shaderProgram.setModelView(vState.getState(ip));
+		float iVTick = Utility.interpolateLinear((float)vTick - 3f, (float)vTick, (float)ip);
+		
+		shaderProgram.pushMatrix();
+		shaderProgram.multMatrix(MatUtil.translationMat44D(0.0, 0.0, 0.0));
+		shaderProgram.multMatrix(MatUtil.rotationMat44D(iVTick, 0.0, 1.0, 1.0));
+		shaderProgram.multMatrix(MatUtil.scaleMat44D(1.0, 1.0, 1.0));
+		shaderProgram.applyModelView();
 		
 		shaderProgram.setColor(1.0, 0.5, 0.0, 1.0);
 		vObject.render(shaderProgram);

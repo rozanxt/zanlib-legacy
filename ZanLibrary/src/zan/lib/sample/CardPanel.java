@@ -4,11 +4,10 @@ import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.obj.TextureObject;
-import zan.lib.gfx.obj.VertexState;
 import zan.lib.gfx.view.ViewPort3D;
 import zan.lib.math.matrix.MatUtil;
 import zan.lib.panel.BasePanel;
-
+import zan.lib.util.Utility;
 import static org.lwjgl.opengl.GL11.*;
 
 public class CardPanel extends BasePanel {
@@ -17,7 +16,6 @@ public class CardPanel extends BasePanel {
 	private ViewPort3D viewPort;
 	
 	private TextureObject vObject;
-	private VertexState vState;
 	
 	private double vTick;
 	
@@ -46,8 +44,6 @@ public class CardPanel extends BasePanel {
 		vObject.setNumCoords(2);
 		vObject.setDrawMode(GL_TRIANGLE_FAN);
 		
-		vState = new VertexState();
-		
 		vTick = 0.0;
 	}
 	
@@ -60,7 +56,6 @@ public class CardPanel extends BasePanel {
 	@Override
 	public void update(double time) {
 		vTick += 3.0;
-		vState.amendState();
 	}
 	
 	@Override
@@ -69,12 +64,15 @@ public class CardPanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		vState.setState(shaderProgram.getStackMatrix());
-		vState.multMatrix(MatUtil.translationMat44D(0.0, 0.0, 0.0));
-		vState.multMatrix(MatUtil.rotationMat44D(vTick, 0.0, 1.0, 0.0));
-		vState.multMatrix(MatUtil.rotationMat44D(32, 0.0, 0.0, 1.0));
-		vState.multMatrix(MatUtil.scaleMat44D(0.5, 0.8, 1.0));
-		shaderProgram.setModelView(vState.getState(ip));
+		float IVTick = Utility.interpolateLinear((float)vTick, (float)vTick - 3f, (float)ip);
+		
+		shaderProgram.pushMatrix();
+		shaderProgram.multMatrix(MatUtil.translationMat44D(0.0, 0.0, 0.0));
+		shaderProgram.multMatrix(MatUtil.rotationMat44D(IVTick, 0.0, 1.0, 0.0));
+		shaderProgram.multMatrix(MatUtil.rotationMat44D(32.0, 0.0, 0.0, 1.0));
+		shaderProgram.multMatrix(MatUtil.scaleMat44D(0.5, 0.8, 1.0));
+		shaderProgram.applyModelView();
+		shaderProgram.popMatrix();
 		
 		shaderProgram.setColor(0.32, 0.54, 0.7, 1.0);
 		vObject.render(shaderProgram);

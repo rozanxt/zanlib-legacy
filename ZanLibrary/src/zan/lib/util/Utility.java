@@ -6,6 +6,10 @@ import java.io.IOException;
 
 public class Utility {
 	
+	public static float interpolateLinear(float lastState, float currentState, float ip) {
+		return lastState + (currentState - lastState) * ip;
+	}
+	
 	public static String readFileAsString(String path) {
 		StringBuilder content = new StringBuilder();
 		try {

@@ -1,20 +1,22 @@
 package zan.lib.gfx.sprite;
 
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.obj.VertexState;
 import zan.lib.math.matrix.MatUtil;
+import zan.lib.util.Utility;
 
 public abstract class BaseSprite {
-	
-	protected VertexState state;
 	
 	protected float posX, posY;
 	protected float scaleX, scaleY;
 	protected float angle;
 	protected float opacity;
 	
+	protected float oldPosX, oldPosY;
+	protected float oldScaleX, oldScaleY;
+	protected float oldAngle;
+	protected float oldOpacity;
+	
 	public BaseSprite() {
-		state = new VertexState();
 		loadIdentity();
 	}
 	
@@ -52,17 +54,33 @@ public abstract class BaseSprite {
 		}
 	}
 	
+	public void amendState() {
+		oldPosX = posX; oldPosY = posY;
+		oldScaleX = scaleX; oldScaleY = scaleY;
+		oldAngle = angle;
+		oldOpacity = opacity;
+	}
+	
 	public void update() {
-		state.amendState();
+		amendState();
 	}
 	
 	public void render(ShaderProgram sp, double ip) {
-		state.setState(sp.getStackMatrix());
-		state.multMatrix(MatUtil.translationMat44D(posX, posY, 0.0));
-		state.multMatrix(MatUtil.rotationMat44D(angle, 0.0, 0.0, 1.0));
-		state.multMatrix(MatUtil.scaleMat44D(scaleX, scaleY, 1.0));
-		sp.setColor(1.0, 1.0, 1.0, opacity);
-		sp.setModelView(state.getState(ip));
+		float iPosX = Utility.interpolateLinear(oldPosX, posX, (float)ip);
+		float iPosY = Utility.interpolateLinear(oldPosY, posY, (float)ip);
+		float iScaleX = Utility.interpolateLinear(oldScaleX, scaleX, (float)ip);
+		float iScaleY = Utility.interpolateLinear(oldScaleY, scaleY, (float)ip);
+		float iAngle = Utility.interpolateLinear(oldAngle, angle, (float)ip);
+		float iOpacity = Utility.interpolateLinear(oldOpacity, opacity, (float)ip);
+		
+		sp.pushMatrix();
+		sp.multMatrix(MatUtil.translationMat44D(iPosX, iPosY, 0.0));
+		sp.multMatrix(MatUtil.rotationMat44D(iAngle, 0.0, 0.0, 1.0));
+		sp.multMatrix(MatUtil.scaleMat44D(iScaleX, iScaleY, 1.0));
+		sp.applyModelView();
+		sp.popMatrix();
+		
+		sp.setColor(1.0, 1.0, 1.0, iOpacity);
 		draw(sp);
 	}
 	
