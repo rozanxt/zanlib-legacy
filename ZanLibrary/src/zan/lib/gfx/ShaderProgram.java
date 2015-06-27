@@ -54,7 +54,7 @@ public class ShaderProgram {
 		loadProgram(vertexShaderPath, fragmentShaderPath);
 		
 		bind();
-		enableDepthTest(true);
+		enableDepthTest(false);
 		enableBlend(true);
 		enableTexture(false);
 		setTextureUnit(0);
