@@ -8,7 +8,7 @@ import zan.lib.gfx.view.ViewPort2D;
 import zan.lib.math.matrix.MatUtil;
 import zan.lib.panel.BasePanel;
 import zan.lib.res.ResourceReader;
-import zan.lib.util.Utility;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class TextPanel extends BasePanel {
@@ -17,8 +17,6 @@ public class TextPanel extends BasePanel {
 	private ViewPort2D viewPort;
 	
 	private VertexObject vObject;
-	
-	private double vTick;
 	
 	public TextPanel(CoreEngine core) {
 		viewPort = new ViewPort2D(0, 0, core.getScreenWidth(), core.getScreenHeight());
@@ -41,8 +39,6 @@ public class TextPanel extends BasePanel {
 		vObject.setNumCoords(2);
 		vObject.setDrawMode(GL_TRIANGLE_FAN);
 		
-		vTick = 0.0;
-		
 		TextManager.init();
 		TextManager.loadFontFile(new ResourceReader("res/font/fonts.res").getData().getNode("defont"));
 	}
@@ -55,7 +51,7 @@ public class TextPanel extends BasePanel {
 	
 	@Override
 	public void update(double time) {
-		vTick += 3.0;
+		
 	}
 	
 	@Override
@@ -64,7 +60,12 @@ public class TextPanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		TextManager.renderText(shaderProgram, "Weiss Schwarz Simulator", "defont", -1f, 0f, 0.1f);
+		shaderProgram.pushMatrix();
+		shaderProgram.multMatrix(MatUtil.translationMat44D(-1.0, 0.0, 0.0));
+		shaderProgram.multMatrix(MatUtil.rotationMat44D(30.0, 0.0, 0.0, 1.0));
+		shaderProgram.multMatrix(MatUtil.scaleMat44D(0.1, 0.4, 1.0));
+		TextManager.renderText(shaderProgram, "Wie geht es euch?", "defont");
+		shaderProgram.popMatrix();
 		
 		shaderProgram.unbind();
 	}

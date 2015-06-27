@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.TextureManager;
-import zan.lib.gfx.obj.TextObject;
+import zan.lib.gfx.obj.FontObject;
 import zan.lib.math.matrix.MatUtil;
 import zan.lib.res.ResourceData;
 
 public class TextManager {
 	
-	private static HashMap<String, Integer> fontTextures;
 	private static HashMap<String, FontInfo> fontInfos;
 	private static HashMap<String, ArrayList<CharInfo>> charInfos;
+	private static HashMap<String, FontObject> fontObjects;
 	
 	private static final String chars =
 			" !\"#$%&\'()*+,-./" +
@@ -24,43 +23,30 @@ public class TextManager {
 			"pqrstuvwxyz{|}~";
 	
 	public static void init() {
-		fontTextures = new HashMap<String, Integer>();
 		fontInfos = new HashMap<String, FontInfo>();
 		charInfos = new HashMap<String, ArrayList<CharInfo>>();
+		fontObjects = new HashMap<String, FontObject>();
 	}
 	
-	public static void renderText(ShaderProgram sp, String text, String font, float sx, float sy, float size) {
-		int fontTexture = fontTextures.get(font);
+	public static void renderText(ShaderProgram sp, String text, String font) {
 		FontInfo fontInfo = fontInfos.get(font);
 		ArrayList<CharInfo> charInfo = charInfos.get(font);
 		
-		TextObject to = new TextObject(fontTexture, fontInfo.x_res, fontInfo.y_res);
+		FontObject fo = fontObjects.get(font);
 		
 		float dw = 0f;
 		for (int i=0;i<text.length();i++) {
 			int ch = chars.indexOf(text.charAt(i));
 			if (ch < 0) continue;
 			
-			int fi = (int)(ch / 16);
-			int fj = (int)(ch % 16);
-			
-			float tile = (1f/16f);
-			
-			to.setTexCoord(fj * tile, fi * tile, (fj + 1) * tile, (fi + 1) * tile);
-			
 			sp.pushMatrix();
-			sp.multMatrix(MatUtil.translationMat44D(sx+dw, sy, 0.0));
-			sp.multMatrix(MatUtil.rotationMat44D(0.0, 0.0, 0.0, 1.0));
-			sp.multMatrix(MatUtil.scaleMat44D(size, size, 1.0));
+			sp.multMatrix(MatUtil.translationMat44D(dw, 0.0, 0.0));
 			sp.applyModelView();
 			sp.popMatrix();
 			
-			sp.setColor(1.0, 1.0, 0.0, 1.0);
-			to.render(sp);
+			fo.render(sp, ch);
 			
-			System.out.println(charInfo.get(ch).width);
-			
-			dw += size * (charInfo.get(ch).width + fontInfo.x_os) / 32f;
+			dw += (charInfo.get(ch).width + fontInfo.x_os) / 32f;
 		}
 	}
 	
@@ -96,11 +82,10 @@ public class TextManager {
 			}
 		}
 		
-		fontTextures.put(fontInfo.name, TextureManager.loadTexture(fontInfo.name, fontInfo.file));
 		fontInfos.put(fontInfo.name, fontInfo);
 		
 		ArrayList<CharInfo> gridInfo = new ArrayList<CharInfo>();
-		for (int i=0;i<6;i++) {
+		for (int i=0;i<16;i++) {
 			for (int j=0;j<16;j++) {
 				int charWidth = fontInfo.def_w;
 				for (int k=0;k<charInfo.size();k++) {
@@ -111,8 +96,9 @@ public class TextManager {
 				gridInfo.add(new CharInfo(j, i, charWidth));
 			}
 		}
-		
 		charInfos.put(fontInfo.name, gridInfo);
+		
+		fontObjects.put(fontInfo.name, new FontObject(fontInfo, gridInfo));
 	}
 	
 }
