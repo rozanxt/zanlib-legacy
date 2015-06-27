@@ -6,9 +6,9 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
 import zan.lib.gfx.TextureManager;
+import zan.lib.gfx.text.TextManager;
 import zan.lib.input.InputManager;
 import zan.lib.panel.BasePanel;
-
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -202,6 +202,7 @@ public abstract class CoreEngine {
 	private void initManager() {
 		InputManager.init();
 		TextureManager.init();
+		TextManager.init();
 	}
 	
 	private void initInput(long previousWindow) {
