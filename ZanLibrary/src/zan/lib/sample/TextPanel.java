@@ -61,12 +61,14 @@ public class TextPanel extends BasePanel {
 		viewPort.adjustView(shaderProgram);
 		
 		shaderProgram.pushMatrix();
-		shaderProgram.multMatrix(MatUtil.translationMat44D(-1.0, 0.0, 0.0));
-		shaderProgram.multMatrix(MatUtil.rotationMat44D(30.0, 0.0, 0.0, 1.0));
-		shaderProgram.multMatrix(MatUtil.scaleMat44D(0.1, 0.4, 1.0));
-		TextManager.renderText(shaderProgram, "Wie geht es euch?", "defont");
+		shaderProgram.multMatrix(MatUtil.translationMat44D(-0.65, -0.22, 0.0));
+		shaderProgram.multMatrix(MatUtil.rotationMat44D(10.0, 0.0, 0.0, 1.0));
+		shaderProgram.multMatrix(MatUtil.scaleMat44D(0.2, 0.3, 1.0));
+		shaderProgram.setColor(0.0, 0.5, 0.8, 0.8);
+		TextManager.renderText(shaderProgram, "ZanLibrary", "defont");
 		shaderProgram.popMatrix();
 		
+		shaderProgram.popMatrix();
 		shaderProgram.unbind();
 	}
 	

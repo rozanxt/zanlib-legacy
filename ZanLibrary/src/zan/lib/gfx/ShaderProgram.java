@@ -34,6 +34,8 @@ public class ShaderProgram {
 	private boolean enableBlend;
 	private boolean enableTexture;
 	
+	private FloatBuffer floatBuffer;
+	
 	public ShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
 		programID = 0;
 		vertexPosID = 0;
@@ -50,6 +52,8 @@ public class ShaderProgram {
 		matrixStack.add(MatUtil.identityMat44D());
 		projectionMatrix = MatUtil.identityMat44D();
 		modelViewMatrix = MatUtil.identityMat44D();
+		
+		floatBuffer = BufferUtils.createFloatBuffer(16);
 		
 		loadProgram(vertexShaderPath, fragmentShaderPath);
 		
@@ -110,19 +114,19 @@ public class ShaderProgram {
 	public void setProjection(Mat44D matrix) {projectionMatrix.set(matrix);}
 	public void applyProjection() {setProjection(getStackMatrix());}
 	public void bindProjection() {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-		for (int i=0;i<16;i++) buffer.put((float)projectionMatrix.get(i));
-		buffer.flip();
-		glUniformMatrix4(projectionMatrixID, false, buffer);
+		floatBuffer.clear();
+		for (int i=0;i<16;i++) floatBuffer.put((float)projectionMatrix.get(i));
+		floatBuffer.flip();
+		glUniformMatrix4(projectionMatrixID, false, floatBuffer);
 	}
 	
 	public void setModelView(Mat44D matrix) {modelViewMatrix.set(matrix);}
 	public void applyModelView() {setModelView(getStackMatrix());}
 	public void bindModelView() {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-		for (int i=0;i<16;i++) buffer.put((float)modelViewMatrix.get(i));
-		buffer.flip();
-		glUniformMatrix4(modelViewMatrixID, false, buffer);
+		floatBuffer.clear();
+		for (int i=0;i<16;i++) floatBuffer.put((float)modelViewMatrix.get(i));
+		floatBuffer.flip();
+		glUniformMatrix4(modelViewMatrixID, false, floatBuffer);
 	}
 	
 	public void pushMatrix() {
