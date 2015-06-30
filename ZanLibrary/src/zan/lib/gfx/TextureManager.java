@@ -20,20 +20,20 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class TextureManager {
 	
-	private static HashMap<String, Integer> textureStore;
+	private static HashMap<String, TextureData> textureStore;
 	
 	private static GraphicsConfiguration gc;
 	private static final int BYTES_PER_PIXEL = 4;
 	
 	public static void init() {
-		textureStore = new HashMap<String, Integer>();
+		textureStore = new HashMap<String, TextureData>();
 		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
 	}
 	
 	public static void destroy() {
-		for (Map.Entry<String, Integer> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue());
+		for (Map.Entry<String, TextureData> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().getTextureID());
 		textureStore.clear();
 	}
 	
@@ -43,12 +43,15 @@ public class TextureManager {
 			return getTextureID(texture);
 		}
 		
-		int textureID = createTexture(filename);
-		if (textureID != 0) textureStore.put(texture, new Integer(textureID));
-		return textureID;
+		TextureData textureData = createTexture(filename);
+		if (textureData != null && textureData.getTextureID() != 0) {
+			textureStore.put(texture, textureData);
+			return getTextureID(texture);
+		}
+		return 0;
 	}
 	
-	private static int createTexture(String filename) {
+	private static TextureData createTexture(String filename) {
 		try {
 			BufferedImage im = ImageIO.read(new File(filename));
 			
@@ -59,10 +62,10 @@ public class TextureManager {
 			
 			g2d.drawImage(im, 0, 0, null);
 			g2d.dispose();
-			return genTexture(bi);
+			return new TextureData(genTexture(bi), bi.getWidth(), bi.getHeight());
 		} catch(IOException e) {
 			System.err.println("Error loading texture for " + filename + ":\n " + e); 
-			return 0;
+			return null;
 		}
 	}
 	
@@ -115,11 +118,11 @@ public class TextureManager {
 			System.err.println("No texture stored under " + texture);  
 			return 0;
 		}
-		return textureStore.get(texture);
+		return textureStore.get(texture).getTextureID();
 	}
 	
 	public static boolean isTextureLoaded(String texture) {
-		if (textureStore.get(texture) == null || textureStore.get(texture) == 0) return false;
+		if (textureStore.get(texture) == null || textureStore.get(texture).getTextureID() == 0) return false;
 		return true;
 	}
 	
