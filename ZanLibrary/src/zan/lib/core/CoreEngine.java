@@ -106,8 +106,9 @@ public abstract class CoreEngine {
 	// CLEANUP
 	
 	private void destroy() {
-		InputManager.destroy();
+		TextManager.destroy();
 		TextureManager.destroy();
+		InputManager.destroy();
 		glfwDestroyWindow(window);
 		keyCallback.release();
 		charCallback.release();

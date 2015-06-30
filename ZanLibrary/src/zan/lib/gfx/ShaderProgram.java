@@ -36,6 +36,7 @@ public class ShaderProgram {
 	
 	private FloatBuffer floatBuffer;
 	
+	public ShaderProgram() {this("default", "default");}
 	public ShaderProgram(String vertexShaderPath, String fragmentShaderPath) {
 		programID = 0;
 		vertexPosID = 0;
@@ -180,7 +181,34 @@ public class ShaderProgram {
 	
 	private boolean loadShaderFile(String path, int shaderType) {
 		int shader = glCreateShader(shaderType);
-		glShaderSource(shader, Utility.readFileAsString(path));
+		String source = "";
+		if (path.contentEquals("default")) {
+			if (shaderType == GL_VERTEX_SHADER) {
+				source = "#version 330 core\n"
+						+ "uniform mat4 projectionMatrix;\n"
+						+ "uniform mat4 modelViewMatrix;\n"
+						+ "in vec3 vertexPos;\n"
+						+ "in vec2 texCoord;\n"
+						+ "out vec4 textureCoord;\n"
+						+ "void main() {\n"
+						+ "textureCoord = vec4(texCoord.s, texCoord.t, 0.0, 1.0);\n"
+						+ "gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos.x, vertexPos.y, vertexPos.z, 1.0);"
+						+ "}\n";
+			} else if (shaderType == GL_FRAGMENT_SHADER) {
+				source = "#version 330 core\n"
+						+ "uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);\n"
+						+ "uniform bool enableTexture = false;\n"
+						+ "uniform sampler2D texUnit;\n"
+						+ "in vec4 textureCoord;\n"
+						+ "void main() {\n"
+						+ "if (enableTexture) gl_FragColor = texture(texUnit, textureCoord.st) * color;\n"
+						+ "else gl_FragColor = color;\n"
+						+ "}\n";
+			}
+		} else {
+			source = Utility.readFileAsString(path);
+		}
+		glShaderSource(shader, source);
 		glCompileShader(shader);
 		
 		if (glGetShaderi(shader, GL_COMPILE_STATUS) != GL_TRUE) {

@@ -24,7 +24,7 @@ public class TextPanel extends BasePanel {
 	
 	@Override
 	public void init() {
-		shaderProgram = new ShaderProgram("res/shader/sample.glvs", "res/shader/sample.glfs");
+		shaderProgram = new ShaderProgram();
 		
 		viewPort.showView();
 		viewPort.projectView(shaderProgram);

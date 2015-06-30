@@ -27,7 +27,7 @@ public class CardPanel extends BasePanel {
 	public void init() {
 		TextureManager.loadTexture("card", "res/img/sample_card.png");
 		
-		shaderProgram = new ShaderProgram("res/shader/sample.glvs", "res/shader/sample.glfs");
+		shaderProgram = new ShaderProgram();
 		
 		viewPort.setOffsetZ(4f);
 		viewPort.showView();

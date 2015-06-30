@@ -25,7 +25,7 @@ public class ModelPanel extends BasePanel {
 	
 	@Override
 	public void init() {
-		shaderProgram = new ShaderProgram("res/shader/sample.glvs", "res/shader/sample.glfs");
+		shaderProgram = new ShaderProgram();
 		
 		viewPort.setFOVY(120f);
 		viewPort.setDepthInterval(100f);

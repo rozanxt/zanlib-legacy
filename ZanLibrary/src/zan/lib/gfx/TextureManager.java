@@ -20,38 +20,41 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class TextureManager {
 	
-	private static HashMap<String, TextureData> textureStore;
+	private static HashMap<String, TextureInfo> textureStore;
 	
 	private static GraphicsConfiguration gc;
 	private static final int BYTES_PER_PIXEL = 4;
 	
+	private static int TEXTURE_FILTER = GL_LINEAR; // GL_LINEAR / GL_NEAREST
+	
 	public static void init() {
-		textureStore = new HashMap<String, TextureData>();
+		textureStore = new HashMap<String, TextureInfo>();
+		textureStore.put("NO_TEXTURE", new TextureInfo(0, 0, 0));
 		
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
 	}
 	
 	public static void destroy() {
-		for (Map.Entry<String, TextureData> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().getTextureID());
+		for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().textureID);
 		textureStore.clear();
 	}
 	
 	public static int loadTexture(String texture, String filename) {
 		if (textureStore.containsKey(texture)) {
-			System.err.println("Error loading texture:\n " + texture + " is already used");
+			System.err.println("Error loading texture: \"" + texture + "\" is already used");
 			return getTextureID(texture);
 		}
 		
-		TextureData textureData = createTexture(filename);
-		if (textureData != null && textureData.getTextureID() != 0) {
-			textureStore.put(texture, textureData);
+		TextureInfo textureInfo = createTexture(filename);
+		if (textureInfo != null && textureInfo.textureID != 0) {
+			textureStore.put(texture, textureInfo);
 			return getTextureID(texture);
 		}
 		return 0;
 	}
 	
-	private static TextureData createTexture(String filename) {
+	private static TextureInfo createTexture(String filename) {
 		try {
 			BufferedImage im = ImageIO.read(new File(filename));
 			
@@ -62,7 +65,7 @@ public class TextureManager {
 			
 			g2d.drawImage(im, 0, 0, null);
 			g2d.dispose();
-			return new TextureData(genTexture(bi), bi.getWidth(), bi.getHeight());
+			return new TextureInfo(genTexture(bi), bi.getWidth(), bi.getHeight());
 		} catch(IOException e) {
 			System.err.println("Error loading texture for " + filename + ":\n " + e); 
 			return null;
@@ -95,8 +98,8 @@ public class TextureManager {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		
 		// Setup texture scaling filtering
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_LINEAR / GL_NEAREST
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TEXTURE_FILTER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TEXTURE_FILTER);
 		
 		// Send texel data to OpenGL
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -104,8 +107,10 @@ public class TextureManager {
 		return textureID;
 	}
 	
+	public static void setTextureFilter(int filter) {TEXTURE_FILTER = filter;}
+	
 	public static boolean unloadTexture(String texture) {
-		if (isTextureLoaded(texture)) {
+		if (getTextureInfo(texture) != null) {
 			glDeleteTextures(getTextureID(texture));
 			textureStore.remove(texture);
 			return true;
@@ -113,17 +118,16 @@ public class TextureManager {
 		return false;
 	}
 	
-	public static int getTextureID(String texture) {
-		if (!isTextureLoaded(texture)) {
-			System.err.println("No texture stored under " + texture);  
-			return 0;
+	public static TextureInfo getTextureInfo(String texture) {
+		if (textureStore.get(texture) == null) {
+			System.err.println("No texture stored under: \"" + texture + "\"");
+			return textureStore.get("NO_TEXTURE");
 		}
-		return textureStore.get(texture).getTextureID();
+		return textureStore.get(texture);
 	}
 	
-	public static boolean isTextureLoaded(String texture) {
-		if (textureStore.get(texture) == null || textureStore.get(texture).getTextureID() == 0) return false;
-		return true;
+	public static int getTextureID(String texture) {
+		return getTextureInfo(texture).textureID;
 	}
 	
 }

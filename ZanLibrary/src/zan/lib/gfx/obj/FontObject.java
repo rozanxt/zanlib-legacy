@@ -12,7 +12,7 @@ import zan.lib.gfx.text.FontInfo;
 public class FontObject extends TextureObject {
 	
 	public FontObject(FontInfo fontInfo, ArrayList<CharInfo> charInfo) {
-		super(TextureManager.loadTexture(fontInfo.name, fontInfo.file));
+		super(TextureManager.loadTexture(fontInfo.name, fontInfo.filename));
 		
 		int[] indices = new int[16*16*4];
 		for (int i=0;i<16*16*4;i++) indices[i] = i;
