@@ -3,10 +3,8 @@ package zan.lib.sample;
 import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.obj.VertexObject;
-import zan.lib.gfx.text.TextManager;
 import zan.lib.gfx.view.ViewPort2D;
 import zan.lib.panel.BasePanel;
-import zan.lib.res.ResourceReader;
 import zan.lib.util.Utility;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -41,8 +39,6 @@ public class SamplePanel extends BasePanel {
 		vObject.setDrawMode(GL_TRIANGLE_FAN);
 		
 		vTick = 0.0;
-		
-		TextManager.loadFontFile(new ResourceReader("res/font/fonts.res").getData().getNode("defont"));
 	}
 	
 	@Override

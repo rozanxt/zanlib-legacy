@@ -75,6 +75,7 @@ public class ViewPort2D extends ViewPort {
 	
 	@Override
 	public void adjustView(ShaderProgram sp) {
+		sp.translate(2.0*(originX-0.5)*viewPortRatio, 2.0*(originY-0.5), 0.0);
 		sp.scale(zoomScale, zoomScale, 1.0);
 		sp.translate(-offsetX, -offsetY, 0.0);
 	}
