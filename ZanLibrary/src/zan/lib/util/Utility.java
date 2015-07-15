@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Utility {
 	
-	public static float interpolateLinear(float lastState, float currentState, float ip) {
+	public static double interpolateLinear(double lastState, double currentState, double ip) {
 		return lastState + (currentState - lastState) * ip;
 	}
 	

@@ -11,6 +11,4 @@ public class TextureInfo {
 		textureHeight = height;
 	}
 	
-	public float getTextureRatio() {return (float)textureWidth/(float)textureHeight;}
-	
 }

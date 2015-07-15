@@ -3,9 +3,10 @@ package zan.lib.sample;
 import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.obj.VertexObject;
+import zan.lib.gfx.text.TextManager;
 import zan.lib.gfx.view.ViewPort2D;
-import zan.lib.math.matrix.MatUtil;
 import zan.lib.panel.BasePanel;
+import zan.lib.res.ResourceReader;
 import zan.lib.util.Utility;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -40,6 +41,8 @@ public class SamplePanel extends BasePanel {
 		vObject.setDrawMode(GL_TRIANGLE_FAN);
 		
 		vTick = 0.0;
+		
+		TextManager.loadFontFile(new ResourceReader("res/font/fonts.res").getData().getNode("defont"));
 	}
 	
 	@Override
@@ -59,16 +62,16 @@ public class SamplePanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		float iVTick = Utility.interpolateLinear((float)vTick - 3f, (float)vTick, (float)ip);
+		double iVTick = Utility.interpolateLinear(vTick - 3.0, vTick, ip);
 		
 		shaderProgram.pushMatrix();
-		shaderProgram.multMatrix(MatUtil.translationMat44D(0.0, 0.0, 0.0));
-		shaderProgram.multMatrix(MatUtil.rotationMat44D(iVTick, 0.0, 1.0, 1.0));
-		shaderProgram.multMatrix(MatUtil.scaleMat44D(1.0, 1.0, 1.0));
+		shaderProgram.translate(0.0, 0.0, 0.0);
+		shaderProgram.rotate(iVTick, 0.0, 1.0, 1.0);
+		shaderProgram.scale(1.0, 1.0, 1.0);
 		shaderProgram.applyModelView();
-		
 		shaderProgram.setColor(1.0, 0.5, 0.0, 1.0);
 		vObject.render(shaderProgram);
+		shaderProgram.popMatrix();
 		
 		shaderProgram.popMatrix();
 		shaderProgram.unbind();

@@ -145,6 +145,23 @@ public class ShaderProgram {
 		MatUtil.mult(new Mat44D(stackMatrix), matrix, stackMatrix);
 	}
 	
+	public void translate(double x, double y, double z) {
+		multMatrix(MatUtil.translationMat44D(x, y, z));
+	}
+	public void rotate(double angle, double x, double y, double z) {
+		multMatrix(MatUtil.rotationMat44D(angle, x, y, z));
+	}
+	public void scale(double x, double y, double z) {
+		multMatrix(MatUtil.scaleMat44D(x, y, z));
+	}
+	
+	public void setOrthoProjection(double left, double right, double bottom, double top, double near, double far) {
+		setProjection(MatUtil.orthoProjectionMatrix(left, right, bottom, top, near, far));
+	}
+	public void setPerspectiveProjection(double fovy, double aspect, double near, double far) {
+		setProjection(MatUtil.perspectiveProjectionMatrix(fovy, aspect, near, far));
+	}
+	
 	public Mat44D getStackMatrix() {return matrixStack.get(matrixStack.size()-1);}
 	public Mat44D getProjectionMatrix() {return projectionMatrix;}
 	public Mat44D getModelViewMatrix() {return modelViewMatrix;}

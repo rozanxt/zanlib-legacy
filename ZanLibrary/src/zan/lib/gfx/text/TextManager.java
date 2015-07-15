@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.obj.FontObject;
-import zan.lib.math.matrix.MatUtil;
 import zan.lib.res.ResourceData;
 
 public class TextManager {
@@ -42,7 +41,7 @@ public class TextManager {
 			if (ch < 0) continue;
 			
 			sp.pushMatrix();
-			sp.multMatrix(MatUtil.translationMat44D(dw, 0.0, 0.0));
+			sp.translate(dw, 0.0, 0.0);
 			sp.applyModelView();
 			sp.popMatrix();
 			

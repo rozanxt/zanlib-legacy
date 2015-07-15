@@ -21,7 +21,7 @@ public class SpritePanel extends BasePanel {
 	private Sprite sprite;
 	private AnimatedSprite aniSprite;
 	
-	private float var;
+	private double var;
 	
 	public SpritePanel(CoreEngine core) {
 		viewPort = new ViewPortScreen(core.getScreenWidth(), core.getScreenHeight());
@@ -30,24 +30,23 @@ public class SpritePanel extends BasePanel {
 	@Override
 	public void init() {
 		shaderProgram = new ShaderProgram();
-		shaderProgram.enableDepthTest(false);
 		
 		viewPort.showView();
 		viewPort.projectView(shaderProgram);
 		
 		sprite = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"), 256f, 128f);
-		sprite.setPos(320f, 240f);
-		sprite.setScale(200f);
+		sprite.setPos(320.0, 240.0);
+		sprite.setScale(200.0);
 		
 		int ani = TextureManager.loadTexture("animation", "res/img/sample_animation.png");
 		ArrayList<SpriteObject> sheet = new ArrayList<SpriteObject>();
 		for (int i=0;i<12;i++) sheet.add(new SpriteObject(ani, 1536f, 128f, 128f*i, 0f, 128f*(i+1), 128f));
 		aniSprite = new AnimatedSprite(sheet);
 		aniSprite.setFPS(24.0, 50.0);
-		aniSprite.setPos(320f, 240f);
-		aniSprite.setScale(200f);
+		aniSprite.setPos(320.0, 240.0);
+		aniSprite.setScale(200.0);
 		
-		var = 320f;
+		var = 320.0;
 	}
 	
 	@Override
@@ -60,11 +59,11 @@ public class SpritePanel extends BasePanel {
 	@Override
 	public void update(double time) {
 		if (isKeyDown(IM_KEY_RIGHT)) {
-			var += 5f;
+			var += 5.0;
 			aniSprite.tick();
 			aniSprite.setFlip(0);
 		} else if (isKeyDown(IM_KEY_LEFT)) {
-			var -= 5f;
+			var -= 5.0;
 			aniSprite.tick();
 			aniSprite.setFlip(1);
 		}

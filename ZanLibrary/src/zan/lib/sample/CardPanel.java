@@ -5,7 +5,6 @@ import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.obj.TextureObject;
 import zan.lib.gfx.view.ViewPort3D;
-import zan.lib.math.matrix.MatUtil;
 import zan.lib.panel.BasePanel;
 import zan.lib.util.Utility;
 import static org.lwjgl.opengl.GL11.*;
@@ -25,13 +24,13 @@ public class CardPanel extends BasePanel {
 	
 	@Override
 	public void init() {
-		TextureManager.loadTexture("card", "res/img/sample_card.png");
-		
 		shaderProgram = new ShaderProgram();
 		
-		viewPort.setOffsetZ(4f);
+		viewPort.setOffsetZ(4.0);
 		viewPort.showView();
 		viewPort.projectView(shaderProgram);
+		
+		TextureManager.loadTexture("card", "res/img/sample_card.png");
 		
 		int[] indices = {0, 1, 2, 3};
 		float[] vertices = {
@@ -64,16 +63,15 @@ public class CardPanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		float IVTick = Utility.interpolateLinear((float)vTick, (float)vTick - 3f, (float)ip);
+		double IVTick = Utility.interpolateLinear(vTick, vTick - 3f, ip);
 		
 		shaderProgram.pushMatrix();
-		shaderProgram.multMatrix(MatUtil.translationMat44D(0.0, 0.0, 0.0));
-		shaderProgram.multMatrix(MatUtil.rotationMat44D(IVTick, 0.0, 1.0, 0.0));
-		shaderProgram.multMatrix(MatUtil.rotationMat44D(32.0, 0.0, 0.0, 1.0));
-		shaderProgram.multMatrix(MatUtil.scaleMat44D(0.5, 0.8, 1.0));
+		shaderProgram.translate(0.0, 0.0, 0.0);
+		shaderProgram.rotate(IVTick, 0.0, 1.0, 0.0);
+		shaderProgram.rotate(32.0, 0.0, 0.0, 1.0);
+		shaderProgram.scale(0.5, 0.8, 1.0);
 		shaderProgram.applyModelView();
 		shaderProgram.popMatrix();
-		
 		shaderProgram.setColor(0.32, 0.54, 0.7, 1.0);
 		vObject.render(shaderProgram);
 		

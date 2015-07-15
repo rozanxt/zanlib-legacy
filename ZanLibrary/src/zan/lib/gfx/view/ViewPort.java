@@ -11,8 +11,8 @@ public abstract class ViewPort {
 	protected int viewPortX, viewPortY;
 	protected int viewPortW, viewPortH;
 	
-	protected float screenRatio;
-	protected float viewPortRatio;
+	protected double screenRatio;
+	protected double viewPortRatio;
 	
 	public ViewPort(int viewPortX, int viewPortY, int viewPortW, int viewPortH) {
 		setScreenSize(viewPortW, viewPortH);
@@ -22,7 +22,7 @@ public abstract class ViewPort {
 	public void setScreenSize(int screenWidth, int screenHeight) {
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		screenRatio = (float)screenWidth/(float)screenHeight; 
+		screenRatio = (double)screenWidth/(double)screenHeight; 
 	}
 	
 	public void setViewPort(int viewPortX, int viewPortY, int viewPortW, int viewPortH) {
@@ -30,7 +30,7 @@ public abstract class ViewPort {
 		this.viewPortY = viewPortY;
 		this.viewPortW = viewPortW;
 		this.viewPortH = viewPortH;
-		viewPortRatio = (float)viewPortW/(float)viewPortH;
+		viewPortRatio = (double)viewPortW/(double)viewPortH;
 	}
 	
 	public int getScreenWidth() {return screenWidth;}
@@ -41,8 +41,8 @@ public abstract class ViewPort {
 	public int getViewPortW() {return viewPortW;}
 	public int getViewPortH() {return viewPortH;}
 	
-	public float getScreenRatio() {return screenRatio;}
-	public float getViewPortRatio() {return viewPortRatio;}
+	public double getScreenRatio() {return screenRatio;}
+	public double getViewPortRatio() {return viewPortRatio;}
 	
 	public void showView() {
 		glViewport(viewPortX, viewPortY, viewPortW, viewPortH);

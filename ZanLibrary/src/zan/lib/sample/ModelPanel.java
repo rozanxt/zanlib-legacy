@@ -4,7 +4,6 @@ import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.gfx.obj.ModelObject;
 import zan.lib.gfx.view.ViewPort3D;
-import zan.lib.math.matrix.MatUtil;
 import zan.lib.panel.BasePanel;
 
 import static zan.lib.input.InputManager.*;
@@ -27,14 +26,14 @@ public class ModelPanel extends BasePanel {
 	public void init() {
 		shaderProgram = new ShaderProgram();
 		
-		viewPort.setFOVY(120f);
-		viewPort.setDepthInterval(100f);
-		viewPort.setOffsetZ(4f);
+		viewPort.setFOVY(120.0);
+		viewPort.setDepthInterval(100.0);
+		viewPort.setOffsetZ(4.0);
 		
 		viewPort.showView();
 		viewPort.projectView(shaderProgram);
 		
-		model = new ModelObject("res/obj/sample.obj");
+		model = new ModelObject("res/obj/sample_model.obj");
 		model.setDrawMode(GL_LINE_STRIP);
 		
 		rotation = 0.0;
@@ -48,14 +47,14 @@ public class ModelPanel extends BasePanel {
 	
 	@Override
 	public void update(double time) {
-		if (isKeyDown(IM_KEY_RIGHT)) viewPort.setOffsetX(viewPort.getOffsetX()+0.1f);
-		if (isKeyDown(IM_KEY_LEFT)) viewPort.setOffsetX(viewPort.getOffsetX()-0.1f);
-		if (isKeyDown(IM_KEY_UP)) viewPort.setOffsetY(viewPort.getOffsetY()+0.1f);
-		if (isKeyDown(IM_KEY_DOWN)) viewPort.setOffsetY(viewPort.getOffsetY()-0.1f);
-		if (isKeyDown(IM_KEY_W)) viewPort.setOffsetZ(viewPort.getOffsetZ()-0.1f);
-		if (isKeyDown(IM_KEY_S)) viewPort.setOffsetZ(viewPort.getOffsetZ()+0.1f);
-		if (isKeyDown(IM_KEY_A)) rotation-=5.0;
-		if (isKeyDown(IM_KEY_D)) rotation+=5.0;
+		if (isKeyDown(IM_KEY_RIGHT)) viewPort.setOffsetX(viewPort.getOffsetX()+0.1);
+		if (isKeyDown(IM_KEY_LEFT)) viewPort.setOffsetX(viewPort.getOffsetX()-0.1);
+		if (isKeyDown(IM_KEY_UP)) viewPort.setOffsetY(viewPort.getOffsetY()+0.1);
+		if (isKeyDown(IM_KEY_DOWN)) viewPort.setOffsetY(viewPort.getOffsetY()-0.1);
+		if (isKeyDown(IM_KEY_W)) viewPort.setOffsetZ(viewPort.getOffsetZ()-0.1);
+		if (isKeyDown(IM_KEY_S)) viewPort.setOffsetZ(viewPort.getOffsetZ()+0.1);
+		if (isKeyDown(IM_KEY_A)) rotation -= 5.0;
+		if (isKeyDown(IM_KEY_D)) rotation += 5.0;
 	}
 	
 	@Override
@@ -64,11 +63,12 @@ public class ModelPanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		shaderProgram.multMatrix(MatUtil.rotationMat44D(rotation, 0.0, 1.0, 0.0));
+		shaderProgram.pushMatrix();
+		shaderProgram.rotate(rotation, 0.0, 1.0, 0.0);
 		shaderProgram.applyModelView();
-		
 		shaderProgram.setColor(0.0, 1.0, 1.0, 1.0);
 		model.render(shaderProgram);
+		shaderProgram.popMatrix();
 		
 		shaderProgram.popMatrix();
 		shaderProgram.unbind();
