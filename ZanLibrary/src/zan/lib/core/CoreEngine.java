@@ -161,7 +161,6 @@ public abstract class CoreEngine {
 		createWindow(previousWindow);
 		initInput(previousWindow);
 		initWindow();
-		initGL();
 		
 		onWindowResize(window, WIN_WIDTH, WIN_HEIGHT);
 		onScreenResize(window, SCR_WIDTH, SCR_HEIGHT);
@@ -334,7 +333,6 @@ public abstract class CoreEngine {
 	
 	private void initGL() {
 		GLContext.createFromCurrent();
-		glClearColor(0f, 0f, 0f, 1f);
 	}
 	
 	// MAIN LOOP

@@ -24,6 +24,7 @@ public class ShaderProgram {
 	private int projectionMatrixID;
 	private int modelViewMatrixID;
 	
+	private Vec4D clearColor;
 	private Vec4D color;
 	
 	private ArrayList<Mat44D> matrixStack;
@@ -47,6 +48,7 @@ public class ShaderProgram {
 		projectionMatrixID = 0;
 		modelViewMatrixID = 0;
 		
+		clearColor = new Vec4D(0.0, 0.0, 0.0, 1.0);
 		color = new Vec4D(1.0);
 		
 		matrixStack = new ArrayList<Mat44D>();
@@ -76,6 +78,7 @@ public class ShaderProgram {
 	
 	public void bindState() {
 		bind();
+		glClearColor((float)clearColor.get(0), (float)clearColor.get(1), (float)clearColor.get(2), (float)clearColor.get(3));
 		enableDepthTest(enableDepthTest);
 		enableBlend(enableBlend);
 		enableTexture(enableTexture);
@@ -108,6 +111,11 @@ public class ShaderProgram {
 	public void setTexCoordPointer(int size, int stride, long offset) {glVertexAttribPointer(texCoordID, size, GL_FLOAT, false, stride*4, offset*4);}
 	
 	public void setTextureUnit(int texUnit) {glUniform1i(texUnitID, texUnit);}
+	
+	public void setClearColor(double r, double g, double b, double a) {
+		clearColor.setComponents(r, g, b, a);
+		glClearColor((float)r, (float)g, (float)b, (float)a);
+	}
 	
 	public void setColor(double r, double g, double b, double a) {color.setComponents(r, g, b, a);}
 	public void bindColor() {glUniform4f(colorID, (float)color.get(0), (float)color.get(1), (float)color.get(2), (float)color.get(3));}
