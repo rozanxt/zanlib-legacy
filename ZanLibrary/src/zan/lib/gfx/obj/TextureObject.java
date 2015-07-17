@@ -1,25 +1,25 @@
 package zan.lib.gfx.obj;
 
 import zan.lib.gfx.ShaderProgram;
-
+import zan.lib.gfx.TextureInfo;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 
 public class TextureObject extends VertexObject {
 	
-	protected int textureID;
+	protected TextureInfo texture;
 	
-	public TextureObject(int textureID) {
+	public TextureObject(TextureInfo texture) {
 		super();
-		setTextureID(textureID);
+		setTexture(texture);
 	}
-	public TextureObject(int textureID, float[] vertices, int[] indices) {
+	public TextureObject(TextureInfo texture, float[] vertices, int[] indices) {
 		super(vertices, indices);
-		setTextureID(textureID);
+		setTexture(texture);
 	}
 	
-	public void setTextureID(int textureID) {this.textureID = textureID;}
-	public int getTextureID() {return textureID;}
+	public void setTexture(TextureInfo texture) {this.texture = texture;}
+	public TextureInfo getTexture() {return texture;}
 	
 	@Override
 	public void render(ShaderProgram sp) {
@@ -28,7 +28,7 @@ public class TextureObject extends VertexObject {
 		sp.bindModelView();
 		sp.bindColor();
 		sp.enableTexture(true);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_2D, texture.id);
 		sp.enableVertexPointer();
 		sp.enableTexCoordPointer();
 			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);

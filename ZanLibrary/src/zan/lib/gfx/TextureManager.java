@@ -36,22 +36,22 @@ public class TextureManager {
 	}
 	
 	public static void destroy() {
-		for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().textureID);
+		for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().id);
 		textureStore.clear();
 	}
 	
-	public static int loadTexture(String texture, String filename) {
+	public static TextureInfo loadTexture(String texture, String filename) {
 		if (textureStore.containsKey(texture)) {
 			System.err.println("Error loading texture: \"" + texture + "\" is already used");
-			return getTextureID(texture);
+			return getTexture(texture);
 		}
 		
 		TextureInfo textureInfo = createTexture(filename);
-		if (textureInfo != null && textureInfo.textureID != 0) {
+		if (textureInfo != null && textureInfo.id != 0) {
 			textureStore.put(texture, textureInfo);
-			return getTextureID(texture);
+			return getTexture(texture);
 		}
-		return 0;
+		return getTexture("NO_TEXTURE");
 	}
 	
 	private static TextureInfo createTexture(String filename) {
@@ -110,7 +110,7 @@ public class TextureManager {
 	public static void setTextureFilter(int filter) {TEXTURE_FILTER = filter;}
 	
 	public static boolean unloadTexture(String texture) {
-		if (getTextureInfo(texture) != null) {
+		if (textureStore.get(texture) != null && !texture.contentEquals("NO_TEXTURE")) {
 			glDeleteTextures(getTextureID(texture));
 			textureStore.remove(texture);
 			return true;
@@ -118,7 +118,7 @@ public class TextureManager {
 		return false;
 	}
 	
-	public static TextureInfo getTextureInfo(String texture) {
+	public static TextureInfo getTexture(String texture) {
 		if (textureStore.get(texture) == null) {
 			System.err.println("No texture stored under: \"" + texture + "\"");
 			return textureStore.get("NO_TEXTURE");
@@ -126,8 +126,8 @@ public class TextureManager {
 		return textureStore.get(texture);
 	}
 	
-	public static int getTextureID(String texture) {
-		return getTextureInfo(texture).textureID;
-	}
+	public static int getTextureID(String texture) {return getTexture(texture).id;}
+	public static int getTextureWidth(String texture) {return getTexture(texture).width;}
+	public static int getTextureHeight(String texture) {return getTexture(texture).height;}
 	
 }

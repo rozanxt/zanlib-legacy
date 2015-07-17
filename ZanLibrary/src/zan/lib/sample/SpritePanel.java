@@ -4,13 +4,14 @@ import java.util.ArrayList;
 
 import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
+import zan.lib.gfx.TextureInfo;
 import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.obj.VertexObject;
 import zan.lib.gfx.sprite.AnimatedSprite;
 import zan.lib.gfx.sprite.Sprite;
 import zan.lib.gfx.view.ViewPortScreen;
 import zan.lib.panel.BasePanel;
-
 import static zan.lib.input.InputManager.*;
 
 public class SpritePanel extends BasePanel {
@@ -34,13 +35,13 @@ public class SpritePanel extends BasePanel {
 		viewPort.showView();
 		viewPort.projectView(shaderProgram);
 		
-		sprite = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"), 256f, 128f);
+		sprite = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"));
 		sprite.setPos(320.0, 240.0);
 		sprite.setScale(200.0);
 		
-		int ani = TextureManager.loadTexture("animation", "res/img/sample_animation.png");
-		ArrayList<SpriteObject> sheet = new ArrayList<SpriteObject>();
-		for (int i=0;i<12;i++) sheet.add(new SpriteObject(ani, 1536f, 128f, 128f*i, 0f, 128f*(i+1), 128f));
+		TextureInfo ani = TextureManager.loadTexture("animation", "res/img/sample_animation.png");
+		ArrayList<VertexObject> sheet = new ArrayList<VertexObject>();
+		for (int i=0;i<12;i++) sheet.add(new SpriteObject(ani, 128f*i, 0f, 128f*(i+1), 128f));
 		aniSprite = new AnimatedSprite(sheet);
 		aniSprite.setFPS(24.0, 50.0);
 		aniSprite.setPos(320.0, 240.0);

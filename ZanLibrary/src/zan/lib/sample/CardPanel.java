@@ -39,7 +39,7 @@ public class CardPanel extends BasePanel {
 			1f, 1f, 1f, 0f,
 			-1f, 1f, 0f, 0f
 		};
-		vObject = new TextureObject(TextureManager.getTextureID("card"), vertices, indices);
+		vObject = new TextureObject(TextureManager.getTexture("card"), vertices, indices);
 		vObject.setNumCoords(2);
 		vObject.setDrawMode(GL_TRIANGLE_FAN);
 		

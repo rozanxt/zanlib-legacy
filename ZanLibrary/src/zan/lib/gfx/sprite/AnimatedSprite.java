@@ -3,18 +3,18 @@ package zan.lib.gfx.sprite;
 import java.util.ArrayList;
 
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.obj.VertexObject;
 
 public class AnimatedSprite extends BaseSprite {
 	
-	private ArrayList<SpriteObject> sprites;
+	protected ArrayList<VertexObject> sprites;
 	
-	private double ticks;
-	private double framePeriod;
-	private double nextFrame;
-	private int currentFrame;
+	protected double ticks;
+	protected double framePeriod;
+	protected double nextFrame;
+	protected int currentFrame;
 	
-	public AnimatedSprite(ArrayList<SpriteObject> sprites) {
+	public AnimatedSprite(ArrayList<VertexObject> sprites) {
 		super();
 		this.sprites = sprites;
 		ticks = 0.0;

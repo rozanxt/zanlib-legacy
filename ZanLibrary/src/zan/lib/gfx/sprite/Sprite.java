@@ -1,19 +1,21 @@
 package zan.lib.gfx.sprite;
 
 import zan.lib.gfx.ShaderProgram;
+import zan.lib.gfx.TextureInfo;
 import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.obj.VertexObject;
 
 public class Sprite extends BaseSprite {
 	
-	private SpriteObject sprite;
+	protected VertexObject sprite;
 	
-	public Sprite(SpriteObject sprite) {
+	public Sprite(VertexObject sprite) {
 		super();
 		this.sprite = sprite;
 	}
-	public Sprite(int textureID, float width, float height) {
+	public Sprite(TextureInfo texture) {
 		super();
-		sprite = new SpriteObject(textureID, width, height);
+		sprite = new SpriteObject(texture);
 	}
 	
 	@Override

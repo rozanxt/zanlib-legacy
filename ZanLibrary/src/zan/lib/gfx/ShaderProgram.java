@@ -74,6 +74,13 @@ public class ShaderProgram {
 	public void bind() {glUseProgram(programID);}
 	public void unbind() {glUseProgram(0);}
 	
+	public void bindState() {
+		bind();
+		enableDepthTest(enableDepthTest);
+		enableBlend(enableBlend);
+		enableTexture(enableTexture);
+	}
+	
 	public void enableDepthTest(boolean depthTest) {
 		enableDepthTest = depthTest;
 		if (enableDepthTest) glEnable(GL_DEPTH_TEST);
@@ -90,13 +97,6 @@ public class ShaderProgram {
 		enableTexture = texture;
 		if (enableTexture) glUniform1i(enableTextureID, GL_TRUE);
 		else glUniform1i(enableTextureID, GL_FALSE);
-	}
-	
-	public void bindState() {
-		bind();
-		enableDepthTest(enableDepthTest);
-		enableBlend(enableBlend);
-		enableTexture(enableTexture);
 	}
 	
 	public void enableVertexPointer() {glEnableVertexAttribArray(vertexPosID);}
