@@ -1,4 +1,4 @@
-package zan.lib.gfx;
+package zan.lib.gfx.texture;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;

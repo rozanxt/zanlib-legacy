@@ -1,4 +1,4 @@
-package zan.lib.gfx;
+package zan.lib.gfx.texture;
 
 public class TextureInfo {
 	

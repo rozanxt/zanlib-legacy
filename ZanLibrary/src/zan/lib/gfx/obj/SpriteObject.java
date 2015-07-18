@@ -1,7 +1,7 @@
 package zan.lib.gfx.obj;
 
 import static org.lwjgl.opengl.GL11.*;
-import zan.lib.gfx.TextureInfo;
+import zan.lib.gfx.texture.TextureInfo;
 
 public class SpriteObject extends TextureObject {
 	

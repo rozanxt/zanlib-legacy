@@ -81,6 +81,15 @@ public abstract class BaseSprite {
 		double iP = ip;
 		if (!enableInterpolation) iP = 1.0;
 		
+		if (enableColor) {
+			double iRed = Utility.interpolateLinear(oldRed, red, iP);
+			double iGreen = Utility.interpolateLinear(oldGreen, green, iP);
+			double iBlue = Utility.interpolateLinear(oldBlue, blue, iP);
+			double iOpacity = Utility.interpolateLinear(oldOpacity, opacity, iP);
+			
+			sp.setColor(iRed, iGreen, iBlue, iOpacity);
+		}
+		
 		if (enableTransformation) {
 			double iPosX = Utility.interpolateLinear(oldPosX, posX, iP);
 			double iPosY = Utility.interpolateLinear(oldPosY, posY, iP);
@@ -93,19 +102,11 @@ public abstract class BaseSprite {
 			sp.rotate(iAngle, 0.0, 0.0, 1.0);
 			sp.scale(iScaleX, iScaleY, 1.0);
 			sp.applyModelView();
+			draw(sp);
 			sp.popMatrix();
+		} else {
+			draw(sp);
 		}
-		
-		if (enableColor) {
-			double iRed = Utility.interpolateLinear(oldRed, red, iP);
-			double iGreen = Utility.interpolateLinear(oldGreen, green, iP);
-			double iBlue = Utility.interpolateLinear(oldBlue, blue, iP);
-			double iOpacity = Utility.interpolateLinear(oldOpacity, opacity, iP);
-			
-			sp.setColor(iRed, iGreen, iBlue, iOpacity);
-		}
-		
-		draw(sp);
 	}
 	
 	public abstract void draw(ShaderProgram sp);

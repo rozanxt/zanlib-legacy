@@ -5,9 +5,9 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
 import java.util.ArrayList;
 
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.text.CharInfo;
 import zan.lib.gfx.text.FontInfo;
+import zan.lib.gfx.texture.TextureManager;
 
 public class FontObject extends TextureObject {
 	

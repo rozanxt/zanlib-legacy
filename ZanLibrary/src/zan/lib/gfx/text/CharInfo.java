@@ -5,9 +5,9 @@ public class CharInfo {
 	public final int xid, yid;
 	public final int width;
 	
-	public CharInfo(int sx, int sy, int sw) {
-		xid = sx; yid = sy;
-		width = sw;
+	public CharInfo(int xid, int yid, int width) {
+		this.xid = xid; this.yid = yid;
+		this.width = width;
 	}
 	
 }

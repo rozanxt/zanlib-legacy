@@ -35,7 +35,7 @@ public class TextManager {
 		
 		FontObject fo = fontObjects.get(font);
 		
-		float dw = 0f;
+		double dw = 0.0;
 		for (int i=0;i<text.length();i++) {
 			int ch = chars.indexOf(text.charAt(i));
 			if (ch < 0) continue;
@@ -47,7 +47,7 @@ public class TextManager {
 			
 			fo.render(sp, ch);
 			
-			dw += (fontInfo.getCharInfo(ch).width + fontInfo.x_os) / 32f;
+			dw += (fontInfo.getCharInfo(ch).width + fontInfo.x_os) / 32.0;
 		}
 	}
 	

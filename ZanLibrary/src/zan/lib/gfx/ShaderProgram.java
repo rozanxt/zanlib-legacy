@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 
-import zan.lib.math.matrix.Mat44D;
-import zan.lib.math.matrix.MatUtil;
-import zan.lib.math.vector.Vec4D;
+import zan.lib.util.math.Mat44D;
+import zan.lib.util.math.MatUtil;
+import zan.lib.util.math.Vec4D;
 import zan.lib.util.Utility;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;

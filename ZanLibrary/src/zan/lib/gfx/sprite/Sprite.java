@@ -1,9 +1,9 @@
 package zan.lib.gfx.sprite;
 
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.TextureInfo;
 import zan.lib.gfx.obj.SpriteObject;
 import zan.lib.gfx.obj.VertexObject;
+import zan.lib.gfx.texture.TextureInfo;
 
 public class Sprite extends BaseSprite {
 	

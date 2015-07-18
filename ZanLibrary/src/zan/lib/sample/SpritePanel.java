@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.TextureInfo;
-import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.obj.SpriteObject;
 import zan.lib.gfx.obj.VertexObject;
 import zan.lib.gfx.sprite.AnimatedSprite;
 import zan.lib.gfx.sprite.Sprite;
+import zan.lib.gfx.texture.TextureInfo;
+import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPortScreen;
 import zan.lib.panel.BasePanel;
 import static zan.lib.input.InputManager.*;

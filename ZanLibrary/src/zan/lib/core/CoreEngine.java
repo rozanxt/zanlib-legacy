@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.text.TextManager;
+import zan.lib.gfx.texture.TextureManager;
 import zan.lib.input.InputManager;
 import zan.lib.panel.BasePanel;
 import static org.lwjgl.glfw.Callbacks.*;

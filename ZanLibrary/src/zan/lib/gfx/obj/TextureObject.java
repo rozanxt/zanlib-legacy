@@ -1,7 +1,7 @@
 package zan.lib.gfx.obj;
 
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.TextureInfo;
+import zan.lib.gfx.texture.TextureInfo;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 

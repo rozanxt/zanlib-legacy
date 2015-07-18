@@ -2,8 +2,8 @@ package zan.lib.sample;
 
 import zan.lib.core.CoreEngine;
 import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.TextureManager;
 import zan.lib.gfx.obj.TextureObject;
+import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPort3D;
 import zan.lib.panel.BasePanel;
 import zan.lib.util.Utility;
@@ -63,7 +63,7 @@ public class CardPanel extends BasePanel {
 		shaderProgram.pushMatrix();
 		viewPort.adjustView(shaderProgram);
 		
-		double IVTick = Utility.interpolateLinear(vTick, vTick - 3f, ip);
+		double IVTick = Utility.interpolateLinear(vTick, vTick - 3.0, ip);
 		
 		shaderProgram.pushMatrix();
 		shaderProgram.translate(0.0, 0.0, 0.0);
@@ -71,9 +71,9 @@ public class CardPanel extends BasePanel {
 		shaderProgram.rotate(32.0, 0.0, 0.0, 1.0);
 		shaderProgram.scale(0.5, 0.8, 1.0);
 		shaderProgram.applyModelView();
-		shaderProgram.popMatrix();
 		shaderProgram.setColor(0.32, 0.54, 0.7, 1.0);
 		vObject.render(shaderProgram);
+		shaderProgram.popMatrix();
 		
 		shaderProgram.popMatrix();
 		shaderProgram.unbind();
