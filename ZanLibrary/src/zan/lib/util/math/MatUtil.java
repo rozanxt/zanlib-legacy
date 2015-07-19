@@ -1,5 +1,7 @@
 package zan.lib.util.math;
 
+import zan.lib.util.Utility;
+
 public class MatUtil {
 	
 	public static Mat22D identityMat22D() {return new Mat22D(true);}
@@ -21,7 +23,7 @@ public class MatUtil {
 		matrix.set(i, i, factor);
 		return matrix;
 	}
-	public static MatD elemSwitchMatD(int dim, int i, int j) {
+	public static MatD elemSwapMatD(int dim, int i, int j) {
 		MatD matrix = new MatD(dim, true);
 		matrix.set(i, i, 0.0);
 		matrix.set(i, j, 1.0);
@@ -134,6 +136,49 @@ public class MatUtil {
 		return matrix;
 	}
 	
+	public static MatD appendRowMatrix(MatD top, MatD bottom) {
+		MatD result = new MatD(top.rows()+bottom.rows(), Math.max(top.cols(), bottom.cols()), 0.0);
+		for (int i=0;i<top.rows();i++) {
+			for (int j=0;j<top.cols();j++) {
+				result.set(i, j, top.get(i, j));
+			}
+		}
+		for (int i=0;i<bottom.rows();i++) {
+			for (int j=0;j<bottom.cols();j++) {
+				result.set(top.rows()+i, j, bottom.get(i, j));
+			}
+		}
+		return result;
+	}
+	public static MatD appendColMatrix(MatD left, MatD right) {
+		MatD result = new MatD(Math.max(left.rows(), right.rows()), left.cols()+right.cols(), 0.0);
+		for (int i=0;i<left.rows();i++) {
+			for (int j=0;j<left.cols();j++) {
+				result.set(i, j, left.get(i, j));
+			}
+		}
+		for (int i=0;i<right.rows();i++) {
+			for (int j=0;j<right.cols();j++) {
+				result.set(i, left.cols()+j, right.get(i, j));
+			}
+		}
+		return result;
+	}
+	public static MatD appendDiagMatrix(MatD topleft, MatD bottomright) {
+		MatD result = new MatD(topleft.rows()+bottomright.rows(), topleft.cols()+bottomright.cols(), 0.0);
+		for (int i=0;i<topleft.rows();i++) {
+			for (int j=0;j<topleft.cols();j++) {
+				result.set(i, j, topleft.get(i, j));
+			}
+		}
+		for (int i=0;i<bottomright.rows();i++) {
+			for (int j=0;j<bottomright.cols();j++) {
+				result.set(topleft.rows()+i, topleft.cols()+j, bottomright.get(i, j));
+			}
+		}
+		return result;
+	}
+	
 	public static void add(MatD left, MatD right, MatD result) {
 		if (checkSize(left, right, result)) {
 			for (int i=0;i<result.size();i++) result.set(i, left.get(i) + right.get(i));
@@ -228,6 +273,45 @@ public class MatUtil {
 			}
 		}
 		return 0.0;
+	}
+	
+	public static MatD calcRowEchelonForm(MatD matrix) {
+		MatD result = new MatD(matrix);
+		int r = 0;
+		int s = 0;
+		while (r < result.rows() && s < result.cols()) {
+			int k = 0;
+			for (int i=r;i<result.rows();i++) if (k == 0 && !Utility.evaluate(result.get(i, s), 0.0)) k = i;
+			if (k != 0) {
+				result.swapRow(r, k);
+				result.multRow(r, 1.0/result.get(r, s));
+				for (int i=0;i<result.rows();i++) {
+					if (i != r) result.addRow(i, result.getRow(r).scalar(-result.get(i, s)));
+				}
+				r++;
+			}
+			s++;
+		}
+		return result;
+	}
+	
+	public static MatD calcInverse(MatD matrix) {
+		if (matrix.isSquare()) return calcRowEchelonForm(MatUtil.appendColMatrix(matrix, new MatD(matrix.dim(), true))).getSubMatrix(0, matrix.cols(), matrix.rows()-1, 2*matrix.cols()-1);
+		return null;
+	}
+	
+	public static int calcRank(MatD matrix) {
+		MatD result = calcRowEchelonForm(matrix);
+		int rank = 0;
+		for (int i=0;i<result.rows();i++) {
+			for (int j=0;j<result.cols();j++) {
+				if (!Utility.evaluate(result.get(i, j), 0.0)) {
+					rank++;
+					break;
+				}
+			}
+		}
+		return rank;
 	}
 	
 	private static boolean checkSize(MatD... matrices) {

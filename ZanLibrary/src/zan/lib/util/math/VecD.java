@@ -13,23 +13,36 @@ public class VecD {
 	
 	public void set(int component, double value) {data[component] = value;}
 	public void setAll(double value) {for (int i=0;i<size();i++) set(i, value);}
-	public void put(double... entry) {
-		int size = Math.min(size(), entry.length);
-		for (int i=0;i<size;i++) set(i, entry[i]);
+	public void put(int offset, double... entry) {
+		int size = Math.min(size()-offset, entry.length);
+		for (int i=0;i<size;i++) set(offset+i, entry[i]);
 	}
-	public void set(VecD vector) {
-		int size = Math.min(size(), vector.size());
-		for (int i=0;i<size;i++) set(i, vector.get(i));
+	public void put(double... entry) {put(0, entry);}
+	public void set(int offset, VecD vector) {
+		int size = Math.min(size()-offset, vector.size());
+		for (int i=0;i<size;i++) set(offset+i, vector.get(i));
 	}
+	public void set(VecD vector) {set(0, vector);}
 	
 	public double get(int component) {return data[component];}
+	public VecD get(int start, int end) {
+		VecD result = new VecD(end-start+1);
+		int size = Math.min(size()-start, result.size());
+		for (int i=0;i<size;i++) result.set(i, get(start+i));
+		return result;
+	}
 	
-	public double length() {return Math.sqrt(lengthSquared());}
+	public double sum() {
+		double sum = 0.0;
+		for (int i=0;i<size();i++) sum += get(i);
+		return sum;
+	}
 	public double lengthSquared() {
 		double lenSq = 0.0;
 		for (int i=0;i<size();i++) lenSq += get(i) * get(i);
 		return lenSq;
 	}
+	public double length() {return Math.sqrt(lengthSquared());}
 	
 	public VecD scalar(double factor) {
 		for (int i=0;i<size();i++) data[i] *= factor;
@@ -38,12 +51,11 @@ public class VecD {
 	public VecD negate() {return scalar(-1.0);}
 	public VecD normalize() {return scalar(1.0/length());}
 	
-	public VecD getScalar(double factor) {
-		VecD result = new VecD(this);
-		return result.scalar(factor);
+	public VecD round(int dp) {
+		for (int i=0;i<size();i++) set(i, Math.round(get(i)*Math.pow(10, dp))*Math.pow(10, -dp));
+		return this;
 	}
-	public VecD getNegate() {return getScalar(-1.0);}
-	public VecD getNormalize() {return getScalar(1.0/length());}
+	public VecD round() {return round(0);}
 	
 	public double add(int component, double value) {return data[component] += value;}
 	public double sub(int component, double value) {return data[component] -= value;}

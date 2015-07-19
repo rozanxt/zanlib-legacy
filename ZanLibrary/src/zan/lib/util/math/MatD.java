@@ -53,8 +53,8 @@ public class MatD {
 		for (int i=0;i<cols;i++) setCol(i, vectors[i]);
 	}
 	
-	public void set(int row, int col, double value) {data[rows*col+row] = value;}
 	public void set(int element, double value) {data[element] = value;}
+	public void set(int row, int col, double value) {set(rows*col+row, value);}
 	public void setAll(double value) {for (int i=0;i<size();i++) set(i, value);}
 	public void put(double... entry) {
 		int size = Math.min(size(), entry.length);
@@ -69,12 +69,6 @@ public class MatD {
 			}
 		}
 	}
-	public void setDiag(int diag, VecD vector) {
-		int diagX = Math.max(0, diag);
-		int diagY = Math.max(0, -diag);
-		int size = Math.min(Math.min(rows-diagY, cols-diagX), vector.size());
-		for (int i=0;i<size;i++) set(diagY+i, diagX+i, vector.get(i));
-	}
 	public void setRow(int row, VecD vector) {
 		int cols = Math.min(this.cols, vector.size());
 		for (int i=0;i<cols;i++) set(row, i, vector.get(i));
@@ -82,6 +76,12 @@ public class MatD {
 	public void setCol(int col, VecD vector) {
 		int rows = Math.min(this.rows, vector.size());
 		for (int i=0;i<rows;i++) set(i, col, vector.get(i));
+	}
+	public void setDiag(int diag, VecD vector) {
+		int diagX = Math.max(0, diag);
+		int diagY = Math.max(0, -diag);
+		int size = Math.min(Math.min(rows-diagY, cols-diagX), vector.size());
+		for (int i=0;i<size;i++) set(diagY+i, diagX+i, vector.get(i));
 	}
 	
 	public MatD loadIdentity() {
@@ -94,16 +94,8 @@ public class MatD {
 		return this;
 	}
 	
-	public double get(int row, int col) {return data[rows*col+row];}
 	public double get(int element) {return data[element];}
-	public VecD getDiag(int diag) {
-		int diagX = Math.max(0, diag);
-		int diagY = Math.max(0, -diag);
-		int size = Math.min(rows-diagY, cols-diagX);
-		VecD result = new VecD(size);
-		for (int i=0;i<size;i++) result.set(i, get(diagY+i, diagX+i));
-		return result;
-	}
+	public double get(int row, int col) {return get(rows*col+row);}
 	public VecD getRow(int row) {
 		VecD result = new VecD(cols);
 		for (int i=0;i<cols;i++) result.set(i, get(row, i));
@@ -112,6 +104,14 @@ public class MatD {
 	public VecD getCol(int col) {
 		VecD result = new VecD(rows);
 		for (int i=0;i<rows;i++) result.set(i, get(i, col));
+		return result;
+	}
+	public VecD getDiag(int diag) {
+		int diagX = Math.max(0, diag);
+		int diagY = Math.max(0, -diag);
+		int size = Math.min(rows-diagY, cols-diagX);
+		VecD result = new VecD(size);
+		for (int i=0;i<size;i++) result.set(i, get(diagY+i, diagX+i));
 		return result;
 	}
 	public MatD getSubMatrix(int row0, int col0, int row1, int col1) {
@@ -125,14 +125,46 @@ public class MatD {
 		}
 		return result;
 	}
-	public MatD getSubCutMatrix(int i, int j) {
+	public MatD getRowCutMatrix(int row) {
+		if (rows > 1) {
+			MatD result = new MatD(rows-1, cols);
+			int pos = 0;
+			for (int j=0;j<cols;j++) {
+				for (int i=0;i<rows;i++) {
+					if (i != row) {
+						result.set(pos, get(i, j));
+						pos++;
+					}
+				}
+			}
+			return result;
+		}
+		return new MatD(this);
+	}
+	public MatD getColCutMatrix(int col) {
+		if (cols > 1) {
+			MatD result = new MatD(rows, cols-1);
+			int pos = 0;
+			for (int j=0;j<cols;j++) {
+				for (int i=0;i<rows;i++) {
+					if (j != col) {
+						result.set(pos, get(i, j));
+						pos++;
+					}
+				}
+			}
+			return result;
+		}
+		return new MatD(this);
+	}
+	public MatD getSubCutMatrix(int row, int col) {
 		if (rows > 1 && cols > 1) {
 			MatD result = new MatD(rows-1, cols-1);
 			int pos = 0;
-			for (int k=0;k<cols;k++) {
-				for (int l=0;l<rows;l++) {
-					if (k != j && l != i) {
-						result.set(pos, get(l, k));
+			for (int j=0;j<cols;j++) {
+				for (int i=0;i<rows;i++) {
+					if (j != col && i != row) {
+						result.set(pos, get(i, j));
 						pos++;
 					}
 				}
@@ -143,25 +175,15 @@ public class MatD {
 	}
 	
 	public MatD transpose() {
-		if (isSquare()) {
-			MatD temp = new MatD(cols, rows);
-			for (int i=0;i<rows;i++) {
-				for (int j=0;j<cols;j++) {
-					temp.set(j, i, get(i, j));
-				}
-			}
-			set(temp);
-		} else {
-			return getTranspose();
-		}
-		return this;
-	}
-	public MatD getTranspose() {
 		MatD result = new MatD(cols, rows);
 		for (int i=0;i<rows;i++) {
 			for (int j=0;j<cols;j++) {
 				result.set(j, i, get(i, j));
 			}
+		}
+		if (isSquare()) {
+			set(result);
+			return this;
 		}
 		return result;
 	}
@@ -170,10 +192,44 @@ public class MatD {
 		for (int i=0;i<size();i++) data[i] *= factor;
 		return this;
 	}
-	public MatD getScalar(double factor) {
-		MatD result = new MatD(this);
-		return result.scalar(factor);
+	
+	public MatD addRow(int row, VecD vector) {
+		int cols = Math.min(this.cols, vector.size());
+		for (int i=0;i<cols;i++) set(row, i, get(row, i)+vector.get(i));
+		return this;
 	}
+	public MatD multRow(int row, double factor) {
+		for (int i=0;i<cols;i++) set(row, i, get(row, i)*factor);
+		return this;
+	}
+	public MatD swapRow(int i, int j) {
+		VecD temp = getRow(i);
+		setRow(i, getRow(j));
+		setRow(j, temp);
+		return this;
+	}
+	
+	public MatD addCol(int col, VecD vector) {
+		int rows = Math.min(this.rows, vector.size());
+		for (int i=0;i<rows;i++) set(i, col, get(i, col)+vector.get(i));
+		return this;
+	}
+	public MatD multCol(int col, double factor) {
+		for (int i=0;i<rows;i++) set(i, col, get(i, col)*factor);
+		return this;
+	}
+	public MatD swapCol(int i, int j) {
+		VecD temp = getCol(i);
+		setCol(i, getCol(j));
+		setCol(j, temp);
+		return this;
+	}
+	
+	public MatD round(int dp) {
+		for (int i=0;i<size();i++) set(i, Math.round(get(i)*Math.pow(10, dp))*Math.pow(10, -dp));
+		return this;
+	}
+	public MatD round() {return round(0);}
 	
 	public int rows() {return rows;}
 	public int cols() {return cols;}

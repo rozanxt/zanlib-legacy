@@ -149,8 +149,7 @@ public class ShaderProgram {
 		getStackMatrix().set(matrix);
 	}
 	public void multMatrix(Mat44D matrix) {
-		Mat44D stackMatrix = getStackMatrix();
-		MatUtil.mult(new Mat44D(stackMatrix), matrix, stackMatrix);
+		setMatrix(new Mat44D(MatUtil.mult(getStackMatrix(), matrix)));
 	}
 	
 	public void translate(double x, double y, double z) {

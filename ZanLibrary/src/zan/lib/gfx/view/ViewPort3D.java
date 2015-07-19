@@ -1,15 +1,17 @@
 package zan.lib.gfx.view;
 
 import zan.lib.gfx.ShaderProgram;
+import zan.lib.util.math.Vec3D;
 
 public class ViewPort3D extends ViewPort {
 	
 	private double fovy;
 	private double nearClip, farClip;
-	private double offsetX, offsetY, offsetZ;
+	private Vec3D offset;
 	
 	public ViewPort3D(int viewPortX, int viewPortY, int viewPortW, int viewPortH) {
 		super(viewPortX, viewPortY, viewPortW, viewPortH);
+		offset = new Vec3D();
 		setFOVY(120.0);
 		setDepthInterval(0.1, 100.0);
 		setOffset(0.0, 0.0, 0.0);
@@ -22,17 +24,17 @@ public class ViewPort3D extends ViewPort {
 	public void setFarClip(double farClip) {this.farClip = farClip;}
 	public void setOffset(double offsetX, double offsetY) {setOffsetX(offsetX); setOffsetY(offsetY);}
 	public void setOffset(double offsetX, double offsetY, double offsetZ) {setOffsetX(offsetX); setOffsetY(offsetY); setOffsetZ(offsetZ);}
-	public void setOffsetX(double offsetX) {this.offsetX = offsetX;}
-	public void setOffsetY(double offsetY) {this.offsetY = offsetY;}
-	public void setOffsetZ(double offsetZ) {this.offsetZ = offsetZ;}
+	public void setOffsetX(double offsetX) {offset.setX(offsetX);}
+	public void setOffsetY(double offsetY) {offset.setY(offsetY);}
+	public void setOffsetZ(double offsetZ) {offset.setZ(offsetZ);}
 	
 	public double getFOVY() {return fovy;}
 	public double getDepthInterval() {return farClip-nearClip;}
 	public double getNearClip() {return nearClip;}
 	public double getFarClip() {return farClip;}
-	public double getOffsetX() {return offsetX;}
-	public double getOffsetY() {return offsetY;}
-	public double getOffsetZ() {return offsetZ;}
+	public double getOffsetX() {return offset.getX();}
+	public double getOffsetY() {return offset.getY();}
+	public double getOffsetZ() {return offset.getZ();}
 	
 	@Override
 	public void projectView(ShaderProgram sp) {
@@ -41,7 +43,7 @@ public class ViewPort3D extends ViewPort {
 	
 	@Override
 	public void adjustView(ShaderProgram sp) {
-		sp.translate(-offsetX, -offsetY, -offsetZ);
+		sp.translate(-offset.getX(), -offset.getY(), -offset.getZ());
 	}
 	
 }

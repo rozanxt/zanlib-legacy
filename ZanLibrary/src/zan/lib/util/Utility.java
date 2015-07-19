@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 public class Utility {
 	
+	public static boolean evaluate(double a, double b, double epsilon) {
+		return (Math.abs(b-a) < epsilon);
+	}
+	public static boolean evaluate(double a, double b) {return evaluate(a, b, 1E-8);}
+	
 	public static double interpolateLinear(double lastState, double currentState, double ip) {
 		return lastState + (currentState - lastState) * ip;
 	}

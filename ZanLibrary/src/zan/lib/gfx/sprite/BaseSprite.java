@@ -2,24 +2,26 @@ package zan.lib.gfx.sprite;
 
 import zan.lib.gfx.ShaderProgram;
 import zan.lib.util.Utility;
+import zan.lib.util.math.Vec2D;
+import zan.lib.util.math.Vec4D;
+import zan.lib.util.math.VecD;
 
 public abstract class BaseSprite {
 	
-	protected double posX, posY;
-	protected double scaleX, scaleY;
-	protected double angle;
-	protected double red, green, blue, opacity;
-	
-	protected double oldPosX, oldPosY;
-	protected double oldScaleX, oldScaleY;
-	protected double oldAngle;
-	protected double oldRed, oldGreen, oldBlue, oldOpacity;
+	protected Vec4D pos;
+	protected Vec4D scale;
+	protected Vec2D angle;
+	protected VecD color;
 	
 	protected boolean enableInterpolation;
 	protected boolean enableTransformation;
 	protected boolean enableColor;
 	
 	public BaseSprite() {
+		pos = new Vec4D();
+		scale = new Vec4D();
+		angle = new Vec2D();
+		color = new VecD(8);
 		loadIdentity();
 		amendState();
 		enableInterpolation = true;
@@ -30,16 +32,16 @@ public abstract class BaseSprite {
 	public void destroy() {}
 	
 	public void loadIdentity() {
-		posX = 0.0; posY = 0.0;
-		scaleX = 1.0; scaleY = 1.0;
-		angle = 0.0;
-		red = 1.0; green = 1.0; blue = 1.0;	opacity = 1.0;
+		pos.put(0.0, 0.0);
+		scale.put(1.0, 1.0);
+		angle.put(0.0);
+		color.put(1.0, 1.0, 1.0, 1.0);
 	}
 	public void amendState() {
-		oldPosX = posX; oldPosY = posY;
-		oldScaleX = scaleX; oldScaleY = scaleY;
-		oldAngle = angle;
-		oldRed = red; oldGreen = green; oldBlue = blue;	oldOpacity = opacity;
+		pos.set(2, pos.get(0, 1));
+		scale.set(2, scale.get(0, 1));
+		angle.set(1, angle.get(0));
+		color.set(4, color.get(0, 3));
 	}
 	
 	public void enableInterpolation(boolean interpolation) {enableInterpolation = interpolation;}
@@ -47,29 +49,29 @@ public abstract class BaseSprite {
 	public void enableColor(boolean color) {enableColor = color;}
 	
 	public void setPos(double posX, double posY) {setX(posX); setY(posY);}
-	public void setX(double posX) {this.posX = posX;}
-	public void setY(double posY) {this.posY = posY;}
+	public void setX(double posX) {pos.setX(posX);}
+	public void setY(double posY) {pos.setY(posY);}
 	public void setScale(double scale) {setScaleX(scale); setScaleY(scale);}
-	public void setScaleX(double scaleX) {this.scaleX = scaleX;}
-	public void setScaleY(double scaleY) {this.scaleY = scaleY;}
-	public void setAngle(double angle) {this.angle = angle;}
-	public void setColor(double red, double green, double blue, double opacity) {this.red = red; this.green = green; this.blue = blue; this.opacity = opacity;}
-	public void setColor(double red, double green, double blue) {setColor(red, green, blue, opacity);}
-	public void setOpacity(double opacity) {this.opacity = opacity;}
+	public void setScaleX(double scaleX) {scale.setX(scaleX);}
+	public void setScaleY(double scaleY) {scale.setY(scaleY);}
+	public void setAngle(double angle) {this.angle.set(0, angle);}
+	public void setColor(double r, double g, double b, double a) {color.put(r, g, b, a);}
+	public void setColor(double r, double g, double b) {color.put(r, g, b);}
+	public void setOpacity(double a) {color.set(3, a);}
 	
 	public void setFlip(int flip) {
 		if (flip == 1) {
-			setScaleX(-Math.abs(scaleX));
-			setScaleY(Math.abs(scaleY));
+			setScaleX(-Math.abs(scale.getX()));
+			setScaleY(Math.abs(scale.getY()));
 		} else if (flip == 2) {
-			setScaleX(Math.abs(scaleX));
-			setScaleY(-Math.abs(scaleY));
+			setScaleX(Math.abs(scale.getX()));
+			setScaleY(-Math.abs(scale.getY()));
 		} else if (flip == 3) {
-			setScaleX(-Math.abs(scaleX));
-			setScaleY(-Math.abs(scaleY));
+			setScaleX(-Math.abs(scale.getX()));
+			setScaleY(-Math.abs(scale.getY()));
 		} else {
-			setScaleX(Math.abs(scaleX));
-			setScaleY(Math.abs(scaleY));
+			setScaleX(Math.abs(scale.getX()));
+			setScaleY(Math.abs(scale.getY()));
 		}
 	}
 	
@@ -82,20 +84,20 @@ public abstract class BaseSprite {
 		if (!enableInterpolation) iP = 1.0;
 		
 		if (enableColor) {
-			double iRed = Utility.interpolateLinear(oldRed, red, iP);
-			double iGreen = Utility.interpolateLinear(oldGreen, green, iP);
-			double iBlue = Utility.interpolateLinear(oldBlue, blue, iP);
-			double iOpacity = Utility.interpolateLinear(oldOpacity, opacity, iP);
+			double iRed = Utility.interpolateLinear(color.get(4), color.get(0), iP);
+			double iGreen = Utility.interpolateLinear(color.get(5), color.get(1), iP);
+			double iBlue = Utility.interpolateLinear(color.get(6), color.get(2), iP);
+			double iOpacity = Utility.interpolateLinear(color.get(7), color.get(3), iP);
 			
 			sp.setColor(iRed, iGreen, iBlue, iOpacity);
 		}
 		
 		if (enableTransformation) {
-			double iPosX = Utility.interpolateLinear(oldPosX, posX, iP);
-			double iPosY = Utility.interpolateLinear(oldPosY, posY, iP);
-			double iScaleX = Utility.interpolateLinear(oldScaleX, scaleX, iP);
-			double iScaleY = Utility.interpolateLinear(oldScaleY, scaleY, iP);
-			double iAngle = Utility.interpolateLinear(oldAngle, angle, iP);
+			double iPosX = Utility.interpolateLinear(pos.getZ(), pos.getX(), iP);
+			double iPosY = Utility.interpolateLinear(pos.getW(), pos.getY(), iP);
+			double iScaleX = Utility.interpolateLinear(scale.getZ(), scale.getX(), iP);
+			double iScaleY = Utility.interpolateLinear(scale.getW(), scale.getY(), iP);
+			double iAngle = Utility.interpolateLinear(angle.get(1), angle.get(0), iP);
 			
 			sp.pushMatrix();
 			sp.translate(iPosX, iPosY, 0.0);
