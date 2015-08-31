@@ -44,6 +44,7 @@ public class ViewPort3D extends ViewPort {
 	@Override
 	public void adjustView(ShaderProgram sp) {
 		sp.translate(-offset.getX(), -offset.getY(), -offset.getZ());
+		sp.applyModelView();
 	}
 	
 }

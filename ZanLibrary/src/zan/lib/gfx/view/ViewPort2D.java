@@ -81,6 +81,7 @@ public class ViewPort2D extends ViewPort {
 		sp.translate(2.0*(origin.getX()-0.5)*viewPortRatio, 2.0*(origin.getY()-0.5), 0.0);
 		sp.scale(zoomScale, zoomScale, 1.0);
 		sp.translate(-offset.getX(), -offset.getY(), 0.0);
+		sp.applyModelView();
 	}
 	
 }
