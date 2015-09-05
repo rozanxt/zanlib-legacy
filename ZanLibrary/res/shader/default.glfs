@@ -1,13 +1,15 @@
-#version 330 core
+uniform bool enableColor;
+uniform bool enableTexture;
 
-uniform vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
-
-uniform bool enableTexture = false;
 uniform sampler2D texUnit;
+uniform vec4 tintColor;
 
-in vec4 textureCoord;
+varying vec4 fragColor;
+varying vec2 fragTexCoord;
 
 void main() {
-	if (enableTexture) gl_FragColor = texture(texUnit, textureCoord.st) * color;
-	else gl_FragColor = color;
+	vec4 color = fragColor;
+	if (enableColor) color = tintColor;
+	if (enableTexture) color = color * texture2D(texUnit, fragTexCoord);
+	gl_FragColor = color;
 }

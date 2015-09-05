@@ -1,85 +1,79 @@
 package zan.lib.sample;
 
-import zan.lib.core.CoreEngine;
-import zan.lib.gfx.ShaderProgram;
+import zan.lib.core.BasePanel;
 import zan.lib.gfx.obj.VertexObject;
+import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.view.ViewPort2D;
-import zan.lib.panel.BasePanel;
 import zan.lib.util.Utility;
-import static org.lwjgl.opengl.GL11.*;
 
 public class SamplePanel extends BasePanel {
-	
-	private ShaderProgram shaderProgram;
+
+	private DefaultShader shader;
 	private ViewPort2D viewPort;
-	
-	private VertexObject vObject;
-	
-	private double vTick;
-	
-	public SamplePanel(CoreEngine core) {
+
+	private VertexObject object;
+
+	private double tick;
+
+	public SamplePanel(SampleCore core) {
+		shader = new DefaultShader();
 		viewPort = new ViewPort2D(0, 0, core.getScreenWidth(), core.getScreenHeight());
 	}
-	
+
 	@Override
 	public void init() {
-		shaderProgram = new ShaderProgram();
-		
+		shader.loadProgram();
+
 		viewPort.showView();
-		viewPort.projectView(shaderProgram);
-		
-		int[] indices = {0, 1, 2};
-		float[] vertices = {
-			-0.6f, -0.4f,
-			0.6f, -0.4f,
-			0f, 0.6f,
+		viewPort.projectView(shader);
+
+		final int[] ind = {0, 1, 2};
+		final float[] ver = {
+			-0.6f, -0.4f, 1f, 0f, 0f,
+			0.6f, -0.4f, 0f, 1f, 0f,
+			0f, 0.6f, 0f, 0f, 1f
 		};
-		vObject = new VertexObject(vertices, indices);
-		vObject.setNumCoords(2);
-		vObject.setDrawMode(GL_TRIANGLE_FAN);
-		
-		vTick = 0.0;
+		object = new VertexObject(ver, ind, 2, 0, 3, 0);
+
+		tick = 0.0;
 	}
-	
+
 	@Override
 	public void destroy() {
-		vObject.destroy();
-		shaderProgram.destroy();
+		object.destroy();
+		shader.destroy();
 	}
-	
+
 	@Override
 	public void update(double time) {
-		vTick += 3.0;
+		tick += 3.0;
 	}
-	
+
 	@Override
 	public void render(double ip) {
-		shaderProgram.bind();
-		shaderProgram.pushMatrix();
-		viewPort.adjustView(shaderProgram);
-		
-		double iVTick = Utility.interpolateLinear(vTick - 3.0, vTick, ip);
-		
-		shaderProgram.pushMatrix();
-		shaderProgram.translate(0.0, 0.0, 0.0);
-		shaderProgram.rotate(iVTick, 0.0, 1.0, 1.0);
-		shaderProgram.scale(1.0, 1.0, 1.0);
-		shaderProgram.applyModelView();
-		shaderProgram.setColor(1.0, 0.5, 0.0, 1.0);
-		vObject.render(shaderProgram);
-		shaderProgram.popMatrix();
-		
-		shaderProgram.popMatrix();
-		shaderProgram.unbind();
+		shader.bind();
+		viewPort.adjustView(shader);
+
+		double iTick = Utility.interpolateLinear(tick - 3.0, tick, ip);
+
+		shader.pushMatrix();
+		shader.translate(0.0, 0.0, 0.0);
+		shader.rotate(iTick, 0.0, 1.0, 1.0);
+		shader.scale(1.0 + 0.2*Math.sin(0.01*iTick), 1.0 + 0.2*Math.sin(0.01*iTick), 1.0);
+		shader.applyModelMatrix();
+		object.render(shader);
+		shader.popMatrix();
+
+		shader.unbind();
 	}
-	
+
 	@Override
 	public void onScreenResize(int width, int height) {
-		shaderProgram.bindState();
+		shader.bindState();
 		viewPort.setScreenSize(width, height);
 		viewPort.setViewPort(0, 0, width, height);
 		viewPort.showView();
-		viewPort.projectView(shaderProgram);
+		viewPort.projectView(shader);
 	}
-	
+
 }

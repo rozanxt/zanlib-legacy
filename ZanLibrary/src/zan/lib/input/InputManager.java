@@ -3,13 +3,13 @@ package zan.lib.input;
 import java.util.ArrayList;
 
 public class InputManager {
-	
+
 	public static final int IM_KEY_UNKNOWN = 0xFFFFFFFF;
-	
+
 	public static final int IM_RELEASE = 0x0;
 	public static final int IM_PRESS = 0x1;
 	public static final int IM_REPEAT = 0x2;
-	
+
 	public static final int
 		IM_KEY_SPACE         = 0x20,
 		IM_KEY_APOSTROPHE    = 0x27,
@@ -61,7 +61,7 @@ public class InputManager {
 		IM_KEY_GRAVE_ACCENT  = 0x60,
 		IM_KEY_WORLD_1       = 0xA1,
 		IM_KEY_WORLD_2       = 0xA2;
-	
+
 	public static final int
 		IM_KEY_ESCAPE        = 0x100,
 		IM_KEY_ENTER         = 0x101,
@@ -134,12 +134,12 @@ public class InputManager {
 		IM_KEY_RIGHT_SUPER   = 0x15B,
 		IM_KEY_MENU          = 0x15C,
 		IM_KEY_LAST          = IM_KEY_MENU;
-	
+
 	public static final int IM_MOD_SHIFT = 0x1;
 	public static final int IM_MOD_CONTROL = 0x2;
 	public static final int IM_MOD_ALT = 0x4;
 	public static final int IM_MOD_SUPER = 0x8;
-	
+
 	public static final int
 		IM_MOUSE_BUTTON_1      = 0x0,
 		IM_MOUSE_BUTTON_2      = 0x1,
@@ -153,19 +153,19 @@ public class InputManager {
 		IM_MOUSE_BUTTON_LEFT   = IM_MOUSE_BUTTON_1,
 		IM_MOUSE_BUTTON_RIGHT  = IM_MOUSE_BUTTON_2,
 		IM_MOUSE_BUTTON_MIDDLE = IM_MOUSE_BUTTON_3;
-	
+
 	public static final int
 		IM_MOUSE_NORMAL   = 0x34001,
 		IM_MOUSE_HIDDEN   = 0x34002,
 		IM_MOUSE_DISABLED = 0x34003;
-	
+
 	private static ArrayList<WindowInput> windowInputs;
-	
+
 	private static long currentWindow;
-	
+
 	public static void init() {windowInputs = new ArrayList<WindowInput>();}
 	public static void destroy() {windowInputs.clear();}
-	
+
 	public static WindowInput setWindow(long window) {
 		if (window == currentWindow || window == 0) return null;
 		for (int i=0;i<windowInputs.size();i++) {
@@ -179,7 +179,7 @@ public class InputManager {
 		currentWindow = window;
 		return windowInputs.get(windowInputs.size()-1);
 	}
-	
+
 	public static WindowInput destroyWindow(long window) {
 		for (int i=0;i<windowInputs.size();i++) {
 			WindowInput windowInput = windowInputs.get(i);
@@ -187,7 +187,7 @@ public class InputManager {
 		}
 		return null;
 	}
-	
+
 	private static WindowInput getWindow(long window) {
 		for (int i=0;i<windowInputs.size();i++) {
 			WindowInput windowInput = windowInputs.get(i);
@@ -195,15 +195,15 @@ public class InputManager {
 		}
 		return null;
 	}
-	
+
 	/** @deprecated Replaced by invoke callback methods */
 	public static void poll() {getWindow(currentWindow).poll();}
 	/** @deprecated Replaced by invoke callback methods */
 	public static void poll(long window) {getWindow(window).poll();}
-	
+
 	public static void clear() {getWindow(currentWindow).clear();}
 	public static void clear(long window) {getWindow(window).clear();}
-	
+
 	public static void invokeKeys(int key, int state, int mods) {getWindow(currentWindow).invokeKeys(key, state, mods);}
 	public static void invokeKeys(long window, int key, int state, int mods) {getWindow(window).invokeKeys(key, state, mods);}
 	public static void invokeChars(char ch) {getWindow(currentWindow).invokeChars(ch);}
@@ -216,10 +216,10 @@ public class InputManager {
 	public static void invokeMouseScroll(long window, double mouseScroll) {getWindow(window).invokeMouseScroll(mouseScroll);}
 	public static void invokeMouseEnter(boolean mouseEnter) {getWindow(currentWindow).invokeMouseEnter(mouseEnter);}
 	public static void invokeMouseEnter(long window, boolean mouseEnter) {getWindow(window).invokeMouseEnter(mouseEnter);}
-	
+
 	public static void setMouseMode(int mode) {getWindow(currentWindow).setMouseMode(mode);}
 	public static void setMouseMode(long window, int mode) {getWindow(window).setMouseMode(mode);}
-	
+
 	public static boolean isKeyMods(int key, int mods) {return getWindow(currentWindow).isKeyMods(key, mods);}
 	public static boolean isKeyMods(long window, int key, int mods) {return getWindow(window).isKeyMods(key, mods);}
 	public static boolean isKeyPressed(int key) {return getWindow(currentWindow).isKeyPressed(key);}
@@ -230,10 +230,10 @@ public class InputManager {
 	public static boolean isKeyRepeated(long window, int key) {return getWindow(window).isKeyRepeated(key);}
 	public static boolean isKeyDown(int key) {return getWindow(currentWindow).isKeyDown(key);}
 	public static boolean isKeyDown(long window, int key) {return getWindow(window).isKeyDown(key);}
-	
+
 	public static ArrayList<Character> getCharEvents() {return getWindow(currentWindow).getCharEvents();}
 	public static ArrayList<Character> getCharEvents(long window) {return getWindow(window).getCharEvents();}
-	
+
 	public static boolean isMouseMods(int button, int mods) {return getWindow(currentWindow).isMouseMods(button, mods);}
 	public static boolean isMouseMods(long window, int button, int mods) {return getWindow(window).isMouseMods(button, mods);}
 	public static boolean isMousePressed(int button) {return getWindow(currentWindow).isMousePressed(button);}
@@ -246,7 +246,7 @@ public class InputManager {
 	public static boolean isMouseEntered(long window) {return getWindow(window).isMouseEntered();}
 	public static boolean isMouseLeft() {return getWindow(currentWindow).isMouseLeft();}
 	public static boolean isMouseLeft(long window) {return getWindow(window).isMouseLeft();}
-	
+
 	public static double getMouseX() {return getWindow(currentWindow).getMouseX();}
 	public static double getMouseX(long window) {return getWindow(window).getMouseX();}
 	public static double getMouseY() {return getWindow(currentWindow).getMouseY();}
@@ -257,5 +257,5 @@ public class InputManager {
 	public static double getMouseDY(long window) {return getWindow(window).getMouseDY();}
 	public static double getMouseScroll() {return getWindow(currentWindow).getMouseScroll();}
 	public static double getMouseScroll(long window) {return getWindow(window).getMouseScroll();}
-	
+
 }

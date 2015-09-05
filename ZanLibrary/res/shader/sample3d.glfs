@@ -1,0 +1,26 @@
+uniform bool enableColor;
+uniform bool enableTexture;
+
+uniform sampler2D texUnit;
+
+uniform vec4 tintColor;
+
+varying vec3 fragPos;
+varying vec3 fragNormal;
+varying vec4 fragColor;
+varying vec2 fragTexCoord;
+
+void main() {
+	vec3 lightPos = vec3(0.0, 0.0, 0.0);
+	float lightDist = length(lightPos - fragPos);
+	vec3 lightVector = normalize(lightPos - fragPos);
+	
+	float diffuse = max(dot(fragNormal, lightVector), 0.0);
+	diffuse = diffuse * (1.0 / (1.0 + (0.05 * lightDist * lightDist)));
+	diffuse = diffuse + 0.3;
+	
+	vec4 color = fragColor;
+	if (enableColor) color = tintColor;
+	if (enableTexture) color = color * texture2D(texUnit, fragTexCoord);
+	gl_FragColor = color * diffuse;
+}

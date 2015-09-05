@@ -1,49 +1,31 @@
 package zan.lib.gfx.sprite;
 
-import java.util.ArrayList;
+import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.shader.DefaultShader;
 
-import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.obj.VertexObject;
+public class AnimatedSprite extends Sprite {
 
-public class AnimatedSprite extends BaseSprite {
-	
-	protected ArrayList<VertexObject> sprites;
-	
-	protected double ticks;
-	protected double framePeriod;
-	protected double nextFrame;
-	protected int currentFrame;
-	
-	public AnimatedSprite(ArrayList<VertexObject> sprites) {
-		super();
-		this.sprites = sprites;
-		ticks = 0.0;
-		framePeriod = 1.0;
-		nextFrame = 0.0;
-		currentFrame = 0;
-	}
-	
-	@Override
-	public void destroy() {
-		for (int i=0;i<sprites.size();i++) sprites.get(i).destroy();
-	}
-	
-	public void setCurrentFrame(int currentFrame) {this.currentFrame = currentFrame;}
+	protected double ticks = 0.0;
+	protected double framePeriod = 1.0;
+	protected double nextFrame = 0.0;
+	protected int currentFrame = 0;
+
+	public AnimatedSprite(SpriteObject sprite) {super(sprite);}
+
+	public void setFrame(int frame) {currentFrame = frame;}
 	public void setFPS(double fps, double tps) {framePeriod = tps/fps;}
-	
+
 	public void tick() {
 		ticks += 1.0;
 		if (ticks > nextFrame) {
 			int times = (int)((ticks-nextFrame)/framePeriod)+1;
 			currentFrame += times;
-			if (currentFrame >= sprites.size()) currentFrame %= sprites.size();
+			if (currentFrame >= sprite.getNumFrames()) currentFrame %= sprite.getNumFrames();
 			nextFrame += framePeriod * times;
 		}
 	}
-	
+
 	@Override
-	public void draw(ShaderProgram sp) {
-		sprites.get(currentFrame).render(sp);
-	}
-	
+	public void draw(DefaultShader sp) {sprite.renderFrame(sp, currentFrame);}
+
 }

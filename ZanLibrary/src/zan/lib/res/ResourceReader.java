@@ -9,23 +9,23 @@ import zan.lib.util.Utility;
 
 /** Resource reader class */
 public class ResourceReader {
-	
+
 	private ResourceData resource;
-	
+
 	public ResourceReader(String fnm) {
 		resource = new ResourceData(Utility.getPrefix(fnm));
-		
+
 		try {
 			ArrayList<ResourceData> parent = new ArrayList<ResourceData>();
 			parent.add(resource);
-			
+
 			BufferedReader br = new BufferedReader(new FileReader(fnm));
 			String line;
 			while((line = br.readLine()) != null) {
 				if (line.length() == 0)	continue;
 				String[] tkns = Utility.split(line);
 				if (tkns[0].isEmpty() || tkns[0].startsWith("//")) continue;
-				
+
 				if (tkns.length == 1) {
 					if (tkns[0].contentEquals("}")) {
 						if (parent.size() > 1) {
@@ -44,7 +44,7 @@ public class ResourceReader {
 				if (line.contains("{") || line.contains("}")) {
 					System.out.println("Invalid syntax in file " + fnm + ":\n " + line);
 				}
-				
+
 				if (tkns.length == 1) {
 					parent.get(parent.size()-1).addValue(tkns[0]);
 					continue;
@@ -55,15 +55,15 @@ public class ResourceReader {
 					continue;
 				}
 			}
-			
+
 			br.close();
 		} catch (IOException e) {
 			System.err.println("Error reading file " + fnm + ":\n " + e);
 		}
 	}
-	
+
 	public ResourceData getData() {
 		return resource;
 	}
-	
+
 }

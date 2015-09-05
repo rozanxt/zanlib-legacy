@@ -1,4 +1,4 @@
-package zan.lib.panel;
+package zan.lib.core;
 
 public abstract class BasePanel {
 	

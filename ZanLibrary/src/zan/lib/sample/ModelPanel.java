@@ -1,86 +1,79 @@
 package zan.lib.sample;
 
-import zan.lib.core.CoreEngine;
-import zan.lib.gfx.ShaderProgram;
-import zan.lib.gfx.obj.ModelObject;
-import zan.lib.gfx.view.ViewPort3D;
-import zan.lib.panel.BasePanel;
-
 import static zan.lib.input.InputManager.*;
-import static org.lwjgl.opengl.GL11.*;
+import zan.lib.core.BasePanel;
+import zan.lib.gfx.obj.ModelObject;
+import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.view.ViewPort3D;
+import zan.lib.util.math.Vec3D;
 
 public class ModelPanel extends BasePanel {
-	
-	private ShaderProgram shaderProgram;
+
+	private DefaultShader shader;
 	private ViewPort3D viewPort;
-	
+
 	private ModelObject model;
-	
-	private double rotation;
-	
-	public ModelPanel(CoreEngine core) {
+
+	private Vec3D rotation;
+
+	public ModelPanel(SampleCore core) {
+		shader = new Sample3DShader();
 		viewPort = new ViewPort3D(0, 0, core.getScreenWidth(), core.getScreenHeight());
 	}
-	
+
 	@Override
 	public void init() {
-		shaderProgram = new ShaderProgram();
-		
-		viewPort.setFOVY(120.0);
-		viewPort.setDepthInterval(100.0);
-		viewPort.setOffsetZ(4.0);
-		
+		shader.loadProgram();
+		shader.setClearColor(0.2, 0.2, 0.2, 1.0);
+		shader.enableDepthTest(true);
+		shader.enableCullFace(true);
+
+		viewPort.setOffsetZ(5.0);
 		viewPort.showView();
-		viewPort.projectView(shaderProgram);
-		
+		viewPort.projectView(shader);
+
 		model = new ModelObject("res/obj/sample_model.obj");
-		model.setDrawMode(GL_LINE_STRIP);
-		
-		rotation = 0.0;
+
+		rotation = new Vec3D(0.0, 0.0, 0.0);
 	}
-	
+
 	@Override
 	public void destroy() {
 		model.destroy();
-		shaderProgram.destroy();
+		shader.destroy();
 	}
-	
+
 	@Override
 	public void update(double time) {
-		if (isKeyDown(IM_KEY_RIGHT)) viewPort.setOffsetX(viewPort.getOffsetX()+0.1);
-		if (isKeyDown(IM_KEY_LEFT)) viewPort.setOffsetX(viewPort.getOffsetX()-0.1);
-		if (isKeyDown(IM_KEY_UP)) viewPort.setOffsetY(viewPort.getOffsetY()+0.1);
-		if (isKeyDown(IM_KEY_DOWN)) viewPort.setOffsetY(viewPort.getOffsetY()-0.1);
-		if (isKeyDown(IM_KEY_W)) viewPort.setOffsetZ(viewPort.getOffsetZ()-0.1);
-		if (isKeyDown(IM_KEY_S)) viewPort.setOffsetZ(viewPort.getOffsetZ()+0.1);
-		if (isKeyDown(IM_KEY_A)) rotation -= 5.0;
-		if (isKeyDown(IM_KEY_D)) rotation += 5.0;
+		if (isKeyDown(IM_KEY_W)) rotation.addX(5.0);
+		if (isKeyDown(IM_KEY_S)) rotation.subX(5.0);
+		if (isKeyDown(IM_KEY_D)) rotation.addY(5.0);
+		if (isKeyDown(IM_KEY_A)) rotation.subY(5.0);
 	}
-	
+
 	@Override
 	public void render(double ip) {
-		shaderProgram.bind();
-		shaderProgram.pushMatrix();
-		viewPort.adjustView(shaderProgram);
-		
-		shaderProgram.pushMatrix();
-		shaderProgram.rotate(rotation, 0.0, 1.0, 0.0);
-		shaderProgram.applyModelView();
-		shaderProgram.setColor(0.0, 1.0, 1.0, 1.0);
-		model.render(shaderProgram);
-		shaderProgram.popMatrix();
-		
-		shaderProgram.popMatrix();
-		shaderProgram.unbind();
+		shader.bind();
+		viewPort.adjustView(shader);
+
+		shader.pushMatrix();
+		shader.rotate(rotation.getY(), 0.0, 1.0, 0.0);
+		shader.rotate(rotation.getX(), 1.0, 0.0, 0.0);
+		shader.translate(0.0, -1.5, 0.0);
+		shader.applyModelMatrix();
+		model.render(shader);
+		shader.popMatrix();
+
+		shader.unbind();
 	}
-	
+
 	@Override
 	public void onScreenResize(int width, int height) {
-		shaderProgram.bindState();
+		shader.bindState();
 		viewPort.setScreenSize(width, height);
 		viewPort.setViewPort(0, 0, width, height);
 		viewPort.showView();
-		viewPort.projectView(shaderProgram);
+		viewPort.projectView(shader);
 	}
-	
+
 }
