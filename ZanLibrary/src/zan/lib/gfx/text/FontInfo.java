@@ -4,24 +4,23 @@ import java.util.ArrayList;
 
 public class FontInfo {
 
-	public final String name, filename;
-	public final int x_res, y_res;
-	public final int x_tiles, y_tiles;
-	public final int def_w, def_h;
-	public final int x_os;
+	public final String name;
+	public final String bitmap;
+	public final int tiles_x, tiles_y;
+	public final int offset_x, offset_y;
+	public final int default_w, default_h;
 
 	private ArrayList<CharInfo> charInfo;
 
-	public FontInfo(String name, String filename, int x_res, int y_res, int x_tiles, int y_tiles, int def_w, int def_h, int x_os, ArrayList<CharInfo> charInfo) {
+	public FontInfo(String name, String bitmap, int tiles_x, int tiles_y, int offset_x, int offset_y, int default_w, int default_h, ArrayList<CharInfo> charInfo) {
 		this.name = name;
-		this.filename = filename;
-		this.x_res = x_res;
-		this.y_res = y_res;
-		this.x_tiles = x_tiles;
-		this.y_tiles = y_tiles;
-		this.def_w = def_w;
-		this.def_h = def_h;
-		this.x_os = x_os;
+		this.bitmap = bitmap;
+		this.tiles_x = tiles_x;
+		this.tiles_y = tiles_y;
+		this.offset_x = offset_x;
+		this.offset_y = offset_y;
+		this.default_w = default_w;
+		this.default_h = default_h;
 		this.charInfo = charInfo;
 	}
 

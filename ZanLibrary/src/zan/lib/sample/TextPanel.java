@@ -4,7 +4,6 @@ import zan.lib.core.BasePanel;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.text.TextManager;
 import zan.lib.gfx.view.ViewPort2D;
-import zan.lib.res.ResourceReader;
 
 public class TextPanel extends BasePanel {
 
@@ -24,7 +23,7 @@ public class TextPanel extends BasePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
-		TextManager.loadFontFile(new ResourceReader("res/font/fonts.res").getData().getNode("defont"));
+		TextManager.loadFontFile("res/font/fonts.res");
 	}
 
 	@Override

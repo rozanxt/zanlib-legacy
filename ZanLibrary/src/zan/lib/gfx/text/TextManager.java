@@ -34,57 +34,44 @@ public class TextManager {
 
 	public static void renderText(DefaultShader sp, String text, String font) {
 		FontInfo fontInfo = fontInfos.get(font);
-
 		SpriteObject fo = fontObjects.get(font);
+		if (fontInfo == null || fo == null) return;
 
 		double dw = 0.0;
 		for (int i=0;i<text.length();i++) {
 			int ch = chars.indexOf(text.charAt(i));
 			if (ch < 0) continue;
-
 			sp.pushMatrix();
 			sp.translate(dw, 0.0, 0.0);
 			sp.applyModelMatrix();
 			fo.renderFrame(sp, ch);
 			sp.popMatrix();
-
-			dw += (fontInfo.getCharInfo(ch).width + fontInfo.x_os) / 32.0;
+			dw += (fontInfo.getCharInfo(ch).width + fontInfo.offset_x) / 32.0;
 		}
 	}
 
-	public static void loadFontFile(ResourceData fontData) {
-		if (fontData.isEmpty()) {
-			System.err.println("Error loading font data:\n no data found");
-			return;
-		}
-
-		String name = "";
-		String filename = "";
-		int x_res = 0;
-		int y_res = 0;
-		int x_tiles = 0;
-		int y_tiles = 0;
-		int def_w = 0;
-		int def_h = 0;
-		int x_os = 0;
-
+	public static void loadFont(ResourceData fontData) {
+		String name = fontData.getValue("name");
+		String bitmap = fontData.getValue("bitmap");
+		int tiles_x = 0;
+		int tiles_y = 0;
+		int offset_x = 0;
+		int offset_y = 0;
+		int default_w = 0;
+		int default_h = 0;
 		ArrayList<CharInfo> charInfo = new ArrayList<CharInfo>();
 
-		name = fontData.getName();
 		for (int i=0;i<fontData.getNumNodes();i++) {
 			ResourceData node = fontData.getNode(i);
-			if (node.getName().contentEquals("bitmap") && node.getNumValues() == 5) {
-				filename = node.getValue("file");
-				x_tiles = node.getIntegerValue("x");
-				y_tiles = node.getIntegerValue("y");
-				x_res = node.getIntegerValue("w");
-				y_res = node.getIntegerValue("h");
-			} else if (node.getName().contentEquals("offset") && node.getNumValues() == 2) {
-				x_os = node.getIntegerValue("x");
-				//y_os = node.getIntegerValue("y");
-			} else if (node.getName().contentEquals("default") && node.getNumValues() == 2) {
-				def_w = node.getIntegerValue("w");
-				def_h = node.getIntegerValue("h");
+			if (node.getName().contentEquals("tiles")) {
+				tiles_x = node.getIntegerValue("x");
+				tiles_y = node.getIntegerValue("y");
+			} else if (node.getName().contentEquals("offset")) {
+				offset_x = node.getIntegerValue("x");
+				offset_y = node.getIntegerValue("y");
+			} else if (node.getName().contentEquals("default")) {
+				default_w = node.getIntegerValue("w");
+				default_h = node.getIntegerValue("h");
 			} else if (node.getName().contentEquals("char")) {
 				int xi = node.getIntegerValue("x");
 				int yi = node.getIntegerValue("y");
@@ -96,7 +83,7 @@ public class TextManager {
 		ArrayList<CharInfo> gridInfo = new ArrayList<CharInfo>();
 		for (int i=0;i<16;i++) {
 			for (int j=0;j<16;j++) {
-				int charWidth = def_w;
+				int charWidth = default_w;
 				for (int k=0;k<charInfo.size();k++) {
 					if (i == charInfo.get(k).yid && j == charInfo.get(k).xid) {
 						charWidth = charInfo.get(k).width;
@@ -106,9 +93,26 @@ public class TextManager {
 			}
 		}
 
-		FontInfo fontInfo = new FontInfo(name, filename, x_res, y_res, x_tiles, y_tiles, def_w, def_h, x_os, gridInfo);
+		FontInfo fontInfo = new FontInfo(name, bitmap, tiles_x, tiles_y, offset_x, offset_y, default_w, default_h, gridInfo);
 		fontInfos.put(name, fontInfo);
-		fontObjects.put(fontInfo.name, new SpriteObject(TextureManager.loadTexture(fontInfo.name, fontInfo.filename), 0f, 0f, x_tiles, y_tiles, ALIGN_HORIZONTAL));
+		fontObjects.put(fontInfo.name, new SpriteObject(TextureManager.loadTexture(fontInfo.name, fontInfo.bitmap), 0f, 0f, tiles_x, tiles_y, ALIGN_HORIZONTAL));
+	}
+
+	public static void loadFontFile(String filename) {
+		ResourceData fontData = ResourceData.readResource(filename);
+		if (fontData == null) {
+			System.err.println("Error loading font data: No data found!");
+			return;
+		}
+		searchFonts(fontData);
+	}
+
+	private static void searchFonts(ResourceData fontNode) {
+		for (int i=0;i<fontNode.getNumNodes();i++) {
+			ResourceData node = fontNode.getNode(i);
+			if (node.getName().contentEquals("font")) loadFont(node);
+			searchFonts(node);
+		}
 	}
 
 }

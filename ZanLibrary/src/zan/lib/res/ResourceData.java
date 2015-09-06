@@ -5,143 +5,106 @@ import java.util.HashMap;
 
 import zan.lib.util.Utility;
 
-/** Resource data class */
 public class ResourceData {
 
 	private String name;
+	private ArrayList<ResourceData> nodes = new ArrayList<ResourceData>();
+	private HashMap<String, String> values = new HashMap<String, String>();
 
-	private ArrayList<String> value;
-	private HashMap<String, String> param;
+	public ResourceData(String name) {this.name = name;}
 
-	private ArrayList<ResourceData> node;
+	public void addValue(String key, String value) {values.put(key, value);}
+	public void addNode(ResourceData node) {nodes.add(node);}
 
-	public ResourceData(String name) {
-		this.name = name;
-		if (!isEmpty()) {
-			value = new ArrayList<String>();
-			param = new HashMap<String, String>();
-			node = new ArrayList<ResourceData>();
-		}
-	}
+	public String getName() {return name;}
 
-	public String getName() {
-		return name;
-	}
-
-	public boolean isEmpty() {
-		return (name == null);
-	}
-
-	public void clear() {
-		if (!isEmpty()) {
-			param.clear();
-			value.clear();
-			for (int i=0;i<node.size();i++) node.get(i).clear();
-			node.clear();
-		}
-	}
-
-	public void addValue(String value) {
-		if (isEmpty()) return;
-		if (value.contains("=")) {
-			int pos = value.indexOf("=");
-			String key = value.substring(0, pos);
-			if (!param.containsKey(key)) {
-				param.put(key, value.substring(pos+1));
-			}
-		}
-		this.value.add(value);
-	}
-
-	public String getValue(int index) {
-		if (isEmpty()) return null;
-		if (index < 0 || index >= value.size()) return null;
-		return value.get(index);
+	public ResourceData getNode(int node) {return nodes.get(node);}
+	public ResourceData getNode(String node) {
+		for (int i=0;i<getNumNodes();i++) if (getNode(i).getName().contentEquals(node)) return getNode(i);
+		System.err.println("Error in ResourceData " + name + ": Node '" + node + "' not found!");
+		return null;
 	}
 
 	public String getValue(String key) {
-		if (isEmpty()) return null;
-		return param.get(key);
+		if (!values.containsKey(key)) System.err.println("Error in ResourceData " + name + ": Key '" + key + "' not found!");
+		return values.get(key);
 	}
+	public int getIntegerValue(String key) {return Utility.parseInt(getValue(key));}
+	public float getFloatValue(String key) {return Utility.parseFloat(getValue(key));}
 
-	public int getIntegerValue(int index) {
-		if (isEmpty()) return 0;
-		if (index < 0 || index >= value.size()) return 0;
-		if (!Utility.isIntegerString(value.get(index))) return 0;
-		return Integer.parseInt(value.get(index));
-	}
+	public boolean hasKey(String key) {return values.containsKey(key);}
 
-	public int getIntegerValue(String key) {
-		if (isEmpty()) return 0;
-		if (param.get(key) == null) return 0;
-		if (!Utility.isIntegerString(param.get(key))) return 0;
-		return Integer.parseInt(param.get(key));
-	}
+	public int getNumNodes() {return nodes.size();}
+	public int getNumValues() {return values.size();}
 
-	public boolean getBooleanValue(int index) {
-		if (isEmpty()) return false;
-		if (index < 0 || index >= value.size()) return false;
-		if (value.get(index).contentEquals("true")) return true;
-		return false;
-	}
+	public static ResourceData readResource(String filename) {
+		String resourceName = filename;
+		if (filename.contains(".")) {
+			int dot = filename.lastIndexOf(".");
+			resourceName = filename.substring(0, dot);
+		}
+		ResourceData resourceData = new ResourceData(resourceName);
 
-	public boolean getBooleanValue(String key) {
-		if (isEmpty()) return false;
-		if (param.get(key) == null) return false;
-		if (param.get(key).contentEquals("true")) return true;
-		return false;
-	}
+		String resource = Utility.readFileAsString(filename);
+		if (!resource.isEmpty()) {
+			String[] lines = resource.split("\n");
+			ArrayList<String> parse = new ArrayList<String>();
+			for (int i=0;i<lines.length;i++) {
+				if (!lines[i].isEmpty() && !lines[i].startsWith("#")) {
+					String[] tkns = lines[i].split(" |\t|(?<=\\{)|(?=\\{)|(?<=\\})|(?=\\})|(?<=:)|(?=:)|(?<=;)|(?=;)");
+					for (int j=0;j<tkns.length;j++) if (!tkns[j].isEmpty()) parse.add(tkns[j]);
+				}
+			}
 
-	public boolean hasValue() {
-		if (isEmpty()) return false;
-		return !value.isEmpty();
-	}
+			ArrayList<ResourceData> nodes = new ArrayList<ResourceData>();
+			nodes.add(resourceData);
+			boolean inline = false;
+			for (int i=0;i<parse.size();i++) {
+				if (nodes.isEmpty()) {
+					System.err.println("Error parsing file " + filename + ": Excessive use of closing brackets!");
+					return null;
+				}
+				ResourceData node = nodes.get(nodes.size()-1);
+				String token = parse.get(i);
 
-	public int getNumValues() {
-		if (isEmpty()) return 0;
-		return value.size();
-	}
+				if (token.contains("=")) {
+					int sep = token.indexOf("=");
+					String key = token.substring(0, sep);
+					String value = token.substring(sep+1);
 
-	public void addNode(ResourceData node) {
-		if (isEmpty()) return;
-		this.node.add(node);
-	}
+					if (key.isEmpty()) System.err.println("Error parsing file " + filename + ": Empty node key!");
+					else if (value.isEmpty()) System.err.println("Error parsing file " + filename + ": Empty node value!");
+					else if (node.hasKey(key)) System.err.println("Error parsing file " + filename + ": Value key '" + key + "' already used!");
+					else node.addValue(key, value);
+				} else if (token.contentEquals("{")) {
+					if (i > 0) {
+						ResourceData childNode = new ResourceData(parse.get(i-1));
+						node.addNode(childNode);
+						nodes.add(childNode);
+						inline = false;
+					} else System.err.println("Error parsing file " + filename + ": Misplaced bracket!");
+				} else if (token.contentEquals("}")) {
+					if (!inline) nodes.remove(node);
+					else System.err.println("Error parsing file " + filename + ": Misplaced bracket!");
+				} else if (token.contentEquals(":")) {
+					if (i > 0) {
+						ResourceData childNode = new ResourceData(parse.get(i-1));
+						node.addNode(childNode);
+						nodes.add(childNode);
+						inline = true;
+					} else System.err.println("Error parsing file " + filename + ": Misplaced colon!");
+				} else if (token.contentEquals(";")) {
+					if (inline) nodes.remove(node);
+					inline = false;
+				}
+			}
 
-	public ResourceData getNode(int index) {
-		if (isEmpty()) return new ResourceData(null);
-		if (index < 0 || index > node.size()) return new ResourceData(null);
-		return node.get(index);
-	}
-
-	public ResourceData getNode(String key) {
-		if (isEmpty()) return new ResourceData(null);
-		for (int i=0;i<node.size();i++) {
-			if (node.get(i).getName().contentEquals(key)) {
-				return node.get(i);
+			if (nodes.size() != 1) {
+				System.err.println("Error parsing file " + filename + ": Missing or excessive use of brackets or colons!");
+				return null;
 			}
 		}
-		return new ResourceData(null);
-	}
-
-	public ResourceData getNodes(String key) {
-		if (isEmpty()) return new ResourceData(null);
-		ResourceData group = new ResourceData(key);
-		for (int i=0;i<node.size();i++) {
-			if (node.get(i).getName().contentEquals(key)) {
-				group.addNode(node.get(i));
-			}
-		}
-		return group;
-	}
-
-	public boolean hasNode() {
-		if (isEmpty()) return false;
-		return !node.isEmpty();
-	}
-
-	public int getNumNodes() {
-		if (isEmpty()) return 0;
-		return node.size();
+		return resourceData;
 	}
 
 }
