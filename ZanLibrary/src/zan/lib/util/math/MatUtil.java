@@ -3,11 +3,11 @@ package zan.lib.util.math;
 import zan.lib.util.Utility;
 
 public class MatUtil {
-	
+
 	public static Mat22D identityMat22D() {return new Mat22D(true);}
 	public static Mat33D identityMat33D() {return new Mat33D(true);}
 	public static Mat44D identityMat44D() {return new Mat44D(true);}
-	
+
 	public static MatD elemRowAddMatD(int dim, int dest, int addend, double factor) {
 		MatD matrix = new MatD(dim, true);
 		matrix.set(dest, addend, factor);
@@ -31,7 +31,7 @@ public class MatUtil {
 		matrix.set(j, i, 1.0);
 		return matrix;
 	}
-	
+
 	public static Mat22D translationMat22D(double x) {
 		Mat22D matrix = identityMat22D();
 		matrix.set(0, 1, x);
@@ -50,7 +50,7 @@ public class MatUtil {
 		matrix.set(2, 3, z);
 		return matrix;
 	}
-	
+
 	public static Mat22D scaleMat22D(double x) {
 		Mat22D matrix = identityMat22D();
 		matrix.set(0, 0, x);
@@ -69,7 +69,7 @@ public class MatUtil {
 		matrix.set(2, 2, z);
 		return matrix;
 	}
-	
+
 	public static Mat33D rotationMat33D(double angle) {
 		double rad = Math.toRadians(angle);
 		double sin = Math.sin(rad);
@@ -102,7 +102,7 @@ public class MatUtil {
 		matrix.set(2, 2, c*c*(1-cos)+cos);
 		return matrix;
 	}
-	
+
 	public static Mat44D orthoProjectionMatrix(double left, double right, double bottom, double top, double near, double far) {
 		double sx = 2.0/(right-left);
 		double sy = 2.0/(top-bottom);
@@ -119,7 +119,7 @@ public class MatUtil {
 		matrix.set(2, 3, -tz);
 		return matrix;
 	}
-	
+
 	public static Mat44D perspectiveProjectionMatrix(double fovy, double aspect, double near, double far) {
 		double f = 1.0/Math.tan(fovy/2.0);
 		double sx = f/aspect;
@@ -135,7 +135,7 @@ public class MatUtil {
 		matrix.set(3, 3, 0.0);
 		return matrix;
 	}
-	
+
 	public static MatD appendRowMatrix(MatD top, MatD bottom) {
 		MatD result = new MatD(top.rows()+bottom.rows(), Math.max(top.cols(), bottom.cols()), 0.0);
 		for (int i=0;i<top.rows();i++) {
@@ -178,7 +178,7 @@ public class MatUtil {
 		}
 		return result;
 	}
-	
+
 	public static void add(MatD left, MatD right, MatD result) {
 		if (checkSize(left, right, result)) {
 			for (int i=0;i<result.size();i++) result.set(i, left.get(i) + right.get(i));
@@ -189,7 +189,7 @@ public class MatUtil {
 		add(left, right, result);
 		return result;
 	}
-	
+
 	public static void sub(MatD left, MatD right, MatD result) {
 		if (checkSize(left, right, result)) {
 			for (int i=0;i<result.size();i++) result.set(i, left.get(i) - right.get(i));
@@ -200,7 +200,7 @@ public class MatUtil {
 		sub(left, right, result);
 		return result;
 	}
-	
+
 	public static void mult(MatD left, MatD right, MatD result) {
 		if (checkMultipliable(left, right, result)) {
 			MatD temp = new MatD(result.rows(), result.cols());
@@ -233,7 +233,7 @@ public class MatUtil {
 		}
 		return result;
 	}
-	
+
 	public static void mult(MatD matrix, VecD vector, VecD result) {
 		if (checkMultipliable(matrix, vector, result)) {
 			VecD temp = new VecD(result.size());
@@ -256,7 +256,7 @@ public class MatUtil {
 		}
 		return result;
 	}
-	
+
 	public static double calcDeterminant(MatD matrix) {
 		if (matrix.isSquare()) {
 			if (matrix.dim() > 1) {
@@ -274,7 +274,7 @@ public class MatUtil {
 		}
 		return 0.0;
 	}
-	
+
 	public static MatD calcRowEchelonForm(MatD matrix) {
 		MatD result = new MatD(matrix);
 		int r = 0;
@@ -294,12 +294,12 @@ public class MatUtil {
 		}
 		return result;
 	}
-	
+
 	public static MatD calcInverse(MatD matrix) {
 		if (matrix.isSquare()) return calcRowEchelonForm(MatUtil.appendColMatrix(matrix, new MatD(matrix.dim(), true))).getSubMatrix(0, matrix.cols(), matrix.rows()-1, 2*matrix.cols()-1);
 		return null;
 	}
-	
+
 	public static int calcRank(MatD matrix) {
 		MatD result = calcRowEchelonForm(matrix);
 		int rank = 0;
@@ -313,12 +313,12 @@ public class MatUtil {
 		}
 		return rank;
 	}
-	
+
 	private static boolean checkSize(MatD... matrices) {
 		for (int i=0;i<matrices.length-1;i++) {
 			if (matrices[i].rows() != matrices[i+1].rows() ||
 				matrices[i].cols() != matrices[i+1].cols()) {
-				System.out.println("Incompatible matrices!");
+				System.err.println("Incompatible matrices!");
 				return false;
 			}
 		}
@@ -328,17 +328,17 @@ public class MatUtil {
 		if (left.cols() != right.rows() ||
 			result.rows() != left.rows() ||
 			result.cols() != right.cols()) {
-			System.out.println("Incompatible matrices!");
+			System.err.println("Incompatible matrices!");
 			return false;
 		}
 		return true;
 	}
 	private static boolean checkMultipliable(MatD matrix, VecD vector, VecD result) {
 		if (matrix.cols() != vector.size() || matrix.rows() != result.size()) {
-			System.out.println("Incompatible matrices or vertices!");
+			System.err.println("Incompatible matrices or vertices!");
 			return false;
 		}
 		return true;
 	}
-	
+
 }

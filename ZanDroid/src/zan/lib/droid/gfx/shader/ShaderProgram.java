@@ -1,7 +1,8 @@
-package zan.lib.gfx.shader;
+package zan.lib.droid.gfx.shader;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import android.util.Log;
+
+import static android.opengl.GLES20.*;
 
 public abstract class ShaderProgram {
 
@@ -28,12 +29,12 @@ public abstract class ShaderProgram {
 
 	protected int fetchAttribLocation(String variable) {
 		int location = glGetAttribLocation(programID, variable);
-		if (location == -1) System.err.println(variable + " is not a valid GLSL program variable!");
+		if (location == -1) Log.e("ShaderProgram", variable + " is not a valid GLSL program variable!");
 		return location;
 	}
 	protected int fetchUniformLocation(String variable) {
 		int location = glGetUniformLocation(programID, variable);
-		if (location == -1) System.err.println(variable + " is not a valid GLSL program variable!");
+		if (location == -1) Log.e("ShaderProgram", variable + " is not a valid GLSL program variable!");
 		return location;
 	}
 
@@ -43,8 +44,10 @@ public abstract class ShaderProgram {
 		loadShader(fragmentShader, GL_FRAGMENT_SHADER);
 		glLinkProgram(programID);
 
-		if (glGetProgrami(programID, GL_LINK_STATUS) != 1) {
-			System.err.println("Error linking GLSL program " + programID + ":\n" + glGetProgramInfoLog(programID));
+		final int[] linkStatus = new int[1];
+		glGetProgramiv(programID, GL_LINK_STATUS, linkStatus, 0);
+		if (linkStatus[0] != 1) {
+			Log.e("ShaderProgram", "Error linking GLSL program " + programID + ":\n" + glGetProgramInfoLog(programID));
 			destroy();
 			return false;
 		}
@@ -59,8 +62,10 @@ public abstract class ShaderProgram {
 		glShaderSource(shader, source);
 		glCompileShader(shader);
 
-		if (glGetShaderi(shader, GL_COMPILE_STATUS) != GL_TRUE) {
-			System.err.println("Unable to compile GLSL shader " + shader + ":\n" + glGetShaderInfoLog(shader));
+		final int[] compileStatus = new int[1];
+		glGetShaderiv(shader, GL_COMPILE_STATUS, compileStatus, 0);
+		if (compileStatus[0] != GL_TRUE) {
+			Log.e("ShaderProgram", "Unable to compile GLSL shader " + shader + ":\n" + glGetShaderInfoLog(shader));
 			return false;
 		}
 
