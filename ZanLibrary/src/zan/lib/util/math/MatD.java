@@ -1,10 +1,10 @@
 package zan.lib.util.math;
 
 public class MatD {
-	
+
 	private double[] data;
 	private final int rows, cols;
-	
+
 	public MatD() {this(1);}
 	public MatD(int dim) {this(dim, dim);}
 	public MatD(int rows, int cols) {
@@ -52,7 +52,7 @@ public class MatD {
 		this(vectors[0].size(), vectors.length);
 		for (int i=0;i<cols;i++) setCol(i, vectors[i]);
 	}
-	
+
 	public void set(int element, double value) {data[element] = value;}
 	public void set(int row, int col, double value) {set(rows*col+row, value);}
 	public void setAll(double value) {for (int i=0;i<size();i++) set(i, value);}
@@ -83,7 +83,7 @@ public class MatD {
 		int size = Math.min(Math.min(rows-diagY, cols-diagX), vector.size());
 		for (int i=0;i<size;i++) set(diagY+i, diagX+i, vector.get(i));
 	}
-	
+
 	public MatD loadIdentity() {
 		for (int i=0;i<rows;i++) {
 			for (int j=0;j<cols;j++) {
@@ -93,7 +93,7 @@ public class MatD {
 		}
 		return this;
 	}
-	
+
 	public double get(int element) {return data[element];}
 	public double get(int row, int col) {return get(rows*col+row);}
 	public VecD getRow(int row) {
@@ -173,7 +173,7 @@ public class MatD {
 		}
 		return new MatD(this);
 	}
-	
+
 	public MatD transpose() {
 		MatD result = new MatD(cols, rows);
 		for (int i=0;i<rows;i++) {
@@ -187,12 +187,12 @@ public class MatD {
 		}
 		return result;
 	}
-	
+
 	public MatD scalar(double factor) {
 		for (int i=0;i<size();i++) data[i] *= factor;
 		return this;
 	}
-	
+
 	public MatD addRow(int row, VecD vector) {
 		int cols = Math.min(this.cols, vector.size());
 		for (int i=0;i<cols;i++) set(row, i, get(row, i)+vector.get(i));
@@ -208,7 +208,7 @@ public class MatD {
 		setRow(j, temp);
 		return this;
 	}
-	
+
 	public MatD addCol(int col, VecD vector) {
 		int rows = Math.min(this.rows, vector.size());
 		for (int i=0;i<rows;i++) set(i, col, get(i, col)+vector.get(i));
@@ -224,20 +224,20 @@ public class MatD {
 		setCol(j, temp);
 		return this;
 	}
-	
+
 	public MatD round(int dp) {
 		for (int i=0;i<size();i++) set(i, Math.round(get(i)*Math.pow(10, dp))*Math.pow(10, -dp));
 		return this;
 	}
 	public MatD round() {return round(0);}
-	
+
 	public int rows() {return rows;}
 	public int cols() {return cols;}
 	public int dim() {return Math.min(rows, cols);}
 	public int size() {return data.length;}
-	
+
 	public boolean isSquare() {return (rows == cols);}
-	
+
 	@Override
 	public String toString() {
 		String str = "";
@@ -250,5 +250,5 @@ public class MatD {
 		}
 		return str;
 	}
-	
+
 }

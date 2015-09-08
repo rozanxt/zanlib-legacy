@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import zan.lib.util.math.Vec3D;
 import zan.lib.util.math.VecUtil;
+import zan.lib.util.res.ResourceUtil;
 import zan.lib.util.Utility;
 
 public class ModelObject extends VertexObject {
 
 	public ModelObject(String path) {
-		String source = Utility.readFileAsString(path);
+		String source = ResourceUtil.readFileAsString(path);
 		String[] data = source.split("\n");
 
 		ArrayList<Vec3D> pos = new ArrayList<Vec3D>();

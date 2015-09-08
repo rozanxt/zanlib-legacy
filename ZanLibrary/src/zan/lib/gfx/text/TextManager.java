@@ -2,17 +2,22 @@ package zan.lib.gfx.text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static zan.lib.gfx.obj.SpriteObject.ALIGN_HORIZONTAL;
 import zan.lib.gfx.obj.SpriteObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureManager;
-import zan.lib.res.ResourceData;
+import zan.lib.util.Utility;
+import zan.lib.util.res.ResourceData;
+import zan.lib.util.res.ResourceUtil;
 
 public class TextManager {
 
 	private static HashMap<String, FontInfo> fontInfos;
 	private static HashMap<String, SpriteObject> fontObjects;
+
+	private static boolean initialized = false;
 
 	private static final String chars = ""
 			+ " !\"#$%&\'()*+,-./"
@@ -23,19 +28,34 @@ public class TextManager {
 			+ "pqrstuvwxyz{|}~";
 
 	public static void init() {
-		fontInfos = new HashMap<String, FontInfo>();
-		fontObjects = new HashMap<String, SpriteObject>();
+		if (!initialized) {
+			fontInfos = new HashMap<String, FontInfo>();
+			fontObjects = new HashMap<String, SpriteObject>();
+			initialized = true;
+		}
 	}
 
-	public static void destroy() {
-		fontInfos.clear();
-		fontObjects.clear();
+	public static void clear() {
+		if (initialized) {
+			for (Map.Entry<String, SpriteObject> entry : fontObjects.entrySet()) entry.getValue().destroy();
+			fontInfos.clear();
+			fontObjects.clear();
+		}
 	}
 
 	public static void renderText(DefaultShader sp, String text, String font) {
+		if (!initialized) {
+			System.err.println("Error rendering text: TextManager is not initialized!");
+			return;
+		}
+
 		FontInfo fontInfo = fontInfos.get(font);
 		SpriteObject fo = fontObjects.get(font);
-		if (fontInfo == null || fo == null) return;
+
+		if (fontInfo == null || fo == null) {
+			System.err.println("Error retrieving font: No font stored under '" + font + "'!");
+			return;
+		}
 
 		double dw = 0.0;
 		for (int i=0;i<text.length();i++) {
@@ -51,6 +71,11 @@ public class TextManager {
 	}
 
 	public static void loadFont(ResourceData fontData) {
+		if (!initialized) {
+			System.err.println("Error loading font '" + fontData.getValue("name") + "': TextManager is not initialized!");
+			return;
+		}
+
 		String name = fontData.getValue("name");
 		String bitmap = fontData.getValue("bitmap");
 		int tiles_x = 0;
@@ -99,20 +124,24 @@ public class TextManager {
 	}
 
 	public static void loadFontFile(String filename) {
-		ResourceData fontData = ResourceData.readResource(filename);
-		if (fontData == null) {
-			System.err.println("Error loading font data: No data found!");
+		if (!initialized) {
+			System.err.println("Error loading font data '" + filename + "': TextManager is not initialized!");
 			return;
 		}
-		searchFonts(fontData);
-	}
 
-	private static void searchFonts(ResourceData fontNode) {
-		for (int i=0;i<fontNode.getNumNodes();i++) {
-			ResourceData node = fontNode.getNode(i);
-			if (node.getName().contentEquals("font")) loadFont(node);
-			searchFonts(node);
+		ResourceData fontData;
+		if (Utility.getSuffix(filename).contentEquals("xml")) {
+			fontData = ResourceUtil.readXML(filename);
+		} else {
+			fontData = ResourceUtil.readResource(filename);
 		}
+
+		ArrayList<ResourceData> fontsToLoad = ResourceUtil.searchDataByName(fontData, "font");
+		if (fontsToLoad.isEmpty()) {
+			System.err.println("Error loading font data '" + filename + "': No data found!");
+			return;
+		}
+		for (int i=0;i<fontsToLoad.size();i++) loadFont(fontsToLoad.get(i));
 	}
 
 }

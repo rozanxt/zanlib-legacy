@@ -32,6 +32,8 @@ public class SpritePanel extends BasePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
+		TextureManager.init();
+
 		spriteA = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"));
 		spriteA.setPos(320.0, 240.0);
 		spriteA.setScale(200.0);
@@ -49,6 +51,7 @@ public class SpritePanel extends BasePanel {
 		spriteA.destroy();
 		spriteB.destroy();
 		shader.destroy();
+		TextureManager.clear();
 	}
 
 	@Override

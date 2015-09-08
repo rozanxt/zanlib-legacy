@@ -1,14 +1,14 @@
 package zan.lib.sample;
 
 import zan.lib.gfx.shader.DefaultShader;
-import zan.lib.util.Utility;
+import zan.lib.util.res.ResourceUtil;
 
 public class Sample3DShader extends DefaultShader {
 
 	@Override
 	public void loadProgram() {
-		String vertexShaderSource = Utility.readFileAsString("res/shader/sample3d.glvs");
-		String fragmentShaderSource = Utility.readFileAsString("res/shader/sample3d.glfs");
+		String vertexShaderSource = ResourceUtil.readFileAsString("res/shader/sample3d.glvs");
+		String fragmentShaderSource = ResourceUtil.readFileAsString("res/shader/sample3d.glfs");
 		loadProgram(vertexShaderSource, fragmentShaderSource);
 	}
 

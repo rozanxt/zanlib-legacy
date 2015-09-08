@@ -46,8 +46,8 @@ public class VertexObject {
 	}
 
 	public void destroy() {
-		resetVertexBuffer();
-		resetIndexBuffer();
+		clearVertexBuffer();
+		clearIndexBuffer();
 	}
 
 	public void setAttributes(int coords, int normals, int colors, int texcoords) {
@@ -104,14 +104,14 @@ public class VertexObject {
 	}
 
 	public int createVBO(FloatBuffer buffer) {
-		resetVertexBuffer();
+		clearVertexBuffer();
 		vertexBuffer = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
 		return vertexBuffer;
 	}
 	public int createIBO(IntBuffer buffer) {
-		resetIndexBuffer();
+		clearIndexBuffer();
 		numVertices = buffer.capacity();
 		indexBuffer = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -119,11 +119,11 @@ public class VertexObject {
 		return indexBuffer;
 	}
 
-	private void resetVertexBuffer() {
+	private void clearVertexBuffer() {
 		glDeleteBuffers(vertexBuffer);
 		vertexBuffer = 0;
 	}
-	private void resetIndexBuffer() {
+	private void clearIndexBuffer() {
 		glDeleteBuffers(indexBuffer);
 		indexBuffer = 0;
 	}

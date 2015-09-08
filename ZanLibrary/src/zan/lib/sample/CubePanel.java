@@ -35,6 +35,7 @@ public class CubePanel extends BasePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
+		TextureManager.init();
 		TextureManager.loadTexture("card", "res/img/sample_card.png");
 
 		final int[] ind = {
@@ -90,6 +91,7 @@ public class CubePanel extends BasePanel {
 	public void destroy() {
 		for (int i=0;i<cubes.length;i++) cubes[i].destroy();
 		shader.destroy();
+		TextureManager.clear();
 	}
 
 	@Override

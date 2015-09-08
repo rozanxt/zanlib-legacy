@@ -44,7 +44,7 @@ public class ViewPort3D extends ViewPort {
 
 	@Override
 	public void adjustView(DefaultShader sp) {
-		sp.setViewMatrix(MatUtil.translationMat44D(-offset.getX(), -offset.getX(), -offset.getZ()));
+		sp.setViewMatrix(MatUtil.translationMat44D(-offset.getX(), -offset.getY(), -offset.getZ()));
 	}
 
 }

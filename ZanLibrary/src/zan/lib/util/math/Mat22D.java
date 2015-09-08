@@ -1,7 +1,7 @@
 package zan.lib.util.math;
 
 public class Mat22D extends MatD {
-	
+
 	public Mat22D() {super(2);}
 	public Mat22D(boolean identity) {super(2, identity);}
 	public Mat22D(double value) {super(2, value);}
@@ -11,5 +11,5 @@ public class Mat22D extends MatD {
 			  double a01, double a11) {
 		super(2, a00, a10, a01, a11);
 	}
-	
+
 }

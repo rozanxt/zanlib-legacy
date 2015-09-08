@@ -10,8 +10,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import zan.lib.gfx.text.TextManager;
-import zan.lib.gfx.texture.TextureManager;
 import zan.lib.input.InputManager;
 
 public abstract class CoreEngine {
@@ -107,8 +105,6 @@ public abstract class CoreEngine {
 
 	private void destroy() {
 		corePanel.destroy();
-		TextManager.destroy();
-		TextureManager.destroy();
 		InputManager.destroy();
 		glfwDestroyWindow(coreWindow);
 		keyCallback.release();
@@ -146,7 +142,6 @@ public abstract class CoreEngine {
 		if (SCR_Y == -1) SCR_Y = (MNT_HEIGHT-WIN_HEIGHT)/2;
 
 		createWindow(NULL);
-		initManager();
 		initInput(NULL);
 		initWindow();
 		initGL();
@@ -200,13 +195,8 @@ public abstract class CoreEngine {
 		if (previousWindow != NULL) glfwDestroyWindow(previousWindow);
 	}
 
-	private void initManager() {
-		InputManager.init();
-		TextureManager.init();
-		TextManager.init();
-	}
-
 	private void initInput(long previousWindow) {
+		InputManager.init();
 		InputManager.setWindow(coreWindow);
 		if (previousWindow != NULL) InputManager.destroyWindow(previousWindow);
 

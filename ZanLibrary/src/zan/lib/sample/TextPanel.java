@@ -3,6 +3,7 @@ package zan.lib.sample;
 import zan.lib.core.BasePanel;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.text.TextManager;
+import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPort2D;
 
 public class TextPanel extends BasePanel {
@@ -23,12 +24,16 @@ public class TextPanel extends BasePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
+		TextureManager.init();
+		TextManager.init();
 		TextManager.loadFontFile("res/font/fonts.res");
 	}
 
 	@Override
 	public void destroy() {
 		shader.destroy();
+		TextManager.clear();
+		TextureManager.clear();
 	}
 
 	@Override

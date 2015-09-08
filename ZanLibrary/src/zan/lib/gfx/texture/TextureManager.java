@@ -27,31 +27,39 @@ public class TextureManager {
 
 	private static int TEXTURE_FILTER = GL_LINEAR;
 
-	public static void init() {
-		textureStore = new HashMap<String, TextureInfo>();
-		textureStore.put("NO_TEXTURE", new TextureInfo(0, 0, 0));
+	private static boolean initialized = false;
 
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+	public static void init() {
+		if (!initialized) {
+			textureStore = new HashMap<String, TextureInfo>();
+			textureStore.put(null, new TextureInfo(0, 0, 0));
+
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
+
+			initialized = true;
+		}
 	}
 
-	public static void destroy() {
-		for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().id);
-		textureStore.clear();
+	public static void clear() {
+		if (initialized) {
+			for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().id);
+			textureStore.clear();
+			textureStore.put(null, new TextureInfo(0, 0, 0));
+		}
 	}
 
 	public static TextureInfo loadTexture(String texture, String filename) {
-		if (textureStore.containsKey(texture)) {
-			System.err.println("Error loading texture: \"" + texture + "\" is already used");
-			return getTexture(texture);
+		if (!initialized) {
+			System.err.println("Error loading texture '" + texture + "': TextureManager is not initialized!");
+			return new TextureInfo(0, 0, 0);
 		}
 
+		if (textureStore.containsKey(texture)) return getTexture(texture);
+
 		TextureInfo textureInfo = createTexture(filename);
-		if (textureInfo != null && textureInfo.id != 0) {
-			textureStore.put(texture, textureInfo);
-			return getTexture(texture);
-		}
-		return getTexture("NO_TEXTURE");
+		if (textureInfo != null && textureInfo.id != 0) textureStore.put(texture, textureInfo);
+		return getTexture(texture);
 	}
 
 	private static TextureInfo createTexture(String filename) {
@@ -67,7 +75,7 @@ public class TextureManager {
 			g2d.dispose();
 			return new TextureInfo(genTexture(bi), bi.getWidth(), bi.getHeight());
 		} catch(IOException e) {
-			System.err.println("Error loading texture for " + filename + ":\n " + e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -78,8 +86,8 @@ public class TextureManager {
 
 		ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL);
 
-		for(int y = 0; y < image.getHeight(); y++){
-			for(int x = 0; x < image.getWidth(); x++){
+		for (int y=0;y<image.getHeight();y++) {
+			for (int x=0;x<image.getWidth();x++) {
 				int pixel = pixels[y * image.getWidth() + x];
 				buffer.put((byte) ((pixel >> 16) & 0xFF));	// Red component
 				buffer.put((byte) ((pixel >> 8) & 0xFF));	// Green component
@@ -87,7 +95,6 @@ public class TextureManager {
 				buffer.put((byte) ((pixel >> 24) & 0xFF));	// Alpha component. Only for RGBA
 			}
 		}
-
 		buffer.flip();
 
 		int textureID = glGenTextures();			// Generate texture ID
@@ -110,7 +117,7 @@ public class TextureManager {
 	public static void setTextureFilter(int filter) {TEXTURE_FILTER = filter;}
 
 	public static boolean unloadTexture(String texture) {
-		if (textureStore.get(texture) != null && !texture.contentEquals("NO_TEXTURE")) {
+		if (initialized && texture != null && textureStore.get(texture) != null) {
 			glDeleteTextures(getTextureID(texture));
 			textureStore.remove(texture);
 			return true;
@@ -119,9 +126,13 @@ public class TextureManager {
 	}
 
 	public static TextureInfo getTexture(String texture) {
+		if (!initialized) {
+			System.err.println("Error retrieving texture '" + texture + "': TextureManager is not initialized!");
+			return new TextureInfo(0, 0, 0);
+		}
 		if (textureStore.get(texture) == null) {
-			System.err.println("No texture stored under: \"" + texture + "\"");
-			return textureStore.get("NO_TEXTURE");
+			System.err.println("Error retrieving texture: No texture stored under '" + texture + "'!");
+			return textureStore.get(null);
 		}
 		return textureStore.get(texture);
 	}
