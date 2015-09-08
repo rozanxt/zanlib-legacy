@@ -1,6 +1,18 @@
 package zan.lib.util;
 
+import java.util.Random;
+
 public class Utility {
+
+	private static Random rnd;
+
+	public static Random getRandom() {
+		if (rnd == null) rnd = new Random();
+		return rnd;
+	}
+	public static void setRandomSeed(long seed) {
+		getRandom().setSeed(seed);
+	}
 
 	public static boolean evaluate(double a, double b, double epsilon) {
 		return (Math.abs(b-a) < epsilon);
