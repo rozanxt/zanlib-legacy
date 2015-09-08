@@ -26,7 +26,7 @@ public class SpritePanel extends BasePanel {
 
 	@Override
 	public void init() {
-		shader.loadProgram();
+		shader.init();
 		shader.enableBlend(true);
 
 		viewPort.showView();
@@ -51,7 +51,7 @@ public class SpritePanel extends BasePanel {
 		spriteA.destroy();
 		spriteB.destroy();
 		shader.destroy();
-		TextureManager.clear();
+		TextureManager.destroy();
 	}
 
 	@Override

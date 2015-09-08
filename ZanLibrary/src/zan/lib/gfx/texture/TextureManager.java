@@ -27,34 +27,21 @@ public class TextureManager {
 
 	private static int TEXTURE_FILTER = GL_LINEAR;
 
-	private static boolean initialized = false;
-
 	public static void init() {
-		if (!initialized) {
-			textureStore = new HashMap<String, TextureInfo>();
-			textureStore.put(null, new TextureInfo(0, 0, 0));
+		textureStore = new HashMap<String, TextureInfo>();
+		textureStore.put(null, new TextureInfo(0, 0, 0));
 
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-
-			initialized = true;
-		}
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
 	}
 
-	public static void clear() {
-		if (initialized) {
-			for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().id);
-			textureStore.clear();
-			textureStore.put(null, new TextureInfo(0, 0, 0));
-		}
+	public static void destroy() {
+		for (Map.Entry<String, TextureInfo> entry : textureStore.entrySet()) glDeleteTextures(entry.getValue().id);
+		textureStore.clear();
+		textureStore.put(null, new TextureInfo(0, 0, 0));
 	}
 
 	public static TextureInfo loadTexture(String texture, String filename) {
-		if (!initialized) {
-			System.err.println("Error loading texture '" + texture + "': TextureManager is not initialized!");
-			return new TextureInfo(0, 0, 0);
-		}
-
 		if (textureStore.containsKey(texture)) return getTexture(texture);
 
 		TextureInfo textureInfo = createTexture(filename);
@@ -117,7 +104,7 @@ public class TextureManager {
 	public static void setTextureFilter(int filter) {TEXTURE_FILTER = filter;}
 
 	public static boolean unloadTexture(String texture) {
-		if (initialized && texture != null && textureStore.get(texture) != null) {
+		if (texture != null && textureStore.get(texture) != null) {
 			glDeleteTextures(getTextureID(texture));
 			textureStore.remove(texture);
 			return true;
@@ -126,10 +113,6 @@ public class TextureManager {
 	}
 
 	public static TextureInfo getTexture(String texture) {
-		if (!initialized) {
-			System.err.println("Error retrieving texture '" + texture + "': TextureManager is not initialized!");
-			return new TextureInfo(0, 0, 0);
-		}
 		if (textureStore.get(texture) == null) {
 			System.err.println("Error retrieving texture: No texture stored under '" + texture + "'!");
 			return textureStore.get(null);

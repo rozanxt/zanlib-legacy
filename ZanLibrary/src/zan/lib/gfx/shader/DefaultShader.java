@@ -79,13 +79,13 @@ public class DefaultShader extends MatrixShader {
 		matrixBuffer.clear();
 		for (int i=0;i<16;i++) matrixBuffer.put((float)modelViewMatrix.get(i));
 		matrixBuffer.flip();
-		glUniformMatrix4(modelViewMatrixID, false, matrixBuffer);
+		glUniformMatrix4fv(modelViewMatrixID, false, matrixBuffer);
 	}
 	public void bindProjection() {
 		matrixBuffer.clear();
 		for (int i=0;i<16;i++) matrixBuffer.put((float)projectionMatrix.get(i));
 		matrixBuffer.flip();
-		glUniformMatrix4(projectionMatrixID, false, matrixBuffer);
+		glUniformMatrix4fv(projectionMatrixID, false, matrixBuffer);
 	}
 	public void bindMatrix() {
 		bindModelView();
@@ -127,7 +127,7 @@ public class DefaultShader extends MatrixShader {
 	}
 
 	@Override
-	public void loadProgram() {
+	public void init() {
 		String vertexShaderSource = ""
 				+ "uniform mat4 modelViewMatrix;"
 				+ "uniform mat4 projectionMatrix;"

@@ -18,7 +18,7 @@ public class TextPanel extends BasePanel {
 
 	@Override
 	public void init() {
-		shader.loadProgram();
+		shader.init();
 		shader.enableBlend(true);
 
 		viewPort.showView();
@@ -32,8 +32,8 @@ public class TextPanel extends BasePanel {
 	@Override
 	public void destroy() {
 		shader.destroy();
-		TextManager.clear();
-		TextureManager.clear();
+		TextManager.destroy();
+		TextureManager.destroy();
 	}
 
 	@Override

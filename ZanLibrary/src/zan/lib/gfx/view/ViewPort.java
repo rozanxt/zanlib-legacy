@@ -44,9 +44,7 @@ public abstract class ViewPort {
 	public double getScreenRatio() {return screenRatio;}
 	public double getViewPortRatio() {return viewPortRatio;}
 
-	public void showView() {
-		glViewport(viewPortX, viewPortY, viewPortW, viewPortH);
-	}
+	public void showView() {glViewport(viewPortX, viewPortY, viewPortW, viewPortH);}
 
 	public abstract void projectView(DefaultShader sp);
 	public abstract void adjustView(DefaultShader sp);

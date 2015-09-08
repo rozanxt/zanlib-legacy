@@ -26,7 +26,7 @@ public class CubePanel extends BasePanel {
 
 	@Override
 	public void init() {
-		shader.loadProgram();
+		shader.init();
 		shader.setClearColor(0.2, 0.2, 0.2, 1.0);
 		shader.enableDepthTest(true);
 		shader.enableCullFace(true);
@@ -91,7 +91,7 @@ public class CubePanel extends BasePanel {
 	public void destroy() {
 		for (int i=0;i<cubes.length;i++) cubes[i].destroy();
 		shader.destroy();
-		TextureManager.clear();
+		TextureManager.destroy();
 	}
 
 	@Override

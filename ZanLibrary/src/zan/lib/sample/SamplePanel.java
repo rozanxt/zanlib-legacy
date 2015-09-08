@@ -22,7 +22,7 @@ public class SamplePanel extends BasePanel {
 
 	@Override
 	public void init() {
-		shader.loadProgram();
+		shader.init();
 
 		viewPort.showView();
 		viewPort.projectView(shader);

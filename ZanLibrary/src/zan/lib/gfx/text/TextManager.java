@@ -17,8 +17,6 @@ public class TextManager {
 	private static HashMap<String, FontInfo> fontInfos;
 	private static HashMap<String, SpriteObject> fontObjects;
 
-	private static boolean initialized = false;
-
 	private static final String chars = ""
 			+ " !\"#$%&\'()*+,-./"
 			+ "0123456789:;<=>?"
@@ -28,27 +26,17 @@ public class TextManager {
 			+ "pqrstuvwxyz{|}~";
 
 	public static void init() {
-		if (!initialized) {
-			fontInfos = new HashMap<String, FontInfo>();
-			fontObjects = new HashMap<String, SpriteObject>();
-			initialized = true;
-		}
+		fontInfos = new HashMap<String, FontInfo>();
+		fontObjects = new HashMap<String, SpriteObject>();
 	}
 
-	public static void clear() {
-		if (initialized) {
-			for (Map.Entry<String, SpriteObject> entry : fontObjects.entrySet()) entry.getValue().destroy();
-			fontInfos.clear();
-			fontObjects.clear();
-		}
+	public static void destroy() {
+		for (Map.Entry<String, SpriteObject> entry : fontObjects.entrySet()) entry.getValue().destroy();
+		fontInfos.clear();
+		fontObjects.clear();
 	}
 
 	public static void renderText(DefaultShader sp, String text, String font) {
-		if (!initialized) {
-			System.err.println("Error rendering text: TextManager is not initialized!");
-			return;
-		}
-
 		FontInfo fontInfo = fontInfos.get(font);
 		SpriteObject fo = fontObjects.get(font);
 
@@ -71,11 +59,6 @@ public class TextManager {
 	}
 
 	public static void loadFont(ResourceData fontData) {
-		if (!initialized) {
-			System.err.println("Error loading font '" + fontData.getValue("name") + "': TextManager is not initialized!");
-			return;
-		}
-
 		String name = fontData.getValue("name");
 		String bitmap = fontData.getValue("bitmap");
 		int tiles_x = 0;
@@ -124,11 +107,6 @@ public class TextManager {
 	}
 
 	public static void loadFontFile(String filename) {
-		if (!initialized) {
-			System.err.println("Error loading font data '" + filename + "': TextManager is not initialized!");
-			return;
-		}
-
 		ResourceData fontData;
 		if (Utility.getSuffix(filename).contentEquals("xml")) {
 			fontData = ResourceUtil.readXML(filename);

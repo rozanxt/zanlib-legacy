@@ -23,7 +23,7 @@ public class ModelPanel extends BasePanel {
 
 	@Override
 	public void init() {
-		shader.loadProgram();
+		shader.init();
 		shader.setClearColor(0.2, 0.2, 0.2, 1.0);
 		shader.enableDepthTest(true);
 		shader.enableCullFace(true);
