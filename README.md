@@ -5,7 +5,7 @@ This project was created to enable programmers to work on a game directly,
 without dealing with setups such as window creation or input handling first.
 It also includes a wrapper which simplifies the use of OpenGL.
 
-Checkout the [ZanLibrary wiki](https://github.com/rozanxt/zanlib/wiki) for more information!
+Check out the [ZanLibrary wiki](https://github.com/rozanxt/zanlib/wiki) for more information!
 
 Main Features:
 - Simple window creation
