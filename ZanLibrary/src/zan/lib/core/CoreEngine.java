@@ -66,16 +66,16 @@ public abstract class CoreEngine {
 	// TIMING VARIABLES
 
 	public static final int SM_NONE = 0;
-	public static final int SM_FREE = 1;
+	public static final int SM_IDLE = 1;
 	public static final int SM_TARGET = 2;
-	private int SLEEP_MODE = SM_FREE;
+	private int SLEEP_MODE = SM_IDLE;
 
 	private long ticks = 0L;
 	private double fps = 0.0;
 	private double TARGET_FPS = 120.0;
 	private double DELTA_FPS = (1.0/TARGET_FPS);
-	private double TARGET_TPS = 50.0;
-	private double DELTA_TPS = (1.0/TARGET_TPS);
+	private double TARGET_UPS = 50.0;
+	private double DELTA_UPS = (1.0/TARGET_UPS);
 	private int SLEEP_DURATION = 2;
 	private int MAX_FRAME_SKIP = 5;
 
@@ -89,7 +89,7 @@ public abstract class CoreEngine {
 
 	// RUN METHOD
 
-	protected void run() {
+	public void run() {
 		if (initialized) return;
 		try {
 			init();
@@ -104,7 +104,7 @@ public abstract class CoreEngine {
 	// CLEANUP
 
 	private void destroy() {
-		corePanel.destroy();
+		if (corePanel != null) corePanel.destroy();
 		InputManager.destroy();
 		glfwDestroyWindow(coreWindow);
 		keyCallback.release();
@@ -146,7 +146,10 @@ public abstract class CoreEngine {
 		initWindow();
 		initGL();
 
-		corePanel.init();
+		if (corePanel == null) {
+			System.err.println("Error in 'CoreEngine': No panels set!");
+			close();
+		} else corePanel.init();
 
 		REQ_WINDOW_RESET = false;
 		initialized = true;
@@ -345,7 +348,7 @@ public abstract class CoreEngine {
 
 				ticks++;
 				frameSkip++;
-				nextTick += DELTA_TPS;
+				nextTick += DELTA_UPS;
 			}
 
 			// FPS counter
@@ -356,7 +359,7 @@ public abstract class CoreEngine {
 				nextFrame += 1.0;
 			}
 
-			render((time+DELTA_TPS-nextTick)/(DELTA_TPS));
+			render((time+DELTA_UPS-nextTick)/(DELTA_UPS));
 			sleep(time);
 			check();
 		}
@@ -375,7 +378,7 @@ public abstract class CoreEngine {
 	}
 
 	private void sleep(double time) {
-		if (SLEEP_MODE == SM_FREE) {
+		if (SLEEP_MODE == SM_IDLE) {
 			Thread.yield();
 			try {Thread.sleep(SLEEP_DURATION);}
 			catch (InterruptedException e) {}
@@ -479,9 +482,9 @@ public abstract class CoreEngine {
 		TARGET_FPS = fps;
 		DELTA_FPS = (1.0/TARGET_FPS);
 	}
-	public void setTargetTPS(double tps) {
-		TARGET_TPS = tps;
-		DELTA_TPS = (1.0/TARGET_TPS);
+	public void setTargetUPS(double ups) {
+		TARGET_UPS = ups;
+		DELTA_UPS = (1.0/TARGET_UPS);
 	}
 
 	public void setSleepDuration(int duration) {SLEEP_DURATION = duration;}
@@ -504,20 +507,20 @@ public abstract class CoreEngine {
 	protected void onWindowMinimize(boolean minimize) {if (corePanel != null) corePanel.onWindowMinimize(minimize);}
 	protected void onWindowFocus(boolean focus) {if (corePanel != null) corePanel.onWindowFocus(focus);}
 
-	protected void onKey(long window, int key, int state, int mods, int scancode) {if (coreWindow == window) onKey(key, state, mods, scancode);}
-	protected void onChar(long window, char ch) {if (coreWindow == window) onChar(ch);}
-	protected void onMouseButton(long window, int button, int state, int mods) {if (coreWindow == window) onMouseButton(button, state, mods);}
-	protected void onMouseMove(long window, double mouseX, double mouseY) {if (coreWindow == window) onMouseMove(mouseX, mouseY);}
-	protected void onMouseScroll(long window, double scrollX, double scrollY) {if (coreWindow == window) onMouseScroll(scrollX, scrollY);}
-	protected void onMouseEnter(long window, boolean mouseEnter) {if (coreWindow == window) onMouseEnter(mouseEnter);}
+	private void onKey(long window, int key, int state, int mods, int scancode) {if (coreWindow == window) onKey(key, state, mods, scancode);}
+	private void onChar(long window, char ch) {if (coreWindow == window) onChar(ch);}
+	private void onMouseButton(long window, int button, int state, int mods) {if (coreWindow == window) onMouseButton(button, state, mods);}
+	private void onMouseMove(long window, double mouseX, double mouseY) {if (coreWindow == window) onMouseMove(mouseX, mouseY);}
+	private void onMouseScroll(long window, double scrollX, double scrollY) {if (coreWindow == window) onMouseScroll(scrollX, scrollY);}
+	private void onMouseEnter(long window, boolean mouseEnter) {if (coreWindow == window) onMouseEnter(mouseEnter);}
 
-	protected void onWindowClose(long window) {if (coreWindow == window) onWindowClose();}
-	protected void onWindowRefresh(long window) {if (coreWindow == window) onWindowRefresh();}
-	protected void onWindowResize(long window, int width, int height) {if (coreWindow == window) onWindowResize(width, height);}
-	protected void onScreenResize(long window, int width, int height) {if (coreWindow == window) onScreenResize(width, height);}
-	protected void onWindowMove(long window, int posX, int posY) {if (coreWindow == window) onWindowMove(posX, posY);}
-	protected void onWindowMinimize(long window, boolean minimize) {if (coreWindow == window) onWindowMinimize(minimize);}
-	protected void onWindowFocus(long window, boolean focus) {if (coreWindow == window) onWindowFocus(focus);}
+	private void onWindowClose(long window) {if (coreWindow == window) onWindowClose();}
+	private void onWindowRefresh(long window) {if (coreWindow == window) onWindowRefresh();}
+	private void onWindowResize(long window, int width, int height) {if (coreWindow == window) onWindowResize(width, height);}
+	private void onScreenResize(long window, int width, int height) {if (coreWindow == window) onScreenResize(width, height);}
+	private void onWindowMove(long window, int posX, int posY) {if (coreWindow == window) onWindowMove(posX, posY);}
+	private void onWindowMinimize(long window, boolean minimize) {if (coreWindow == window) onWindowMinimize(minimize);}
+	private void onWindowFocus(long window, boolean focus) {if (coreWindow == window) onWindowFocus(focus);}
 
 	// GETTERS
 
@@ -562,8 +565,8 @@ public abstract class CoreEngine {
 	public double getFPS() {return fps;}
 	public double getTargetFPS() {return TARGET_FPS;}
 	public double getDeltaFPS() {return DELTA_FPS;}
-	public double getTargetTPS() {return TARGET_TPS;}
-	public double getDeltaTPS() {return DELTA_TPS;}
+	public double getTargetUPS() {return TARGET_UPS;}
+	public double getDeltaUPS() {return DELTA_UPS;}
 	public int getSleepMode() {return SLEEP_MODE;}
 	public int getSleepDuration() {return SLEEP_DURATION;}
 	public int getMaxFrameSkip() {return MAX_FRAME_SKIP;}

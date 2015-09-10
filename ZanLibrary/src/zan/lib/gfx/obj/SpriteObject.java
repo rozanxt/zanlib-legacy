@@ -1,6 +1,5 @@
 package zan.lib.gfx.obj;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureInfo;
 

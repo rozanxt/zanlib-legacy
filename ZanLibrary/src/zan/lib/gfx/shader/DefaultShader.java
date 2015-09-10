@@ -127,7 +127,7 @@ public class DefaultShader extends MatrixShader {
 	}
 
 	@Override
-	public void init() {
+	public void loadProgram() {
 		String vertexShaderSource = ""
 				+ "uniform mat4 modelViewMatrix;"
 				+ "uniform mat4 projectionMatrix;"

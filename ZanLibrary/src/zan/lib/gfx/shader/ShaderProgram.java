@@ -10,8 +10,8 @@ public abstract class ShaderProgram {
 
 	protected int programID = 0;
 
-	public abstract void init();
 	public abstract void bindState();
+	public abstract void loadProgram();
 	protected abstract void fetchLocations();
 
 	public void bind() {glUseProgram(programID);}

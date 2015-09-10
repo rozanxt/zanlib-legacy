@@ -18,7 +18,7 @@ public class TextPanel extends BasePanel {
 
 	@Override
 	public void init() {
-		shader.init();
+		shader.loadProgram();
 		shader.enableBlend(true);
 
 		viewPort.showView();

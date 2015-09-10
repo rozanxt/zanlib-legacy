@@ -5,14 +5,21 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL15.*;
-
 import static zan.lib.gfx.shader.ShaderProgram.BYTES_PER_FLOAT;
 import static zan.lib.gfx.shader.ShaderProgram.BYTES_PER_INT;
 import zan.lib.gfx.shader.DefaultShader;
 
 public class VertexObject {
+
+	public static final int GL_POINTS = GL11.GL_POINTS;
+	public static final int GL_LINE_STRIP = GL11.GL_LINE_STRIP;
+	public static final int GL_LINE_LOOP = GL11.GL_LINE_LOOP;
+	public static final int GL_LINES = GL11.GL_LINES;
+	public static final int GL_TRIANGLE_STRIP = GL11.GL_TRIANGLE_STRIP;
+	public static final int GL_TRIANGLE_FAN = GL11.GL_TRIANGLE_FAN;
+	public static final int GL_TRIANGLES = GL11.GL_TRIANGLES;
 
 	protected int vertexBuffer = 0;
 	protected int indexBuffer = 0;

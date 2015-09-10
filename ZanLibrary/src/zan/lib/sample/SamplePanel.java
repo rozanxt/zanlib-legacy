@@ -8,6 +8,8 @@ import zan.lib.util.Utility;
 
 public class SamplePanel extends BasePanel {
 
+	private SampleCore core;
+
 	private DefaultShader shader;
 	private ViewPort2D viewPort;
 
@@ -16,24 +18,28 @@ public class SamplePanel extends BasePanel {
 	private double tick;
 
 	public SamplePanel(SampleCore core) {
-		shader = new DefaultShader();
-		viewPort = new ViewPort2D(0, 0, core.getScreenWidth(), core.getScreenHeight());
+		this.core = core;
 	}
 
 	@Override
 	public void init() {
-		shader.init();
+		shader = new DefaultShader();
+		shader.loadProgram();
 
+		viewPort = new ViewPort2D(0, 0, core.getScreenWidth(), core.getScreenHeight());
 		viewPort.showView();
 		viewPort.projectView(shader);
 
-		final int[] ind = {0, 1, 2};
-		final float[] ver = {
-			-0.6f, -0.4f, 1f, 0f, 0f,
-			0.6f, -0.4f, 0f, 1f, 0f,
-			0f, 0.6f, 0f, 0f, 1f
+		final int[] indices = {0, 1, 2};
+		final float[] vertices = {
+			-0.6f, -0.4f, 1.0f, 0.0f, 0.0f,
+			0.6f, -0.4f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.6f, 0.0f, 0.0f, 1.0f
 		};
-		object = new VertexObject(ver, ind, 2, 0, 3, 0);
+
+		object = new VertexObject(vertices, indices);
+		object.setAttributes(2, 0, 3, 0);
+		object.setDrawMode(VertexObject.GL_TRIANGLES);
 
 		tick = 0.0;
 	}
@@ -46,7 +52,7 @@ public class SamplePanel extends BasePanel {
 
 	@Override
 	public void update(double time) {
-		tick += 3.0;
+		tick += 3.6;
 	}
 
 	@Override
