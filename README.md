@@ -5,6 +5,8 @@ This project was created to enable programmers to work on a game directly,
 without dealing with setups such as window creation or input handling first.
 It also includes a wrapper which simplifies the use of OpenGL.
 
+Checkout the [ZanLibrary wiki](https://github.com/rozanxt/zanlib/wiki) for more information!
+
 Main Features:
 - Simple window creation
 - Game loop management
@@ -14,4 +16,4 @@ Main Features:
 - Socket programming
 - Maths library
 
-ZanLibrary uses LWJGL 3 (http://www.lwjgl.org/) and Paul Lamb's Sound System (http://www.paulscode.com/).
+ZanLibrary uses [LWJGL 3](http://www.lwjgl.org/) and [Paul Lamb's Sound System](http://www.paulscode.com/).
