@@ -105,6 +105,7 @@ public abstract class CoreEngine {
 
 	private void destroy() {
 		if (corePanel != null) corePanel.destroy();
+		onDestroy();
 		InputManager.destroy();
 		glfwDestroyWindow(coreWindow);
 		keyCallback.release();
@@ -145,6 +146,7 @@ public abstract class CoreEngine {
 		initInput(NULL);
 		initWindow();
 		initGL();
+		onInit();
 
 		if (corePanel == null) {
 			System.err.println("Error in 'CoreEngine': No panels set!");
@@ -292,11 +294,11 @@ public abstract class CoreEngine {
 		});
 		glfwSetWindowPosCallback(coreWindow, windowPosCallback = new GLFWWindowPosCallback() {
 			@Override
-			public void invoke(long window, int posX, int posY) {
+			public void invoke(long window, int windowX, int windowY) {
 				if (initialized && !SCR_FULL) {
-					SCR_X = posX;
-					SCR_Y = posY;
-					onWindowMove(window, posX, posY);
+					SCR_X = windowX;
+					SCR_Y = windowY;
+					onWindowMove(window, windowX, windowY);
 				}
 			}
 		});
@@ -411,9 +413,9 @@ public abstract class CoreEngine {
 		if (initialized) glfwSetWindowTitle(coreWindow, SCR_TITLE);
 	}
 
-	public void setWindowPos(int posX, int posY) {
-		SCR_X = posX;
-		SCR_Y = posY;
+	public void setWindowPos(int windowX, int windowY) {
+		SCR_X = windowX;
+		SCR_Y = windowY;
 		if (initialized) glfwSetWindowPos(coreWindow, SCR_X, SCR_Y);
 	}
 
@@ -458,7 +460,7 @@ public abstract class CoreEngine {
 	public void toggleMinimize() {setMinimize(!isMinimized());}
 
 	/** @deprecated No implementation of this method yet. */
-	public void setFocus(boolean focused) {}
+	public void setFocus(boolean focus) {}
 	/** @deprecated No implementation of this method yet. */
 	public void toggleFocus() {}
 
@@ -492,6 +494,9 @@ public abstract class CoreEngine {
 
 	// CALLBACK METHODS
 
+	protected void onInit() {}
+	protected void onDestroy() {}
+
 	protected void onKey(int key, int state, int mods, int scancode) {if (corePanel != null) corePanel.onKey(key, state, mods, scancode);}
 	protected void onChar(char ch) {if (corePanel != null) corePanel.onChar(ch);}
 	protected void onMouseButton(int button, int state, int mods) {if (corePanel != null) corePanel.onMouseButton(button, state, mods);}
@@ -503,7 +508,7 @@ public abstract class CoreEngine {
 	protected void onWindowRefresh() {if (corePanel != null) corePanel.onWindowRefresh();}
 	protected void onWindowResize(int width, int height) {if (corePanel != null) corePanel.onWindowResize(width, height);}
 	protected void onScreenResize(int width, int height) {if (corePanel != null) corePanel.onScreenResize(width, height);}
-	protected void onWindowMove(int posX, int posY) {if (corePanel != null) corePanel.onWindowMove(posX, posY);}
+	protected void onWindowMove(int windowX, int windowY) {if (corePanel != null) corePanel.onWindowMove(windowX, windowY);}
 	protected void onWindowMinimize(boolean minimize) {if (corePanel != null) corePanel.onWindowMinimize(minimize);}
 	protected void onWindowFocus(boolean focus) {if (corePanel != null) corePanel.onWindowFocus(focus);}
 
@@ -518,7 +523,7 @@ public abstract class CoreEngine {
 	private void onWindowRefresh(long window) {if (coreWindow == window) onWindowRefresh();}
 	private void onWindowResize(long window, int width, int height) {if (coreWindow == window) onWindowResize(width, height);}
 	private void onScreenResize(long window, int width, int height) {if (coreWindow == window) onScreenResize(width, height);}
-	private void onWindowMove(long window, int posX, int posY) {if (coreWindow == window) onWindowMove(posX, posY);}
+	private void onWindowMove(long window, int windowX, int windowY) {if (coreWindow == window) onWindowMove(windowX, windowY);}
 	private void onWindowMinimize(long window, boolean minimize) {if (coreWindow == window) onWindowMinimize(minimize);}
 	private void onWindowFocus(long window, boolean focus) {if (coreWindow == window) onWindowFocus(focus);}
 
