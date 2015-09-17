@@ -63,6 +63,7 @@ public class WindowInput {
 	}
 
 	public void invokeKeys(int key, int state, int mods) {
+		if (key == GLFW_KEY_UNKNOWN) return;
 		KeyEvent keyEvent = keyEvents[key];
 		if (state == GLFW_PRESS) {
 			keyEvent.setPressed(true);
@@ -79,6 +80,7 @@ public class WindowInput {
 	}
 
 	public void invokeMouseButtons(int key, int state, int mods) {
+		if (key == GLFW_KEY_UNKNOWN) return;
 		MouseEvent mouseEvent = mouseEvents[key];
 		if (state == GLFW_PRESS) {
 			mouseEvent.setPressed(true);
