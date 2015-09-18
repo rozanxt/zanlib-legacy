@@ -97,29 +97,23 @@ public class DefaultShader extends MatrixShader {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	}
 
-	public void enablePositionPointer() {enableVertexPointer(vertexPosID);}
-	public void disablePositionPointer() {disableVertexPointer(vertexPosID);}
-	public void setPositionPointer(int size, int stride, int offset) {setVertexPointer(vertexPosID, size, stride, offset);}
+	public void enablePositionPointer() {if (vertexPosID != -1) enableVertexPointer(vertexPosID);}
+	public void disablePositionPointer() {if (vertexPosID != -1) disableVertexPointer(vertexPosID);}
+	public void setPositionPointer(int size, int stride, int offset) {if (vertexPosID != -1) setVertexPointer(vertexPosID, size, stride, offset);}
 
-	public void enableNormalPointer() {enableVertexPointer(vertexNormalID);}
-	public void disableNormalPointer() {disableVertexPointer(vertexNormalID);}
-	public void setNormalPointer(int size, int stride, int offset) {setVertexPointer(vertexNormalID, size, stride, offset);}
+	public void enableNormalPointer() {if (vertexNormalID != -1) enableVertexPointer(vertexNormalID);}
+	public void disableNormalPointer() {if (vertexNormalID != -1) disableVertexPointer(vertexNormalID);}
+	public void setNormalPointer(int size, int stride, int offset) {if (vertexNormalID != -1) setVertexPointer(vertexNormalID, size, stride, offset);}
 
-	public void enableColorPointer() {enableVertexPointer(vertexColorID); glUniform1i(enableColorID, 0);}
-	public void disableColorPointer() {disableVertexPointer(vertexColorID); glUniform1i(enableColorID, 1);}
-	public void setColorPointer(int size, int stride, int offset) {setVertexPointer(vertexColorID, size, stride, offset);}
+	public void enableColorPointer() {if (vertexColorID != -1) enableVertexPointer(vertexColorID); glUniform1i(enableColorID, 0);}
+	public void disableColorPointer() {if (vertexColorID != -1) disableVertexPointer(vertexColorID); glUniform1i(enableColorID, 1);}
+	public void setColorPointer(int size, int stride, int offset) {if (vertexColorID != -1) setVertexPointer(vertexColorID, size, stride, offset);}
 
-	public void enableTexCoordPointer() {enableVertexPointer(texCoordID); glUniform1i(enableTextureID, 1);}
-	public void disableTexCoordPointer() {disableVertexPointer(texCoordID); glUniform1i(enableTextureID, 0);}
-	public void setTexCoordPointer(int size, int stride, int offset) {setVertexPointer(texCoordID, size, stride, offset);}
+	public void enableTexCoordPointer() {if (texCoordID != -1) enableVertexPointer(texCoordID); glUniform1i(enableTextureID, 1);}
+	public void disableTexCoordPointer() {if (texCoordID != -1) disableVertexPointer(texCoordID); glUniform1i(enableTextureID, 0);}
+	public void setTexCoordPointer(int size, int stride, int offset) {if (texCoordID != -1) setVertexPointer(texCoordID, size, stride, offset);}
 
 	public void drawElements(int drawMode, int numVertices, int indexOffset) {glDrawElements(drawMode, numVertices, GL_UNSIGNED_INT, indexOffset);}
-
-	public boolean isPositionPointerAvailable() {return (vertexPosID != -1);}
-	public boolean isNormalPointerAvailable() {return (vertexNormalID != -1);}
-	public boolean isColorPointerAvailable() {return (vertexColorID != -1);}
-	public boolean isTexCoordPointerAvailable() {return (texCoordID != -1);}
-
 
 	@Override
 	public void bindState() {
