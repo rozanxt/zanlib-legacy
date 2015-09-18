@@ -15,7 +15,7 @@ public class SampleCore extends CoreEngine {
 	public static void main(String[] args) {
 		SampleCore core = new SampleCore();
 		core.setTitle("Sample Program");
-		core.setPanel(new SamplePanel(core));
+		core.setPanel(new TextPanel(core));
 		core.run();
 	}
 

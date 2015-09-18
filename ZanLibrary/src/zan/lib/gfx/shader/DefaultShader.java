@@ -128,7 +128,7 @@ public class DefaultShader extends MatrixShader {
 
 	@Override
 	public void loadProgram() {
-		String vertexShaderSource = ""
+		String vertexShaderSource = "#version 110\n"
 				+ "uniform mat4 modelViewMatrix;"
 				+ "uniform mat4 projectionMatrix;"
 				+ "attribute vec3 vertexPos;"
@@ -141,7 +141,7 @@ public class DefaultShader extends MatrixShader {
 				+ "fragTexCoord = texCoord;"
 				+ "gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 1.0);"
 				+ "}";
-		String fragmentShaderSource = ""
+		String fragmentShaderSource = "#version 110\n"
 				+ "uniform bool enableColor;"
 				+ "uniform bool enableTexture;"
 				+ "uniform sampler2D texUnit;"

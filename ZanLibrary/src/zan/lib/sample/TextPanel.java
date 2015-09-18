@@ -26,7 +26,7 @@ public class TextPanel extends BasePanel {
 
 		TextureManager.init();
 		TextManager.init();
-		TextManager.loadFontFile("res/font/fonts.res");
+		TextManager.loadFontFile("res/fnt/fonts.res");
 	}
 
 	@Override
