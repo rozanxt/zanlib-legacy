@@ -13,16 +13,16 @@ import zan.lib.util.math.Vec4D;
 
 public class DefaultShader extends MatrixShader {
 
-	protected int vertexPosID = 0;
-	protected int vertexNormalID = 0;
-	protected int vertexColorID = 0;
-	protected int texCoordID = 0;
-	protected int texUnitID = 0;
-	protected int enableTextureID = 0;
-	protected int enableColorID = 0;
-	protected int tintColorID = 0;
-	protected int modelViewMatrixID = 0;
-	protected int projectionMatrixID = 0;
+	protected int vertexPosID = -1;
+	protected int vertexNormalID = -1;
+	protected int vertexColorID = -1;
+	protected int texCoordID = -1;
+	protected int texUnitID = -1;
+	protected int enableTextureID = -1;
+	protected int enableColorID = -1;
+	protected int tintColorID = -1;
+	protected int modelViewMatrixID = -1;
+	protected int projectionMatrixID = -1;
 
 	protected boolean enableBlend = false;
 	protected boolean enableCullFace = false;
@@ -114,6 +114,12 @@ public class DefaultShader extends MatrixShader {
 	public void setTexCoordPointer(int size, int stride, int offset) {setVertexPointer(texCoordID, size, stride, offset);}
 
 	public void drawElements(int drawMode, int numVertices, int indexOffset) {glDrawElements(drawMode, numVertices, GL_UNSIGNED_INT, indexOffset);}
+
+	public boolean isPositionPointerAvailable() {return (vertexPosID != -1);}
+	public boolean isNormalPointerAvailable() {return (vertexNormalID != -1);}
+	public boolean isColorPointerAvailable() {return (vertexColorID != -1);}
+	public boolean isTexCoordPointerAvailable() {return (texCoordID != -1);}
+
 
 	@Override
 	public void bindState() {

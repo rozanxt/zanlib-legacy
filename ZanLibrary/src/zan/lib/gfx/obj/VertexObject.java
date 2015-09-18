@@ -77,22 +77,30 @@ public class VertexObject {
 		sp.bindMatrix();
 		sp.bindBuffer(vertexBuffer, indexBuffer);
 
-		if (numCoords > 0) {
-			sp.setPositionPointer(numCoords, numData, coordOffset);
-			sp.enablePositionPointer();
-		} else sp.disablePositionPointer();
-		if (numNormals > 0) {
-			sp.setNormalPointer(numNormals, numData, normalOffset);
-			sp.enableNormalPointer();
-		} else sp.disableNormalPointer();
-		if (numColors > 0) {
-			sp.setColorPointer(numColors, numData, colorOffset);
-			sp.enableColorPointer();
-		} else sp.disableColorPointer();
-		if (numTexCoords > 0) {
-			sp.setTexCoordPointer(numTexCoords, numData, texCoordOffset);
-			sp.enableTexCoordPointer();
-		} else sp.disableTexCoordPointer();
+		if (sp.isPositionPointerAvailable()) {
+			if (numCoords > 0) {
+				sp.setPositionPointer(numCoords, numData, coordOffset);
+				sp.enablePositionPointer();
+			} else sp.disablePositionPointer();
+		}
+		if (sp.isNormalPointerAvailable()) {
+			if (numNormals > 0) {
+				sp.setNormalPointer(numNormals, numData, normalOffset);
+				sp.enableNormalPointer();
+			} else sp.disableNormalPointer();
+		}
+		if (sp.isColorPointerAvailable()) {
+			if (numColors > 0) {
+				sp.setColorPointer(numColors, numData, colorOffset);
+				sp.enableColorPointer();
+			} else sp.disableColorPointer();
+		}
+		if (sp.isTexCoordPointerAvailable()) {
+			if (numTexCoords > 0) {
+				sp.setTexCoordPointer(numTexCoords, numData, texCoordOffset);
+				sp.enableTexCoordPointer();
+			} else sp.disableTexCoordPointer();
+		}
 
 		sp.drawElements(drawMode, numVertices, indexOffset);
 	}
