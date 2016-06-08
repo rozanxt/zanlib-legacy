@@ -1,7 +1,5 @@
 package zan.lib.core;
 
-import java.nio.ByteBuffer;
-
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -13,25 +11,6 @@ import org.lwjgl.opengl.*;
 import zan.lib.input.InputManager;
 
 public abstract class CoreEngine {
-
-	// CALLBACK CLASSES
-
-	private GLFWErrorCallback errorCallback;
-
-	private GLFWKeyCallback keyCallback;
-	private GLFWCharCallback charCallback;
-	private GLFWMouseButtonCallback mouseButtonCallback;
-	private GLFWCursorPosCallback mousePosCallback;
-	private GLFWScrollCallback mouseScrollCallback;
-	private GLFWCursorEnterCallback mouseEnterCallback;
-
-	private GLFWWindowCloseCallback windowCloseCallback;
-	private GLFWWindowRefreshCallback windowRefreshCallback;
-	private GLFWWindowSizeCallback windowSizeCallback;
-	private GLFWFramebufferSizeCallback framebufferSizeCallback;
-	private GLFWWindowPosCallback windowPosCallback;
-	private GLFWWindowIconifyCallback windowIconifyCallback;
-	private GLFWWindowFocusCallback windowFocusCallback;
 
 	// WINDOW VARIABLES
 
@@ -97,7 +76,7 @@ public abstract class CoreEngine {
 			destroy();
 		} finally {
 			glfwTerminate();
-			errorCallback.release();
+			glfwSetErrorCallback(null).free();
 		}
 	}
 
@@ -107,38 +86,26 @@ public abstract class CoreEngine {
 		if (corePanel != null) corePanel.destroy();
 		onDestroy();
 		InputManager.destroy();
+		glfwFreeCallbacks(coreWindow);
 		glfwDestroyWindow(coreWindow);
-		keyCallback.release();
-		charCallback.release();
-		mouseButtonCallback.release();
-		mousePosCallback.release();
-		mouseScrollCallback.release();
-		mouseEnterCallback.release();
-		windowCloseCallback.release();
-		windowRefreshCallback.release();
-		windowSizeCallback.release();
-		framebufferSizeCallback.release();
-		windowPosCallback.release();
-		windowIconifyCallback.release();
-		windowFocusCallback.release();
 	}
 
-	public void close() {glfwSetWindowShouldClose(coreWindow, GL_TRUE);}
+	public void close() {glfwSetWindowShouldClose(coreWindow, true);}
 	public void close(boolean close) {
 		if (close) close();
-		else glfwSetWindowShouldClose(coreWindow, GL_FALSE);
+		else glfwSetWindowShouldClose(coreWindow, false);
 	}
 
 	// INITIALIZATION
 
 	private void init() {
-		glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
+		GLFWErrorCallback.createPrint(System.err).set();
 
-		if (glfwInit() != GL_TRUE) throw new IllegalStateException("Unable to initialize GLFW");
+		if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
-		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		MNT_WIDTH = GLFWvidmode.width(vidmode);
-		MNT_HEIGHT = GLFWvidmode.height(vidmode);
+		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		MNT_WIDTH = vidmode.width();
+		MNT_HEIGHT = vidmode.height();
 		if (SCR_X == -1) SCR_X = (MNT_WIDTH-WIN_WIDTH)/2;
 		if (SCR_Y == -1) SCR_Y = (MNT_HEIGHT-WIN_HEIGHT)/2;
 
@@ -205,7 +172,7 @@ public abstract class CoreEngine {
 		InputManager.setWindow(coreWindow);
 		if (previousWindow != NULL) InputManager.destroyWindow(previousWindow);
 
-		glfwSetKeyCallback(coreWindow, keyCallback = new GLFWKeyCallback() {
+		glfwSetKeyCallback(coreWindow, new GLFWKeyCallback() {
 			@Override
 			public void invoke(long window, int key, int scancode, int state, int mods) {
 				if (initialized) {
@@ -214,7 +181,7 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetCharCallback(coreWindow, charCallback = new GLFWCharCallback() {
+		glfwSetCharCallback(coreWindow, new GLFWCharCallback() {
 			@Override
 			public void invoke(long window, int ch) {
 				if (initialized) {
@@ -223,7 +190,7 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetMouseButtonCallback(coreWindow, mouseButtonCallback = new GLFWMouseButtonCallback() {
+		glfwSetMouseButtonCallback(coreWindow, new GLFWMouseButtonCallback() {
 			@Override
 			public void invoke(long window, int button, int state, int mods) {
 				if (initialized) {
@@ -232,7 +199,7 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetCursorPosCallback(coreWindow, mousePosCallback = new GLFWCursorPosCallback() {
+		glfwSetCursorPosCallback(coreWindow, new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double mouseX, double mouseY) {
 				if (initialized) {
@@ -241,7 +208,7 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetScrollCallback(coreWindow, mouseScrollCallback = new GLFWScrollCallback() {
+		glfwSetScrollCallback(coreWindow, new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double scrollX, double scrollY) {
 				if (initialized) {
@@ -250,29 +217,29 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetCursorEnterCallback(coreWindow, mouseEnterCallback = new GLFWCursorEnterCallback() {
+		glfwSetCursorEnterCallback(coreWindow, new GLFWCursorEnterCallback() {
 			@Override
-			public void invoke(long window, int mouseEnter) {
+			public void invoke(long window, boolean mouseEnter) {
 				if (initialized) {
-					InputManager.invokeMouseEnter(window, (mouseEnter == GL_TRUE));
-					onMouseEnter(window, (mouseEnter == GL_TRUE));
+					InputManager.invokeMouseEnter(window, mouseEnter);
+					onMouseEnter(window, mouseEnter);
 				}
 			}
 		});
 
-		glfwSetWindowCloseCallback(coreWindow, windowCloseCallback = new GLFWWindowCloseCallback() {
+		glfwSetWindowCloseCallback(coreWindow, new GLFWWindowCloseCallback() {
 			@Override
 			public void invoke(long window) {
 				if (initialized) onWindowClose(window);
 			}
 		});
-		glfwSetWindowRefreshCallback(coreWindow, windowRefreshCallback = new GLFWWindowRefreshCallback() {
+		glfwSetWindowRefreshCallback(coreWindow, new GLFWWindowRefreshCallback() {
 			@Override
 			public void invoke(long window) {
 				if (initialized) onWindowRefresh(window);
 			}
 		});
-		glfwSetWindowSizeCallback(coreWindow, windowSizeCallback = new GLFWWindowSizeCallback() {
+		glfwSetWindowSizeCallback(coreWindow, new GLFWWindowSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
 				if (initialized && !SCR_FULL) {
@@ -282,7 +249,7 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetFramebufferSizeCallback(coreWindow, framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
+		glfwSetFramebufferSizeCallback(coreWindow, new GLFWFramebufferSizeCallback() {
 			@Override
 			public void invoke(long window, int width, int height) {
 				if (initialized && !SCR_FULL) {
@@ -292,7 +259,7 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetWindowPosCallback(coreWindow, windowPosCallback = new GLFWWindowPosCallback() {
+		glfwSetWindowPosCallback(coreWindow, new GLFWWindowPosCallback() {
 			@Override
 			public void invoke(long window, int windowX, int windowY) {
 				if (initialized && !SCR_FULL) {
@@ -302,19 +269,19 @@ public abstract class CoreEngine {
 				}
 			}
 		});
-		glfwSetWindowIconifyCallback(coreWindow, windowIconifyCallback = new GLFWWindowIconifyCallback() {
+		glfwSetWindowIconifyCallback(coreWindow, new GLFWWindowIconifyCallback() {
 			@Override
-			public void invoke(long window, int minimize) {
+			public void invoke(long window, boolean minimize) {
 				if (initialized) {
-					SCR_MINIMIZE = (minimize == GL_TRUE);
-					onWindowMinimize(window, (minimize == GL_TRUE));
+					SCR_MINIMIZE = minimize;
+					onWindowMinimize(window, minimize);
 				}
 			}
 		});
-		glfwSetWindowFocusCallback(coreWindow, windowFocusCallback = new GLFWWindowFocusCallback() {
+		glfwSetWindowFocusCallback(coreWindow, new GLFWWindowFocusCallback() {
 			@Override
-			public void invoke(long window, int focus) {
-				if (initialized) onWindowFocus(window, (focus == GL_TRUE));
+			public void invoke(long window, boolean focus) {
+				if (initialized) onWindowFocus(window, focus);
 			}
 		});
 	}
@@ -328,7 +295,7 @@ public abstract class CoreEngine {
 	}
 
 	private void initGL() {
-		GLContext.createFromCurrent();
+		GL.createCapabilities();
 	}
 
 	// MAIN LOOP
@@ -338,7 +305,7 @@ public abstract class CoreEngine {
 		nextTick = nextFrame = getTime();
 		int frameCount = 0;
 
-		while (glfwWindowShouldClose(coreWindow) == GL_FALSE) {
+		while (!glfwWindowShouldClose(coreWindow)) {
 			double time = getTime();
 
 			int frameSkip = 0;
