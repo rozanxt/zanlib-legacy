@@ -1,17 +1,17 @@
 package zan.lib.sample;
 
-import zan.lib.core.BasePanel;
+import zan.lib.core.FramePanel;
 import zan.lib.input.InputManager;
 import zan.lib.sound.SoundManager;
 
-public class SoundPanel extends BasePanel {
+public class SoundPanel extends FramePanel {
 
 	public SoundPanel(SampleCore core) {
 
 	}
 
 	@Override
-	public void init() {
+	public void create() {
 		SoundManager.init();
 		SoundManager.loadMusic("humoresky", "res/snd/sample_music.ogg");
 		SoundManager.loadSound("click", "res/snd/sample_sound.wav");

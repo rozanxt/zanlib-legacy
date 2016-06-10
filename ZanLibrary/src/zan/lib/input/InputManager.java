@@ -163,7 +163,7 @@ public class InputManager {
 
 	private static long currentWindow;
 
-	public static void init() {windowInputs = new ArrayList<WindowInput>();}
+	public static void create() {windowInputs = new ArrayList<WindowInput>();}
 	public static void destroy() {windowInputs.clear();}
 
 	public static WindowInput setWindow(long window) {
@@ -195,11 +195,6 @@ public class InputManager {
 		}
 		return null;
 	}
-
-	/** @deprecated Replaced by invoke callback methods */
-	public static void poll() {getWindow(currentWindow).poll();}
-	/** @deprecated Replaced by invoke callback methods */
-	public static void poll(long window) {getWindow(window).poll();}
 
 	public static void clear() {getWindow(currentWindow).clear();}
 	public static void clear(long window) {getWindow(window).clear();}

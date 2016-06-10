@@ -1,26 +1,29 @@
 package zan.lib.sample;
 
-import zan.lib.core.BasePanel;
+import zan.lib.core.FramePanel;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.text.TextManager;
 import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPort2D;
 
-public class TextPanel extends BasePanel {
+public class TextPanel extends FramePanel {
+
+	private SampleCore core;
 
 	private DefaultShader shader;
 	private ViewPort2D viewPort;
 
 	public TextPanel(SampleCore core) {
-		shader = new DefaultShader();
-		viewPort = new ViewPort2D(0, 0, core.getScreenWidth(), core.getScreenHeight());
+		this.core = core;
 	}
 
 	@Override
-	public void init() {
+	public void create() {
+		shader = new DefaultShader();
 		shader.loadProgram();
 		shader.enableBlend(true);
 
+		viewPort = new ViewPort2D(0, 0, core.getScreenWidth(), core.getScreenHeight());
 		viewPort.showView();
 		viewPort.projectView(shader);
 

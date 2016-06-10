@@ -43,13 +43,6 @@ public class WindowInput {
 		mouseLeft = false;
 	}
 
-	/** @deprecated Replaced by invoke callback methods. */
-	public void poll() {
-		for (int i=0;i<GLFW_KEY_LAST;i++) keyEvents[i].setPressed((glfwGetKey(window, i) == 1));
-		for (int i=0;i<GLFW_MOUSE_BUTTON_LAST;i++) mouseEvents[i].setPressed((glfwGetMouseButton(window, i) == 1));
-		invokeRawMousePos();
-	}
-
 	public void clear() {
 		for (int i=0;i<GLFW_KEY_LAST;i++) keyEvents[i].clear();
 		charEvents.clear();
@@ -95,15 +88,6 @@ public class WindowInput {
 		mouseDY = mouseY - this.mouseY;
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
-	}
-
-	/** @deprecated Use {@link #invokeMousePos(double,double)} instead. */
-	public void invokeRawMousePos() {
-		glfwGetCursorPos(window, rawX, rawY);
-		mouseDX = rawX.get(0) - mouseX;
-		mouseDY = rawY.get(0) - mouseY;
-		mouseX = rawX.get(0);
-		mouseY = rawY.get(0);
 	}
 
 	public void invokeMouseScroll(double mouseScroll) {

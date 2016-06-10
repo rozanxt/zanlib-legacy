@@ -1,7 +1,7 @@
 package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
-import zan.lib.core.BasePanel;
+import zan.lib.core.FramePanel;
 import zan.lib.gfx.obj.SpriteObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.sprite.AnimatedSprite;
@@ -9,7 +9,9 @@ import zan.lib.gfx.sprite.Sprite;
 import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPortScreen;
 
-public class SpritePanel extends BasePanel {
+public class SpritePanel extends FramePanel {
+
+	private SampleCore core;
 
 	private DefaultShader shader;
 	private ViewPortScreen viewPort;
@@ -20,15 +22,16 @@ public class SpritePanel extends BasePanel {
 	private double value;
 
 	public SpritePanel(SampleCore core) {
-		shader = new DefaultShader();
-		viewPort = new ViewPortScreen(core.getScreenWidth(), core.getScreenHeight());
+		this.core = core;
 	}
 
 	@Override
-	public void init() {
+	public void create() {
+		shader = new DefaultShader();
 		shader.loadProgram();
 		shader.enableBlend(true);
 
+		viewPort = new ViewPortScreen(core.getScreenWidth(), core.getScreenHeight());
 		viewPort.showView();
 		viewPort.projectView(shader);
 

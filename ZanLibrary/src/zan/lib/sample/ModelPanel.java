@@ -1,13 +1,15 @@
 package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
-import zan.lib.core.BasePanel;
+import zan.lib.core.FramePanel;
 import zan.lib.gfx.obj.ModelObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.view.ViewPort3D;
 import zan.lib.util.math.Vec3D;
 
-public class ModelPanel extends BasePanel {
+public class ModelPanel extends FramePanel {
+
+	private SampleCore core;
 
 	private DefaultShader shader;
 	private ViewPort3D viewPort;
@@ -17,17 +19,18 @@ public class ModelPanel extends BasePanel {
 	private Vec3D rotation;
 
 	public ModelPanel(SampleCore core) {
-		shader = new Sample3DShader();
-		viewPort = new ViewPort3D(0, 0, core.getScreenWidth(), core.getScreenHeight());
+		this.core = core;
 	}
 
 	@Override
-	public void init() {
+	public void create() {
+		shader = new Sample3DShader();
 		shader.loadProgram();
 		shader.setClearColor(0.2, 0.2, 0.2, 1.0);
 		shader.enableDepthTest(true);
 		shader.enableCullFace(true);
 
+		viewPort = new ViewPort3D(0, 0, core.getScreenWidth(), core.getScreenHeight());
 		viewPort.setOffsetZ(5.0);
 		viewPort.showView();
 		viewPort.projectView(shader);

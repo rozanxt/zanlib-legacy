@@ -1,12 +1,12 @@
 package zan.lib.sample;
 
-import zan.lib.core.BasePanel;
+import zan.lib.core.FramePanel;
 import zan.lib.gfx.obj.VertexObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.view.ViewPort2D;
 import zan.lib.util.Utility;
 
-public class SamplePanel extends BasePanel {
+public class SamplePanel extends FramePanel {
 
 	private SampleCore core;
 
@@ -22,7 +22,7 @@ public class SamplePanel extends BasePanel {
 	}
 
 	@Override
-	public void init() {
+	public void create() {
 		shader = new DefaultShader();
 		shader.loadProgram();
 
