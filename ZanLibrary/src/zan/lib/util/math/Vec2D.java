@@ -1,27 +1,56 @@
 package zan.lib.util.math;
 
-public class Vec2D extends VecD {
+public final class Vec2D implements IVecD<Vec2D> {
 
-	public Vec2D() {super(2);}
-	public Vec2D(double value) {super(2, value);}
-	public Vec2D(double x, double y) {super(x, y);}
-	public Vec2D(VecD vector) {super(2, vector);}
+	public final double x, y;
 
-	public void setComponents(double x, double y) {setX(x); setY(y);}
-	public void setX(double x) {set(0, x);}
-	public void setY(double y) {set(1, y);}
+	public Vec2D(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
 
-	public double getX() {return get(0);}
-	public double getY() {return get(1);}
+	public double cross(Vec2D v) {return x * v.y - v.x * y;}
 
-	public double addX(double value) {return add(0, value);}
-	public double subX(double value) {return sub(0, value);}
-	public double mulX(double value) {return mul(0, value);}
-	public double divX(double value) {return div(0, value);}
+	@Override
+	public int size() {return 2;}
 
-	public double addY(double value) {return add(1, value);}
-	public double subY(double value) {return sub(1, value);}
-	public double mulY(double value) {return mul(1, value);}
-	public double divY(double value) {return div(1, value);}
+	@Override
+	public double get(int component) {
+		switch (component) {
+		case 0:
+			return x;
+		case 1:
+			return y;
+		default:
+			return 0.0;
+		}
+	}
+
+	@Override
+	public Vec2D add(Vec2D v) {return new Vec2D(x + v.x, y + v.y);}
+
+	@Override
+	public Vec2D sub(Vec2D v) {return new Vec2D(x - v.x, y - v.y);}
+
+	@Override
+	public Vec2D scalar(double s) {return new Vec2D(s * x, s * y);}
+
+	@Override
+	public Vec2D negate() {return scalar(-1.0);}
+
+	@Override
+	public double dot(Vec2D v) {return x * v.x + y * v.y;}
+
+	@Override
+	public double length() {return Math.sqrt(dot(this));}
+
+	@Override
+	public Vec2D normalize() {return scalar(1.0/length());}
+
+	@Override
+	public boolean is(Vec2D v) {return (x == v.x && y == v.y);}
+
+	@Override
+	public String toString() {return "(" + x + "," + y + ")";}
 
 }

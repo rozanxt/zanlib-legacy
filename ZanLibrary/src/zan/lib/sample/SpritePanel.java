@@ -39,11 +39,11 @@ public class SpritePanel extends FramePanel {
 
 		spriteA = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"));
 		spriteA.setPos(320.0, 240.0);
-		spriteA.setScale(200.0);
+		spriteA.setScale(200.0, 200.0);
 
 		spriteB = new AnimatedSprite(new SpriteObject(TextureManager.loadTexture("animation", "res/img/sample_animation.png"), 12, 1, SpriteObject.ALIGN_HORIZONTAL));
 		spriteB.setPos(320.0, 240.0);
-		spriteB.setScale(200.0);
+		spriteB.setScale(200.0, 200.0);
 		spriteB.setFPS(24.0, 50.0);
 
 		value = 320.0;
@@ -69,9 +69,9 @@ public class SpritePanel extends FramePanel {
 			spriteB.setFlip(1);
 		}
 
-		spriteA.setScale(value);
+		spriteA.setScale(value, value);
 		spriteA.setAngle(value);
-		spriteB.setX(value);
+		spriteB.setPos(value, 0.0);
 
 		spriteA.update();
 		spriteB.update();

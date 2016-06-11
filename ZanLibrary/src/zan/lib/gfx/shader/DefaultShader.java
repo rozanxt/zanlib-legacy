@@ -60,7 +60,7 @@ public class DefaultShader extends MatrixShader {
 	}
 
 	public void setClearColor(double r, double g, double b, double a) {
-		clearColor.setComponents(r, g, b, a);
+		clearColor = new Vec4D(r, g, b, a);
 		glClearColor((float)r, (float)g, (float)b, (float)a);
 	}
 

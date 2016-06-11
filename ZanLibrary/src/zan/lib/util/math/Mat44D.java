@@ -1,17 +1,129 @@
 package zan.lib.util.math;
 
-public class Mat44D extends MatD {
+public final class Mat44D implements IMatD<Mat44D> {
 
-	public Mat44D() {super(4);}
-	public Mat44D(boolean identity) {super(4, identity);}
-	public Mat44D(double value) {super(4, value);}
-	public Mat44D(MatD matrix) {super(4, matrix);}
-	public Mat44D(Vec4D vec0, Vec4D vec1, Vec4D vec2, Vec4D vec3) {super(vec0, vec1, vec2, vec3);}
-	public Mat44D(double a00, double a10, double a20, double a30,
-			  double a01, double a11, double a21, double a31,
-			  double a02, double a12, double a22, double a32,
-			  double a03, double a13, double a23, double a33) {
-		super(4, a00, a10, a20, a30, a01, a11, a21, a31, a02, a12, a22, a32, a03, a13, a23, a33);
+	private final double[] data;
+
+	public Mat44D(double... data) {
+		if (size() != data.length) {
+			System.err.println("Warning: Inconsistent matrix");
+			this.data = null;
+		} else {
+			this.data = data;
+		}
+	}
+
+	@Override
+	public int rows() {return 4;}
+
+	@Override
+	public int cols() {return 4;}
+
+	@Override
+	public int size() {return 16;}
+
+	@Override
+	public double get(int component) {return data[component];}
+
+	@Override
+	public double get(int row, int col) {return data[cols()*row+col];}
+
+	@Override
+	public Mat44D add(Mat44D m) {
+		if (rows() != m.rows() || cols() != m.cols()) {
+			System.err.println("Warning: Incompatible matrices");
+			return null;
+		}
+		double[] result = new double[size()];
+		for (int i=0;i<size();i++) result[i] = get(i) + m.get(i);
+		return new Mat44D(result);
+	}
+
+	@Override
+	public Mat44D sub(Mat44D m) {
+		if (rows() != m.rows() || cols() != m.cols()) {
+			System.err.println("Warning: Incompatible matrices");
+			return null;
+		}
+		double[] result = new double[size()];
+		for (int i=0;i<size();i++) result[i] = get(i) - m.get(i);
+		return new Mat44D(result);
+	}
+
+	@Override
+	public Mat44D mult(Mat44D m) {
+		if (cols() != m.rows()) {
+			System.err.println("Warning: Incompatible matrices");
+			return null;
+		}
+		double[] result = new double[rows() * m.cols()];
+		for (int i=0;i<rows();i++) {
+			for (int j=0;j<m.cols();j++) {
+				double sum = 0.0;
+				for (int k=0;k<cols();k++) sum += get(i, k) * m.get(k, j);
+				result[m.cols()*i+j] = sum;
+			}
+		}
+		return new Mat44D(result);
+	}
+
+	@Override
+	public Mat44D scalar(double s) {
+		double[] result = new double[size()];
+		for (int i=0;i<size();i++) result[i] = s * get(i);
+		return new Mat44D(result);
+	}
+
+	@Override
+	public Mat44D negate() {return scalar(-1.0);}
+
+	@Override
+	public double dot(Mat44D v) {
+		double dot = 0.0;
+		for (int i=0;i<size();i++) dot += get(i) * v.get(i);
+		return dot;
+	}
+
+	@Override
+	public double length() {return Math.sqrt(dot(this));}
+
+	@Override
+	public Mat44D normalize() {return scalar(1.0/length());}
+
+	@Override
+	public Mat44D transpose() {
+		double[] result = new double[cols() * rows()];
+		for (int i=0;i<cols();i++) {
+			for (int j=0;j<rows();j++) {
+				result[rows()*i+j] = get(j, i);
+			}
+		}
+		return new Mat44D(result);
+	}
+
+	@Override
+	public boolean is(Mat44D m) {
+		if (rows() != m.rows() || cols() != m.cols()) return false;
+		for (int i=0;i<size();i++) if (get(i) != m.get(i)) return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("(");
+		for (int i=0;i<rows();i++) {
+			for (int j=0;j<cols();j++) {
+				str.append(get(i, j));
+				if (j<cols()-1) str.append(",");
+			}
+			if (i<rows()-1) {
+				str.append(";");
+				str.append("\n ");
+			}
+		}
+		str.append(")");
+		return str.toString();
 	}
 
 }

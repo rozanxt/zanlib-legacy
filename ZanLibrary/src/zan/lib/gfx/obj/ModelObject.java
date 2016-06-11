@@ -3,7 +3,6 @@ package zan.lib.gfx.obj;
 import java.util.ArrayList;
 
 import zan.lib.util.math.Vec3D;
-import zan.lib.util.math.VecUtil;
 import zan.lib.util.res.ResourceUtil;
 import zan.lib.util.Utility;
 
@@ -32,9 +31,9 @@ public class ModelObject extends VertexObject {
 			Vec3D p0 = pos.get((int)ind.get(i).get(0)-1);
 			Vec3D p1 = pos.get((int)ind.get(i).get(1)-1);
 			Vec3D p2 = pos.get((int)ind.get(i).get(2)-1);
-			Vec3D v01 = new Vec3D(VecUtil.sub(p1, p0));
-			Vec3D v12 = new Vec3D(VecUtil.sub(p2, p1));
-			Vec3D n = VecUtil.cross(v01, v12);
+			Vec3D v01 = p1.sub(p0);
+			Vec3D v12 = p2.sub(p1);
+			Vec3D n = v01.cross(v12);
 			n.normalize();
 			ver.add(p0);
 			ver.add(p1);

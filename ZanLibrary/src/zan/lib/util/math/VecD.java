@@ -1,77 +1,79 @@
 package zan.lib.util.math;
 
-public class VecD {
+public final class VecD implements IVecD<VecD> {
 
-	private double[] data;
+	private final double[] data;
 
-	public VecD() {this(1);}
-	public VecD(int size) {data = new double[size];}
-	public VecD(int size, double value) {this(size); setAll(value);}
-	public VecD(double... entry) {this(entry.length); put(entry);}
-	public VecD(VecD vector) {this(vector.size()); set(vector);}
-	public VecD(int size, VecD vector) {this(size, 0.0); set(vector);}
+	public VecD(double... data) {this.data = data;}
 
-	public void set(int component, double value) {data[component] = value;}
-	public void setAll(double value) {for (int i=0;i<size();i++) set(i, value);}
-	public void put(int offset, double... entry) {
-		int size = Math.min(size()-offset, entry.length);
-		for (int i=0;i<size;i++) set(offset+i, entry[i]);
-	}
-	public void put(double... entry) {put(0, entry);}
-	public void set(int offset, VecD vector) {
-		int size = Math.min(size()-offset, vector.size());
-		for (int i=0;i<size;i++) set(offset+i, vector.get(i));
-	}
-	public void set(VecD vector) {set(0, vector);}
-
-	public double get(int component) {return data[component];}
-	public VecD get(int start, int end) {
-		VecD result = new VecD(end-start+1);
-		int size = Math.min(size()-start, result.size());
-		for (int i=0;i<size;i++) result.set(i, get(start+i));
-		return result;
-	}
-
-	public double sum() {
-		double sum = 0.0;
-		for (int i=0;i<size();i++) sum += get(i);
-		return sum;
-	}
-	public double lengthSquared() {
-		double lenSq = 0.0;
-		for (int i=0;i<size();i++) lenSq += get(i) * get(i);
-		return lenSq;
-	}
-	public double length() {return Math.sqrt(lengthSquared());}
-
-	public VecD scalar(double factor) {
-		for (int i=0;i<size();i++) data[i] *= factor;
-		return this;
-	}
-	public VecD negate() {return scalar(-1.0);}
-	public VecD normalize() {return scalar(1.0/length());}
-
-	public VecD round(int dp) {
-		for (int i=0;i<size();i++) set(i, Math.round(get(i)*Math.pow(10, dp))*Math.pow(10, -dp));
-		return this;
-	}
-	public VecD round() {return round(0);}
-
-	public double add(int component, double value) {return data[component] += value;}
-	public double sub(int component, double value) {return data[component] -= value;}
-	public double mul(int component, double value) {return data[component] *= value;}
-	public double div(int component, double value) {return data[component] /= value;}
-
+	@Override
 	public int size() {return data.length;}
 
 	@Override
-	public String toString() {
-		String str = "";
-		for (int i=0;i<size();i++) {
-			str += get(i);
-			if (i < size()-1) str += " ";
+	public double get(int component) {return data[component];}
+
+	@Override
+	public VecD add(VecD v) {
+		if (size() != v.size()) {
+			System.err.println("Warning: Incompatible vectors");
+			return null;
 		}
-		return str;
+		double[] result = new double[size()];
+		for (int i=0;i<size();i++) result[i] = get(i) + v.get(i);
+		return new VecD(result);
+	}
+
+	@Override
+	public VecD sub(VecD v) {
+		if (size() != v.size()) {
+			System.err.println("Warning: Incompatible vectors");
+			return null;
+		}
+		double[] result = new double[size()];
+		for (int i=0;i<size();i++) result[i] = get(i) - v.get(i);
+		return new VecD(result);
+	}
+
+	@Override
+	public VecD scalar(double s) {
+		double[] result = new double[size()];
+		for (int i=0;i<size();i++) result[i] = s * get(i);
+		return new VecD(result);
+	}
+
+	@Override
+	public VecD negate() {return scalar(-1.0);}
+
+	@Override
+	public double dot(VecD v) {
+		double dot = 0.0;
+		for (int i=0;i<size();i++) dot += get(i) * v.get(i);
+		return dot;
+	}
+
+	@Override
+	public double length() {return Math.sqrt(dot(this));}
+
+	@Override
+	public VecD normalize() {return scalar(1.0/length());}
+
+	@Override
+	public boolean is(VecD v) {
+		if (size() != v.size()) return false;
+		for (int i=0;i<size();i++) if (get(i) != v.get(i)) return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		str.append("(");
+		for (int i=0;i<size();i++) {
+			str.append(get(i));
+			if (i < size()-1) str.append(",");
+		}
+		str.append(")");
+		return str.toString();
 	}
 
 }

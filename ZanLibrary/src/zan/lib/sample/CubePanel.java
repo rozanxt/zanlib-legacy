@@ -34,7 +34,7 @@ public class CubePanel extends FramePanel {
 		shader.enableCullFace(true);
 
 		viewPort = new ViewPort3D(0, 0, core.getScreenWidth(), core.getScreenHeight());
-		viewPort.setOffsetZ(5.0);
+		viewPort.setOffset(0.0, 0.0, 5.0);
 		viewPort.showView();
 		viewPort.projectView(shader);
 
@@ -103,10 +103,10 @@ public class CubePanel extends FramePanel {
 			mode++;
 			if (mode == 2) mode = 0;
 		}
-		if (isKeyDown(IM_KEY_W)) rotation.addX(5.0);
-		if (isKeyDown(IM_KEY_S)) rotation.subX(5.0);
-		if (isKeyDown(IM_KEY_D)) rotation.addY(5.0);
-		if (isKeyDown(IM_KEY_A)) rotation.subY(5.0);
+		if (isKeyDown(IM_KEY_W)) rotation = rotation.add(new Vec3D(5.0, 0.0, 0.0));
+		if (isKeyDown(IM_KEY_S)) rotation = rotation.sub(new Vec3D(5.0, 0.0, 0.0));
+		if (isKeyDown(IM_KEY_D)) rotation = rotation.add(new Vec3D(0.0, 5.0, 0.0));
+		if (isKeyDown(IM_KEY_A)) rotation = rotation.sub(new Vec3D(0.0, 5.0, 0.0));
 	}
 
 	@Override
@@ -115,8 +115,8 @@ public class CubePanel extends FramePanel {
 		viewPort.adjustView(shader);
 
 		shader.pushMatrix();
-		shader.rotate(rotation.getY(), 0.0, 1.0, 0.0);
-		shader.rotate(rotation.getX(), 1.0, 0.0, 0.0);
+		shader.rotate(rotation.y, 0.0, 1.0, 0.0);
+		shader.rotate(rotation.x, 1.0, 0.0, 0.0);
 		shader.scale(0.8, 0.8, 0.8);
 		shader.applyModelMatrix();
 		shader.setColor(0.0, 0.5, 0.8, 0.8);

@@ -1,41 +1,60 @@
 package zan.lib.util.math;
 
-public class Vec4D extends VecD {
+public final class Vec4D implements IVecD<Vec4D> {
 
-	public Vec4D() {super(4);}
-	public Vec4D(double value) {super(4, value);}
-	public Vec4D(double x, double y, double z, double w) {super(x, y, z, w);}
-	public Vec4D(VecD vector) {super(4, vector);}
+	public final double x, y, z, w;
 
-	public void setComponents(double x, double y, double z, double w) {setX(x); setY(y); setZ(z); setW(w);}
-	public void setX(double x) {set(0, x);}
-	public void setY(double y) {set(1, y);}
-	public void setZ(double z) {set(2, z);}
-	public void setW(double w) {set(3, w);}
+	public Vec4D(double x, double y, double z, double w) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
+	}
 
-	public double getX() {return get(0);}
-	public double getY() {return get(1);}
-	public double getZ() {return get(2);}
-	public double getW() {return get(3);}
+	@Override
+	public int size() {return 4;}
 
-	public double addX(double value) {return add(0, value);}
-	public double subX(double value) {return sub(0, value);}
-	public double mulX(double value) {return mul(0, value);}
-	public double divX(double value) {return div(0, value);}
+	@Override
+	public double get(int component) {
+		switch (component) {
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		case 3:
+			return w;
+		default:
+			return 0.0;
+		}
+	}
 
-	public double addY(double value) {return add(1, value);}
-	public double subY(double value) {return sub(1, value);}
-	public double mulY(double value) {return mul(1, value);}
-	public double divY(double value) {return div(1, value);}
+	@Override
+	public Vec4D add(Vec4D v) {return new Vec4D(x + v.x, y + v.y, z + v.z, w + v.w);}
 
-	public double addZ(double value) {return add(2, value);}
-	public double subZ(double value) {return sub(2, value);}
-	public double mulZ(double value) {return mul(2, value);}
-	public double divZ(double value) {return div(2, value);}
+	@Override
+	public Vec4D sub(Vec4D v) {return new Vec4D(x - v.x, y - v.y, z + v.z, w + v.w);}
 
-	public double addW(double value) {return add(3, value);}
-	public double subW(double value) {return sub(3, value);}
-	public double mulW(double value) {return mul(3, value);}
-	public double divW(double value) {return div(3, value);}
+	@Override
+	public Vec4D scalar(double s) {return new Vec4D(s * x, s * y, s * z, s * w);}
+
+	@Override
+	public Vec4D negate() {return scalar(-1.0);}
+
+	@Override
+	public double dot(Vec4D v) {return x * v.x + y * v.y + z * v.z + w * v.w;}
+
+	@Override
+	public double length() {return Math.sqrt(dot(this));}
+
+	@Override
+	public Vec4D normalize() {return scalar(1.0/length());}
+
+	@Override
+	public boolean is(Vec4D v) {return (x == v.x && y == v.y && z == v.z && w == v.w);}
+
+	@Override
+	public String toString() {return "(" + x + "," + y + "," + z + "," + w + ")";}
 
 }

@@ -1,6 +1,7 @@
 package zan.lib.gfx.view;
 
 import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.util.math.MathUtil;
 import zan.lib.util.math.Vec2D;
 
 public class ViewPort2D extends ViewPort {
@@ -8,8 +9,8 @@ public class ViewPort2D extends ViewPort {
 	private double heightInterval;
 	private double depthInterval;
 	private double zoomScale;
-	private Vec2D origin = new Vec2D();
-	private Vec2D offset = new Vec2D();
+	private Vec2D origin = MathUtil.zeroVec2D;
+	private Vec2D offset = MathUtil.zeroVec2D;
 
 	private double screenToVirtualRatio;
 	private double virtualToScreenRatio;
@@ -34,12 +35,8 @@ public class ViewPort2D extends ViewPort {
 		calcRatio();
 	}
 	public void setDepthInterval(double depthInterval) {this.depthInterval = depthInterval;}
-	public void setOrigin(double originX, double originY) {setOriginX(originX); setOriginY(originY);}
-	public void setOriginX(double originX) {origin.setX(originX);}
-	public void setOriginY(double originY) {origin.setY(originY);}
-	public void setOffset(double offsetX, double offsetY) {setOffsetX(offsetX); setOffsetY(offsetY);}
-	public void setOffsetX(double offsetX) {offset.setX(offsetX);}
-	public void setOffsetY(double offsetY) {offset.setY(offsetY);}
+	public void setOrigin(double originX, double originY) {origin = new Vec2D(originX, originY);}
+	public void setOffset(double offsetX, double offsetY) {offset = new Vec2D(offsetX, offsetY);}
 
 	public void calcRatio() {
 		screenToVirtualRatio = heightInterval/viewPortH;
@@ -48,25 +45,25 @@ public class ViewPort2D extends ViewPort {
 
 	public double getHeightInterval() {return heightInterval;}
 	public double getDepthInterval() {return depthInterval;}
-	public double getOriginX() {return origin.getX();}
-	public double getOriginY() {return origin.getY();}
-	public double getOffsetX() {return offset.getX();}
-	public double getOffsetY() {return offset.getY();}
+	public double getOriginX() {return origin.x;}
+	public double getOriginY() {return origin.y;}
+	public double getOffsetX() {return offset.x;}
+	public double getOffsetY() {return offset.y;}
 
 	public double getScreenToVirtualRatio() {return screenToVirtualRatio;}
 	public double getVirtualToScreenRatio() {return virtualToScreenRatio;}
 
 	public double getScreenToVirtualX(double x) {
-		return (x-viewPortX-origin.getX()*viewPortW)*screenToVirtualRatio+offset.getX();
+		return (x-viewPortX-origin.x*viewPortW)*screenToVirtualRatio+offset.x;
 	}
 	public double getScreenToVirtualY(double y) {
-		return ((screenHeight-y)-viewPortY-origin.getY()*viewPortH)*screenToVirtualRatio+offset.getY();
+		return ((screenHeight-y)-viewPortY-origin.y*viewPortH)*screenToVirtualRatio+offset.y;
 	}
 	public double getVirtualToScreenX(double x) {
-		return (x-offset.getX())*virtualToScreenRatio+origin.getX()*viewPortW+viewPortX;
+		return (x-offset.x)*virtualToScreenRatio+origin.x*viewPortW+viewPortX;
 	}
 	public double getVirtualToScreenY(double y) {
-		return screenHeight-((y-offset.getY())*virtualToScreenRatio+origin.getY()*viewPortH+viewPortY);
+		return screenHeight-((y-offset.y)*virtualToScreenRatio+origin.y*viewPortH+viewPortY);
 	}
 
 	@Override
@@ -78,9 +75,9 @@ public class ViewPort2D extends ViewPort {
 	public void adjustView(DefaultShader sp) {
 		sp.pushMatrix();
 		sp.loadIdentityMatrix();
-		sp.translate(2.0*(origin.getX()-0.5)*viewPortRatio, 2.0*(origin.getY()-0.5), 0.0);
+		sp.translate(2.0*(origin.x-0.5)*viewPortRatio, 2.0*(origin.y-0.5), 0.0);
 		sp.scale(zoomScale, zoomScale, 1.0);
-		sp.translate(-offset.getX(), -offset.getY(), 0.0);
+		sp.translate(-offset.x, -offset.y, 0.0);
 		sp.applyViewMatrix();
 		sp.popMatrix();
 	}

@@ -1,34 +1,59 @@
 package zan.lib.util.math;
 
-public class Vec3D extends VecD {
+public final class Vec3D implements IVecD<Vec3D> {
 
-	public Vec3D() {super(3);}
-	public Vec3D(double value) {super(3, value);}
-	public Vec3D(double x, double y, double z) {super(x, y, z);}
-	public Vec3D(VecD vector) {super(3, vector);}
+	public final double x, y, z;
 
-	public void setComponents(double x, double y, double z) {setX(x); setY(y); setZ(z);}
-	public void setX(double x) {set(0, x);}
-	public void setY(double y) {set(1, y);}
-	public void setZ(double z) {set(2, z);}
+	public Vec3D(double x, double y, double z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
-	public double getX() {return get(0);}
-	public double getY() {return get(1);}
-	public double getZ() {return get(2);}
+	public Vec3D cross(Vec3D v) {return new Vec3D(y * v.z - v.y * z, z * v.x - v.z * x, x * v.y - v.x * y);}
 
-	public double addX(double value) {return add(0, value);}
-	public double subX(double value) {return sub(0, value);}
-	public double mulX(double value) {return mul(0, value);}
-	public double divX(double value) {return div(0, value);}
+	@Override
+	public int size() {return 3;}
 
-	public double addY(double value) {return add(1, value);}
-	public double subY(double value) {return sub(1, value);}
-	public double mulY(double value) {return mul(1, value);}
-	public double divY(double value) {return div(1, value);}
+	@Override
+	public double get(int component) {
+		switch (component) {
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		default:
+			return 0.0;
+		}
+	}
 
-	public double addZ(double value) {return add(2, value);}
-	public double subZ(double value) {return sub(2, value);}
-	public double mulZ(double value) {return mul(2, value);}
-	public double divZ(double value) {return div(2, value);}
+	@Override
+	public Vec3D add(Vec3D v) {return new Vec3D(x + v.x, y + v.y, z + v.z);}
+
+	@Override
+	public Vec3D sub(Vec3D v) {return new Vec3D(x - v.x, y - v.y, z + v.z);}
+
+	@Override
+	public Vec3D scalar(double s) {return new Vec3D(s * x, s * y, s * z);}
+
+	@Override
+	public Vec3D negate() {return scalar(-1.0);}
+
+	@Override
+	public double dot(Vec3D v) {return x * v.x + y * v.y + z * v.z;}
+
+	@Override
+	public double length() {return Math.sqrt(dot(this));}
+
+	@Override
+	public Vec3D normalize() {return scalar(1.0/length());}
+
+	@Override
+	public boolean is(Vec3D v) {return (x == v.x && y == v.y && z == v.z);}
+
+	@Override
+	public String toString() {return "(" + x + "," + y + "," + z + ")";}
 
 }
