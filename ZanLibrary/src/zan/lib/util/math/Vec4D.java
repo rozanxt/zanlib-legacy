@@ -34,7 +34,7 @@ public final class Vec4D implements IVecD<Vec4D> {
 	public Vec4D add(Vec4D v) {return new Vec4D(x + v.x, y + v.y, z + v.z, w + v.w);}
 
 	@Override
-	public Vec4D sub(Vec4D v) {return new Vec4D(x - v.x, y - v.y, z + v.z, w + v.w);}
+	public Vec4D sub(Vec4D v) {return new Vec4D(x - v.x, y - v.y, z - v.z, w - v.w);}
 
 	@Override
 	public Vec4D scalar(double s) {return new Vec4D(s * x, s * y, s * z, s * w);}

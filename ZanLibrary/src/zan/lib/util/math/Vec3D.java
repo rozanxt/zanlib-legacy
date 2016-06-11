@@ -10,7 +10,7 @@ public final class Vec3D implements IVecD<Vec3D> {
 		this.z = z;
 	}
 
-	public Vec3D cross(Vec3D v) {return new Vec3D(y * v.z - v.y * z, z * v.x - v.z * x, x * v.y - v.x * y);}
+	public Vec3D cross(Vec3D v) {return new Vec3D(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);}
 
 	@Override
 	public int size() {return 3;}
@@ -33,7 +33,7 @@ public final class Vec3D implements IVecD<Vec3D> {
 	public Vec3D add(Vec3D v) {return new Vec3D(x + v.x, y + v.y, z + v.z);}
 
 	@Override
-	public Vec3D sub(Vec3D v) {return new Vec3D(x - v.x, y - v.y, z + v.z);}
+	public Vec3D sub(Vec3D v) {return new Vec3D(x - v.x, y - v.y, z - v.z);}
 
 	@Override
 	public Vec3D scalar(double s) {return new Vec3D(s * x, s * y, s * z);}

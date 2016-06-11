@@ -75,15 +75,16 @@ public class DefaultShader extends MatrixShader {
 	}
 
 	public void bindModelView() {
-		Mat44D modelViewMatrix = getModelViewMatrix();
+		Mat44D modelViewMatrix = getModelViewMatrix().transpose();
 		matrixBuffer.clear();
 		for (int i=0;i<16;i++) matrixBuffer.put((float)modelViewMatrix.get(i));
 		matrixBuffer.flip();
 		glUniformMatrix4fv(modelViewMatrixID, false, matrixBuffer);
 	}
 	public void bindProjection() {
+		Mat44D projectMatrix = projectionMatrix.transpose();
 		matrixBuffer.clear();
-		for (int i=0;i<16;i++) matrixBuffer.put((float)projectionMatrix.get(i));
+		for (int i=0;i<16;i++) matrixBuffer.put((float)projectMatrix.get(i));
 		matrixBuffer.flip();
 		glUniformMatrix4fv(projectionMatrixID, false, matrixBuffer);
 	}

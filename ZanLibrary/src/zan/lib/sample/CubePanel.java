@@ -7,6 +7,7 @@ import zan.lib.gfx.obj.VertexObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPort3D;
+import zan.lib.util.math.MathUtil;
 import zan.lib.util.math.Vec3D;
 
 public class CubePanel extends FramePanel {
@@ -87,7 +88,7 @@ public class CubePanel extends FramePanel {
 		cubes[1] = new VertexObject(ver, ind, 3, 3, 4, 2);
 
 		mode = 0;
-		rotation = new Vec3D(0.0, 0.0, 0.0);
+		rotation = MathUtil.zeroVec3D;
 	}
 
 	@Override
