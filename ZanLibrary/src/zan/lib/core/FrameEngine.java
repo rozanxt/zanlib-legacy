@@ -57,8 +57,8 @@ public abstract class FrameEngine extends RawEngine {
 
 	private long ticks = 0L;
 	private double fps = 0.0;
-	private double TARGET_FPS = 60.0;
-	private double DELTA_FPS = (1.0/TARGET_FPS);
+	private double TARGET_FPS = 0.0;
+	private double DELTA_FPS = 0.0;
 	private double TARGET_UPS = 50.0;
 	private double DELTA_UPS = (1.0/TARGET_UPS);
 	private int SLEEP_DURATION = 2;
@@ -306,9 +306,17 @@ public abstract class FrameEngine extends RawEngine {
 	}
 
 	private void sleep(double time) {
-		Thread.yield();
-		try {Thread.sleep(SLEEP_DURATION);}
-		catch (InterruptedException e) {}
+		if (DELTA_FPS > 0.0) {
+			double now = getTime();
+			while (now - time < DELTA_FPS) {
+				Thread.yield();
+				now = getTime();
+			}
+		} else {
+			Thread.yield();
+			try {Thread.sleep(SLEEP_DURATION);}
+			catch (InterruptedException e) {}
+		}
 	}
 
 	// Cleanup
@@ -482,8 +490,13 @@ public abstract class FrameEngine extends RawEngine {
 	// Timing Methods
 
 	public void setTargetFPS(double fps) {
-		TARGET_FPS = fps;
-		DELTA_FPS = (1.0/TARGET_FPS);
+		if (fps > 0.0) {
+			TARGET_FPS = fps;
+			DELTA_FPS = (1.0/TARGET_FPS);
+		} else {
+			TARGET_FPS = 0.0;
+			DELTA_FPS = 0.0;
+		}
 	}
 	public void setTargetUPS(double ups) {
 		TARGET_UPS = ups;

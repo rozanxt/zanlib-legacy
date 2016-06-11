@@ -57,6 +57,14 @@ public class TextPanel extends FramePanel {
 		TextManager.renderText(shader, "ZanLibrary", "defont");
 		shader.popMatrix();
 
+		shader.pushMatrix();
+		shader.translate(-0.25, -0.2, 0.0);
+		shader.scale(0.1, 0.1, 1.0);
+		shader.applyModelMatrix();
+		shader.setColor(0.0, 0.5, 0.8, 0.8);
+		TextManager.renderText(shader, "FPS: " + core.getFPS(), "defont");
+		shader.popMatrix();
+
 		shader.unbind();
 	}
 
