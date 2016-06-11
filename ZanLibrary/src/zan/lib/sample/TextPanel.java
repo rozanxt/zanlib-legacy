@@ -27,8 +27,8 @@ public class TextPanel extends FramePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
-		TextureManager.init();
-		TextManager.init();
+		TextureManager.create();
+		TextManager.create();
 		TextManager.loadFontFile("res/fnt/fonts.res");
 	}
 

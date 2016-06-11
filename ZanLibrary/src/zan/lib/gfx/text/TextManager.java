@@ -25,7 +25,7 @@ public class TextManager {
 			+ "`abcdefghijklmno"
 			+ "pqrstuvwxyz{|}~";
 
-	public static void init() {
+	public static void create() {
 		fontInfos = new HashMap<String, FontInfo>();
 		fontObjects = new HashMap<String, SpriteObject>();
 	}

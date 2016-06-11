@@ -28,7 +28,7 @@ public abstract class MatrixShader extends ShaderProgram {
 		if (!matrixStack.isEmpty()) matrixStack.remove(getStackMatrix());
 	}
 
-	public void setMatrix(MatD matrix) {matrixStack.set(matrixStack.size()-1, matrix);}
+	public void setMatrix(MatD matrix) {if (!matrixStack.isEmpty()) matrixStack.set(matrixStack.size()-1, matrix);}
 	public void multMatrix(MatD matrix) {setMatrix(getStackMatrix().mult(matrix));}
 	public void loadIdentityMatrix() {setMatrix(MathUtil.idMat44D);}
 

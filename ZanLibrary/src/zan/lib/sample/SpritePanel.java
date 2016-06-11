@@ -35,7 +35,7 @@ public class SpritePanel extends FramePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
-		TextureManager.init();
+		TextureManager.create();
 
 		spriteA = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"));
 		spriteA.setPos(320.0, 240.0);

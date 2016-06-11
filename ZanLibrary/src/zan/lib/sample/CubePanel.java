@@ -39,7 +39,7 @@ public class CubePanel extends FramePanel {
 		viewPort.showView();
 		viewPort.projectView(shader);
 
-		TextureManager.init();
+		TextureManager.create();
 		TextureManager.loadTexture("card", "res/img/sample_card.png");
 
 		final int[] ind = {

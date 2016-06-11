@@ -27,7 +27,7 @@ public class TextureManager {
 
 	private static int TEXTURE_FILTER = GL_LINEAR;
 
-	public static void init() {
+	public static void create() {
 		textureStore = new HashMap<String, TextureInfo>();
 		textureStore.put(null, new TextureInfo(0, 0, 0));
 
