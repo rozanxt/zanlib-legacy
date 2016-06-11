@@ -33,8 +33,7 @@ public class ModelObject extends VertexObject {
 			Vec3D p2 = pos.get((int)ind.get(i).get(2)-1);
 			Vec3D v01 = p1.sub(p0);
 			Vec3D v12 = p2.sub(p1);
-			Vec3D n = v01.cross(v12);
-			n.normalize();
+			Vec3D n = v01.cross(v12).normalize();
 			ver.add(p0);
 			ver.add(p1);
 			ver.add(p2);

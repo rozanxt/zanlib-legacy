@@ -71,7 +71,7 @@ public class SpritePanel extends FramePanel {
 
 		spriteA.setScale(value, value);
 		spriteA.setAngle(value);
-		spriteB.setPos(value, 0.0);
+		spriteB.setPosX(value);
 
 		spriteA.update();
 		spriteB.update();

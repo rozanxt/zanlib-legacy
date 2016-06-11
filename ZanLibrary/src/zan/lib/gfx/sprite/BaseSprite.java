@@ -33,7 +33,7 @@ public abstract class BaseSprite {
 	}
 	public void amendState() {
 		pos = new Vec4D(pos.x, pos.y, pos.x, pos.y);
-		scale = new Vec4D(pos.x, pos.y, scale.x, scale.y);
+		scale = new Vec4D(scale.x, scale.y, scale.x, scale.y);
 		angle = new Vec2D(angle.x, angle.x);
 		color = new VecD(color.get(0), color.get(1), color.get(2), color.get(3), color.get(0), color.get(1), color.get(2), color.get(3));
 	}
@@ -43,7 +43,11 @@ public abstract class BaseSprite {
 	public void enableColor(boolean color) {enableColor = color;}
 
 	public void setPos(double posX, double posY) {pos = new Vec4D(posX, posY, pos.z, pos.w);}
+	public void setPosX(double posX) {pos = new Vec4D(posX, pos.y, pos.z, pos.w);}
+	public void setPosY(double posY) {pos = new Vec4D(pos.x, posY, pos.z, pos.w);}
 	public void setScale(double scaleX, double scaleY) {scale = new Vec4D(scaleX, scaleY, scale.z, scale.w);}
+	public void setScaleX(double scaleX) {scale = new Vec4D(scaleX, scale.y, scale.z, scale.w);}
+	public void setScaleY(double scaleY) {scale = new Vec4D(scale.x, scaleY, scale.z, scale.w);}
 	public void setAngle(double angle) {this.angle = new Vec2D(angle, this.angle.y);}
 	public void setColor(double r, double g, double b, double a) {color = new VecD(r, g, b, a, color.get(0), color.get(1), color.get(2), color.get(3));}
 	public void setColor(double r, double g, double b) {color = new VecD(r, g, b, color.get(3), color.get(0), color.get(1), color.get(2), color.get(3));}

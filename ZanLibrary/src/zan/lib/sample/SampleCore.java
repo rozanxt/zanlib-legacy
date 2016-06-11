@@ -17,7 +17,7 @@ public class SampleCore extends FrameEngine {
 		SampleCore core = new SampleCore();
 		core.setTitle("Sample Program");
 		core.setIcon("res/ico/sample_icon.png");
-		core.setPanel(new CubePanel(core));
+		core.setPanel(new SamplePanel(core));
 		core.run();
 	}
 
