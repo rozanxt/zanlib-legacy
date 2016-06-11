@@ -15,8 +15,8 @@ public final class Vec4D implements IVecD<Vec4D> {
 	public int size() {return 4;}
 
 	@Override
-	public double get(int component) {
-		switch (component) {
+	public double get(int index) {
+		switch (index) {
 		case 0:
 			return x;
 		case 1:
@@ -49,7 +49,7 @@ public final class Vec4D implements IVecD<Vec4D> {
 	public double length() {return Math.sqrt(dot(this));}
 
 	@Override
-	public Vec4D normalize() {return scalar(1.0/length());}
+	public Vec4D normalize() {return scalar(1.0 / length());}
 
 	@Override
 	public boolean is(Vec4D v) {return (x == v.x && y == v.y && z == v.z && w == v.w);}

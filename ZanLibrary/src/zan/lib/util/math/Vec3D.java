@@ -10,14 +10,12 @@ public final class Vec3D implements IVecD<Vec3D> {
 		this.z = z;
 	}
 
-	public Vec3D cross(Vec3D v) {return new Vec3D(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);}
-
 	@Override
 	public int size() {return 3;}
 
 	@Override
-	public double get(int component) {
-		switch (component) {
+	public double get(int index) {
+		switch (index) {
 		case 0:
 			return x;
 		case 1:
@@ -43,12 +41,13 @@ public final class Vec3D implements IVecD<Vec3D> {
 
 	@Override
 	public double dot(Vec3D v) {return x * v.x + y * v.y + z * v.z;}
+	public Vec3D cross(Vec3D v) {return new Vec3D(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);}
 
 	@Override
 	public double length() {return Math.sqrt(dot(this));}
 
 	@Override
-	public Vec3D normalize() {return scalar(1.0/length());}
+	public Vec3D normalize() {return scalar(1.0 / length());}
 
 	@Override
 	public boolean is(Vec3D v) {return (x == v.x && y == v.y && z == v.z);}

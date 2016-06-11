@@ -9,14 +9,12 @@ public final class Vec2D implements IVecD<Vec2D> {
 		this.y = y;
 	}
 
-	public double cross(Vec2D v) {return x * v.y - v.x * y;}
-
 	@Override
 	public int size() {return 2;}
 
 	@Override
-	public double get(int component) {
-		switch (component) {
+	public double get(int index) {
+		switch (index) {
 		case 0:
 			return x;
 		case 1:
@@ -40,12 +38,13 @@ public final class Vec2D implements IVecD<Vec2D> {
 
 	@Override
 	public double dot(Vec2D v) {return x * v.x + y * v.y;}
+	public double cross(Vec2D v) {return x * v.y - v.x * y;}
 
 	@Override
 	public double length() {return Math.sqrt(dot(this));}
 
 	@Override
-	public Vec2D normalize() {return scalar(1.0/length());}
+	public Vec2D normalize() {return scalar(1.0 / length());}
 
 	@Override
 	public boolean is(Vec2D v) {return (x == v.x && y == v.y);}

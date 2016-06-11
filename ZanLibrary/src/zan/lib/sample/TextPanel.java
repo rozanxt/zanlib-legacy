@@ -50,7 +50,7 @@ public class TextPanel extends FramePanel {
 		viewPort.adjustView(shader);
 
 		shader.pushMatrix();
-		shader.translate(-0.3, 0.0, 0.0);
+		shader.translate(-0.33, 0.1, 0.0);
 		shader.scale(0.1, 0.1, 1.0);
 		shader.applyModelMatrix();
 		shader.setColor(0.0, 0.5, 0.8, 0.8);
@@ -58,7 +58,7 @@ public class TextPanel extends FramePanel {
 		shader.popMatrix();
 
 		shader.pushMatrix();
-		shader.translate(-0.25, -0.2, 0.0);
+		shader.translate(-0.25, -0.1, 0.0);
 		shader.scale(0.1, 0.1, 1.0);
 		shader.applyModelMatrix();
 		shader.setColor(0.0, 0.5, 0.8, 0.8);

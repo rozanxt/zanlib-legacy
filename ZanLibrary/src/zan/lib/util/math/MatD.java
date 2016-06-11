@@ -1,97 +1,98 @@
 package zan.lib.util.math;
 
+import java.util.Arrays;
+
 public final class MatD implements IMatD<MatD> {
 
-	private final double[] data;
 	private final int rows, cols;
+	private final double[] data;
 
 	public MatD(int rows, int cols, double... data) {
 		this.rows = rows;
 		this.cols = cols;
-		if (size() != data.length) {
-			System.err.println("Warning: Inconsistent matrix");
-			this.data = null;
+		if (size() == data.length) {
+			this.data = Arrays.copyOf(data, data.length);
 		} else {
-			this.data = data;
+			System.out.println("Warning: Illegal matrix entry");
+			this.data = null;
 		}
 	}
 
 	@Override
-	public int rows() {return rows;}
+	public int rows() {
+		return rows;
+	}
 
 	@Override
-	public int cols() {return cols;}
+	public int cols() {
+		return cols;
+	}
 
 	@Override
-	public int size() {return rows * cols;}
+	public int size() {
+		return rows * cols;
+	}
 
 	@Override
-	public double get(int component) {return data[component];}
+	public double get(int index) {
+		return data[index];
+	}
 
 	@Override
-	public double get(int row, int col) {return data[cols*row+col];}
+	public double get(int row, int col) {
+		return data[cols()*row+col];
+	}
 
 	@Override
-	public MatD add(MatD m) {
-		if (rows() != m.rows() || cols() != m.cols()) {
-			System.err.println("Warning: Incompatible matrices");
-			return null;
+	public MatD add(MatD mat) {
+		if (rows() == mat.rows() && cols() == mat.cols()) {
+			double[] result = new double[size()];
+			for (int i=0;i<size();i++) result[i] = get(i) + mat.get(i);
+			return new MatD(rows(), cols(), result);
 		}
+		System.err.println("Warning: Illegal matrix operation");
+		return null;
+	}
+
+	@Override
+	public MatD sub(MatD mat) {
+		if (rows() == mat.rows() && cols() == mat.cols()) {
+			double[] result = new double[size()];
+			for (int i=0;i<size();i++) result[i] = get(i) - mat.get(i);
+			return new MatD(rows(), cols(), result);
+		}
+		System.err.println("Warning: Illegal matrix operation");
+		return null;
+	}
+
+	@Override
+	public MatD scalar(double scalar) {
 		double[] result = new double[size()];
-		for (int i=0;i<size();i++) result[i] = get(i) + m.get(i);
+		for (int i=0;i<size();i++) result[i] = scalar * get(i);
 		return new MatD(rows(), cols(), result);
 	}
 
 	@Override
-	public MatD sub(MatD m) {
-		if (rows() != m.rows() || cols() != m.cols()) {
-			System.err.println("Warning: Incompatible matrices");
-			return null;
-		}
-		double[] result = new double[size()];
-		for (int i=0;i<size();i++) result[i] = get(i) - m.get(i);
-		return new MatD(rows(), cols(), result);
+	public MatD negate() {
+		return scalar(-1.0);
 	}
 
 	@Override
-	public MatD mult(MatD m) {
-		if (cols() != m.rows()) {
-			System.err.println("Warning: Incompatible matrices");
-			return null;
-		}
-		double[] result = new double[rows() * m.cols()];
-		for (int i=0;i<rows();i++) {
-			for (int j=0;j<m.cols();j++) {
-				double sum = 0.0;
-				for (int k=0;k<cols();k++) sum += get(i, k) * m.get(k, j);
-				result[m.cols()*i+j] = sum;
+	public MatD mult(MatD mat) {
+		if (cols() == mat.rows()) {
+			double[] result = new double[rows() * mat.cols()];
+			for (int i=0;i<rows();i++) {
+				for (int j=0;j<mat.cols();j++) {
+					double sum = 0.0;
+					for (int k=0;k<cols();k++) sum += get(i, k) * mat.get(k, j);
+					result[mat.cols()*i+j] = sum;
+				}
 			}
+			return new MatD(rows(), mat.cols(), result);
 		}
-		return new MatD(rows(), m.cols(), result);
+		System.err.println("Warning: Illegal matrix operation");
+		return null;
 	}
-
-	@Override
-	public MatD scalar(double s) {
-		double[] result = new double[size()];
-		for (int i=0;i<size();i++) result[i] = s * get(i);
-		return new MatD(rows(), cols(), result);
-	}
-
-	@Override
-	public MatD negate() {return scalar(-1.0);}
-
-	@Override
-	public double dot(MatD v) {
-		double dot = 0.0;
-		for (int i=0;i<size();i++) dot += get(i) * v.get(i);
-		return dot;
-	}
-
-	@Override
-	public double length() {return Math.sqrt(dot(this));}
-
-	@Override
-	public MatD normalize() {return scalar(1.0/length());}
 
 	@Override
 	public MatD transpose() {
@@ -105,9 +106,9 @@ public final class MatD implements IMatD<MatD> {
 	}
 
 	@Override
-	public boolean is(MatD m) {
-		if (rows() != m.rows() || cols() != m.cols()) return false;
-		for (int i=0;i<size();i++) if (get(i) != m.get(i)) return false;
+	public boolean is(MatD mat) {
+		if (rows() != mat.rows() || cols() != mat.cols()) return false;
+		for (int i=0;i<size();i++) if (get(i) != mat.get(i)) return false;
 		return true;
 	}
 

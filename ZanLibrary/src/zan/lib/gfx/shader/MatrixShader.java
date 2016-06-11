@@ -2,19 +2,19 @@ package zan.lib.gfx.shader;
 
 import java.util.ArrayList;
 
-import zan.lib.util.math.Mat44D;
+import zan.lib.util.math.MatD;
 import zan.lib.util.math.MathUtil;
 
 public abstract class MatrixShader extends ShaderProgram {
 
-	protected ArrayList<Mat44D> matrixStack = new ArrayList<Mat44D>();
-	protected Mat44D modelMatrix = MathUtil.idMat44D;
-	protected Mat44D viewMatrix = MathUtil.idMat44D;
-	protected Mat44D projectionMatrix = MathUtil.idMat44D;
+	protected ArrayList<MatD> matrixStack = new ArrayList<MatD>();
+	protected MatD modelMatrix = MathUtil.idMat44D;
+	protected MatD viewMatrix = MathUtil.idMat44D;
+	protected MatD projectionMatrix = MathUtil.idMat44D;
 
-	public void setModelMatrix(Mat44D matrix) {modelMatrix = matrix;}
-	public void setViewMatrix(Mat44D matrix) {viewMatrix = matrix;}
-	public void setProjectionMatrix(Mat44D matrix) {projectionMatrix = matrix;}
+	public void setModelMatrix(MatD matrix) {modelMatrix = matrix;}
+	public void setViewMatrix(MatD matrix) {viewMatrix = matrix;}
+	public void setProjectionMatrix(MatD matrix) {projectionMatrix = matrix;}
 
 	public void applyModelMatrix() {setModelMatrix(getStackMatrix());}
 	public void applyViewMatrix() {setViewMatrix(getStackMatrix());}
@@ -28,8 +28,8 @@ public abstract class MatrixShader extends ShaderProgram {
 		if (!matrixStack.isEmpty()) matrixStack.remove(getStackMatrix());
 	}
 
-	public void setMatrix(Mat44D matrix) {matrixStack.set(matrixStack.size()-1, matrix);}
-	public void multMatrix(Mat44D matrix) {setMatrix(getStackMatrix().mult(matrix));}
+	public void setMatrix(MatD matrix) {matrixStack.set(matrixStack.size()-1, matrix);}
+	public void multMatrix(MatD matrix) {setMatrix(getStackMatrix().mult(matrix));}
 	public void loadIdentityMatrix() {setMatrix(MathUtil.idMat44D);}
 
 	public void translate(double x, double y, double z) {multMatrix(MathUtil.translationMat44D(x, y, z));}
@@ -37,20 +37,20 @@ public abstract class MatrixShader extends ShaderProgram {
 	public void scale(double x, double y, double z) {multMatrix(MathUtil.scaleMat44D(x, y, z));}
 
 	public void setOrthoProjection(double left, double right, double bottom, double top, double near, double far) {
-		setProjectionMatrix(MathUtil.orthoProjectionMatrix(left, right, bottom, top, near, far));
+		setProjectionMatrix(MathUtil.orthoProjectionMat44D(left, right, bottom, top, near, far));
 	}
 	public void setPerspectiveProjection(double fovy, double aspect, double near, double far) {
-		setProjectionMatrix(MathUtil.perspectiveProjectionMatrix(fovy, aspect, near, far));
+		setProjectionMatrix(MathUtil.perspectiveProjectionMat44D(fovy, aspect, near, far));
 	}
 
-	public Mat44D getStackMatrix() {
+	public MatD getStackMatrix() {
 		if (matrixStack.isEmpty()) return MathUtil.idMat44D;
 		return matrixStack.get(matrixStack.size()-1);
 	}
-	public Mat44D getModelMatrix() {return modelMatrix;}
-	public Mat44D getViewMatrix() {return viewMatrix;}
-	public Mat44D getProjectionMatrix() {return projectionMatrix;}
-	public Mat44D getModelViewMatrix() {return viewMatrix.mult(modelMatrix);}
-	public Mat44D getMVPMatrix() {return projectionMatrix.mult(getModelViewMatrix());}
+	public MatD getModelMatrix() {return modelMatrix;}
+	public MatD getViewMatrix() {return viewMatrix;}
+	public MatD getProjectionMatrix() {return projectionMatrix;}
+	public MatD getModelViewMatrix() {return viewMatrix.mult(modelMatrix);}
+	public MatD getMVPMatrix() {return projectionMatrix.mult(getModelViewMatrix());}
 
 }
