@@ -72,10 +72,19 @@ public class LinAlgUtil {
 		return new Mat22D(  x, 0.0,
 						  0.0, 1.0);
 	}
+	public static Mat22D scaleMat22D(double x, double y) {
+		return new Mat22D(  x, 0.0,
+						  0.0,   y);
+	}
 	public static Mat33D scaleMat33D(double x, double y) {
 		return new Mat33D(  x, 0.0, 0.0,
 						  0.0,   y, 0.0,
 						  0.0, 0.0, 1.0);
+	}
+	public static Mat33D scaleMat33D(double x, double y, double z) {
+		return new Mat33D(  x, 0.0, 0.0,
+						  0.0,   y, 0.0,
+						  0.0, 0.0,   z);
 	}
 	public static Mat44D scaleMat44D(double x, double y, double z) {
 		return new Mat44D(  x, 0.0, 0.0, 0.0,
@@ -98,6 +107,18 @@ public class LinAlgUtil {
 		return new Mat33D(cos, -sin, 0.0,
 						  sin, cos, 0.0,
 						  0.0, 0.0, 1.0);
+	}
+	public static Mat33D rotationMat33D(double angle, double x, double y, double z) {
+		Vec3D axis = new Vec3D(x, y, z).normalize();
+		double a = axis.x;
+		double b = axis.y;
+		double c = axis.z;
+		double rad = Math.toRadians(angle);
+		double sin = Math.sin(rad);
+		double cos = Math.cos(rad);
+		return new Mat33D(a*a*(1-cos)+cos, a*b*(1-cos)-c*sin, a*c*(1-cos)+b*sin,
+						  b*a*(1-cos)+c*sin, b*b*(1-cos)+cos, b*c*(1-cos)-a*sin,
+						  c*a*(1-cos)-b*sin, c*b*(1-cos)+a*sin, c*c*(1-cos)+cos);
 	}
 	public static Mat44D rotationMat44D(double angle, double x, double y, double z) {
 		Vec3D axis = new Vec3D(x, y, z).normalize();
@@ -135,6 +156,22 @@ public class LinAlgUtil {
 						  0.0, sy, 0.0, 0.0,
 						  0.0, 0.0, sz,  tz,
 						  0.0, 0.0, -1.0, 0.0);
+	}
+
+	public static Vec2D map(Mat22D mat, Vec2D vec) {
+		return new Vec2D(mat.a11 * vec.x + mat.a12 * vec.y,
+						 mat.a21 * vec.x + mat.a22 * vec.y);
+	}
+	public static Vec3D map(Mat33D mat, Vec3D vec) {
+		return new Vec3D(mat.a11 * vec.x + mat.a12 * vec.y + mat.a13 * vec.z,
+						 mat.a21 * vec.x + mat.a22 * vec.y + mat.a23 * vec.z,
+						 mat.a31 * vec.x + mat.a32 * vec.y + mat.a33 * vec.z);
+	}
+	public static Vec4D map(Mat44D mat, Vec4D vec) {
+		return new Vec4D(mat.a11 * vec.x + mat.a12 * vec.y + mat.a13 * vec.z + mat.a14 * vec.w,
+						 mat.a21 * vec.x + mat.a22 * vec.y + mat.a23 * vec.z + mat.a24 * vec.w,
+						 mat.a31 * vec.x + mat.a32 * vec.y + mat.a33 * vec.z + mat.a34 * vec.w,
+						 mat.a41 * vec.x + mat.a42 * vec.y + mat.a43 * vec.z + mat.a44 * vec.w);
 	}
 
 	public static <T extends IVecSpaceD<T>> boolean is(T left, T right) {return left.is(right);}
