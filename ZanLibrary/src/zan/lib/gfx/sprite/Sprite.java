@@ -1,6 +1,6 @@
 package zan.lib.gfx.sprite;
 
-import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.object.SpriteObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureInfo;
 

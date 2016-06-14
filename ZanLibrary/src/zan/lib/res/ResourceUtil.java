@@ -1,4 +1,4 @@
-package zan.lib.util.res;
+package zan.lib.res;
 
 import static org.lwjgl.BufferUtils.createByteBuffer;
 

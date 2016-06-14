@@ -1,7 +1,7 @@
 package zan.lib.sample;
 
 import zan.lib.gfx.shader.DefaultShader;
-import zan.lib.util.res.ResourceUtil;
+import zan.lib.res.ResourceUtil;
 
 public class Sample3DShader extends DefaultShader {
 

@@ -2,13 +2,13 @@ package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
 import zan.lib.core.FramePanel;
-import zan.lib.gfx.obj.ModelObject;
-import zan.lib.gfx.obj.VertexObject;
+import zan.lib.gfx.object.ModelObject;
+import zan.lib.gfx.object.VertexObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureManager;
 import zan.lib.gfx.view.ViewPort3D;
-import zan.lib.util.math.MathUtil;
-import zan.lib.util.math.Vec3D;
+import zan.lib.math.linalg.LinAlgUtil;
+import zan.lib.math.linalg.Vec3D;
 
 public class CubePanel extends FramePanel {
 
@@ -88,7 +88,7 @@ public class CubePanel extends FramePanel {
 		cubes[1] = new VertexObject(ver, ind, 3, 3, 4, 2);
 
 		mode = 0;
-		rotation = MathUtil.zeroVec3D;
+		rotation = LinAlgUtil.zeroVec3D;
 	}
 
 	@Override

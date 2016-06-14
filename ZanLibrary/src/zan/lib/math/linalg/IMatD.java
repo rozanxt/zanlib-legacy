@@ -1,6 +1,6 @@
-package zan.lib.util.math;
+package zan.lib.math.linalg;
 
-public interface IMatD<M> extends IVecSpaceD<M> {
+public interface IMatD<T> extends IVecSpaceD<T> {
 
 	public int rows();
 	public int cols();
@@ -9,7 +9,7 @@ public interface IMatD<M> extends IVecSpaceD<M> {
 	public double get(int index);
 	public double get(int row, int col);
 
-	public M mult(M m);
-	public M transpose();
+	public T mult(T m);
+	public T transpose();
 
 }

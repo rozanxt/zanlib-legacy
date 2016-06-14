@@ -1,9 +1,9 @@
-package zan.lib.gfx.obj;
+package zan.lib.gfx.object;
 
 import java.util.ArrayList;
 
-import zan.lib.util.math.Vec3D;
-import zan.lib.util.res.ResourceUtil;
+import zan.lib.math.linalg.Vec3D;
+import zan.lib.res.ResourceUtil;
 import zan.lib.util.Utility;
 
 public class ModelObject extends VertexObject {

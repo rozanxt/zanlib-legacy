@@ -1,16 +1,17 @@
 package zan.lib.gfx.text;
 
+import static zan.lib.gfx.object.SpriteObject.ALIGN_HORIZONTAL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static zan.lib.gfx.obj.SpriteObject.ALIGN_HORIZONTAL;
-import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.object.SpriteObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureManager;
+import zan.lib.res.ResourceData;
+import zan.lib.res.ResourceUtil;
 import zan.lib.util.Utility;
-import zan.lib.util.res.ResourceData;
-import zan.lib.util.res.ResourceUtil;
 
 public class TextManager {
 

@@ -72,7 +72,7 @@ public abstract class FrameEngine extends RawEngine {
 	// Initialization
 
 	@Override
-	protected final void init() {
+	protected void init() {
 		initWindow();
 		initIcon();
 		initInput();
@@ -263,7 +263,7 @@ public abstract class FrameEngine extends RawEngine {
 	// Main Loop
 
 	@Override
-	protected final void loop() {
+	protected void loop() {
 		double nextTick, nextFrame;
 		nextTick = nextFrame = getTime();
 		int frameCount = 0;
@@ -322,7 +322,7 @@ public abstract class FrameEngine extends RawEngine {
 	// Cleanup
 
 	@Override
-	protected final void exit() {
+	protected void exit() {
 		if (currentPanel != null) currentPanel.destroy();
 		onExit();
 		InputManager.destroy();

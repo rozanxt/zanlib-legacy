@@ -1,16 +1,15 @@
 package zan.lib.gfx.view;
 
 import zan.lib.gfx.shader.DefaultShader;
-import zan.lib.util.math.MathUtil;
-import zan.lib.util.math.Vec2D;
+import zan.lib.math.linalg.Vec2D;
 
 public class ViewPort2D extends ViewPort {
 
 	private double heightInterval;
 	private double depthInterval;
 	private double zoomScale;
-	private Vec2D origin = MathUtil.zeroVec2D;
-	private Vec2D offset = MathUtil.zeroVec2D;
+	private Vec2D origin;
+	private Vec2D offset;
 
 	private double screenToVirtualRatio;
 	private double virtualToScreenRatio;

@@ -2,7 +2,7 @@ package zan.lib.sample;
 
 import zan.lib.core.FramePanel;
 import zan.lib.input.InputManager;
-import zan.lib.sound.SoundManager;
+import zan.lib.snd.SoundManager;
 
 public class SoundPanel extends FramePanel {
 

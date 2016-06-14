@@ -8,8 +8,8 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import org.lwjgl.BufferUtils;
 
-import zan.lib.util.math.MatD;
-import zan.lib.util.math.Vec4D;
+import zan.lib.math.linalg.Mat44D;
+import zan.lib.math.linalg.Vec4D;
 
 public class DefaultShader extends MatrixShader {
 
@@ -75,14 +75,14 @@ public class DefaultShader extends MatrixShader {
 	}
 
 	public void bindModelView() {
-		MatD modelViewMatrix = getModelViewMatrix().transpose();
+		Mat44D modelViewMatrix = getModelViewMatrix().transpose();
 		matrixBuffer.clear();
 		for (int i=0;i<16;i++) matrixBuffer.put((float)modelViewMatrix.get(i));
 		matrixBuffer.flip();
 		glUniformMatrix4fv(modelViewMatrixID, false, matrixBuffer);
 	}
 	public void bindProjection() {
-		MatD projectMatrix = projectionMatrix.transpose();
+		Mat44D projectMatrix = projectionMatrix.transpose();
 		matrixBuffer.clear();
 		for (int i=0;i<16;i++) matrixBuffer.put((float)projectMatrix.get(i));
 		matrixBuffer.flip();

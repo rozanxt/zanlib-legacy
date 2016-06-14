@@ -2,7 +2,7 @@ package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
 import zan.lib.core.FramePanel;
-import zan.lib.gfx.obj.SpriteObject;
+import zan.lib.gfx.object.SpriteObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.sprite.AnimatedSprite;
 import zan.lib.gfx.sprite.Sprite;

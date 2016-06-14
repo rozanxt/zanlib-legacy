@@ -1,4 +1,4 @@
-package zan.lib.util.res;
+package zan.lib.res;
 
 public class ResourceParsingException extends Exception {
 

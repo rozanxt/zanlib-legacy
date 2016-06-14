@@ -1,0 +1,149 @@
+package zan.lib.math.linalg;
+
+public class LinAlgUtil {
+
+	public static double[] createZeroD(int size) {
+		double[] data = new double[size];
+		for (int i=0;i<size;i++) data[i] = 0.0;
+		return data;
+	}
+	public static double[] createUnitD(int size, int unit) {
+		double[] data = new double[size];
+		for (int i=0;i<size;i++) {
+			if (i == unit) data[i] = 1.0;
+			else data[i] = 0.0;
+		}
+		return data;
+	}
+	public static double[] createIdD(int dim) {
+		double[] data = new double[dim * dim];
+		for (int i=0;i<dim;i++) {
+			for (int j=0;j<dim;j++) {
+				if (i == j) data[dim*i+j] = 1.0;
+				else data[dim*i+j] = 0.0;
+			}
+		}
+		return data;
+	}
+
+	public static final Vec2D zeroVec2D = new Vec2D(0.0, 0.0);
+	public static final Vec3D zeroVec3D = new Vec3D(0.0, 0.0, 0.0);
+	public static final Vec4D zeroVec4D = new Vec4D(0.0, 0.0, 0.0, 0.0);
+	public static VecD zeroVecD(int size) {return new VecD(createZeroD(size));}
+
+	public static final Vec2D unitXVec2D = new Vec2D(1.0, 0.0);
+	public static final Vec2D unitYVec2D = new Vec2D(0.0, 1.0);
+	public static final Vec3D unitXVec3D = new Vec3D(1.0, 0.0, 0.0);
+	public static final Vec3D unitYVec3D = new Vec3D(0.0, 1.0, 0.0);
+	public static final Vec3D unitZVec3D = new Vec3D(0.0, 1.0, 0.0);
+	public static final Vec4D unitXVec4D = new Vec4D(1.0, 0.0, 0.0, 0.0);
+	public static final Vec4D unitYVec4D = new Vec4D(0.0, 1.0, 0.0, 0.0);
+	public static final Vec4D unitZVec4D = new Vec4D(0.0, 0.0, 1.0, 0.0);
+	public static final Vec4D unitWVec4D = new Vec4D(0.0, 0.0, 0.0, 1.0);
+	public static VecD unitVecD(int size, int unit) {return new VecD(createUnitD(size, unit));}
+
+	public static final Mat22D zeroMat22D = new Mat22D(0.0, 0.0, 0.0, 0.0);
+	public static final Mat33D zeroMat33D = new Mat33D(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	public static final Mat44D zeroMat44D = new Mat44D(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	public static MatD zeroMatD(int rows, int cols) {return new MatD(rows, cols, createZeroD(rows * cols));}
+
+	public static final Mat22D idMat22D = new Mat22D(1.0, 0.0, 0.0, 1.0);
+	public static final Mat33D idMat33D = new Mat33D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
+	public static final Mat44D idMat44D = new Mat44D(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+	public static MatD idMatD(int dim) {return new MatD(dim, dim, createIdD(dim));}
+
+	public static Mat22D translationMat22D(double x) {
+		return new Mat22D(1.0, x,
+						  0.0, 1.0);
+	}
+	public static Mat33D translationMat33D(double x, double y) {
+		return new Mat33D(1.0, 0.0, x,
+						  0.0, 1.0, y,
+						  0.0, 0.0, 1.0);
+	}
+	public static Mat44D translationMat44D(double x, double y, double z) {
+		return new Mat44D(1.0, 0.0, 0.0, x,
+						  0.0, 1.0, 0.0, y,
+						  0.0, 0.0, 1.0, z,
+						  0.0, 0.0, 0.0, 1.0);
+	}
+
+	public static Mat22D scaleMat22D(double x) {
+		return new Mat22D(  x, 0.0,
+						  0.0, 1.0);
+	}
+	public static Mat33D scaleMat33D(double x, double y) {
+		return new Mat33D(  x, 0.0, 0.0,
+						  0.0,   y, 0.0,
+						  0.0, 0.0, 1.0);
+	}
+	public static Mat44D scaleMat44D(double x, double y, double z) {
+		return new Mat44D(  x, 0.0, 0.0, 0.0,
+						  0.0,   y, 0.0, 0.0,
+						  0.0, 0.0,   z, 0.0,
+						  0.0, 0.0, 0.0, 1.0);
+	}
+
+	public static Mat22D rotationMat22D(double angle) {
+		double rad = Math.toRadians(angle);
+		double sin = Math.sin(rad);
+		double cos = Math.cos(rad);
+		return new Mat22D(cos, -sin,
+						  sin, cos);
+	}
+	public static Mat33D rotationMat33D(double angle) {
+		double rad = Math.toRadians(angle);
+		double sin = Math.sin(rad);
+		double cos = Math.cos(rad);
+		return new Mat33D(cos, -sin, 0.0,
+						  sin, cos, 0.0,
+						  0.0, 0.0, 1.0);
+	}
+	public static Mat44D rotationMat44D(double angle, double x, double y, double z) {
+		Vec3D axis = new Vec3D(x, y, z).normalize();
+		double a = axis.x;
+		double b = axis.y;
+		double c = axis.z;
+		double rad = Math.toRadians(angle);
+		double sin = Math.sin(rad);
+		double cos = Math.cos(rad);
+		return new Mat44D(a*a*(1-cos)+cos, a*b*(1-cos)-c*sin, a*c*(1-cos)+b*sin, 0.0,
+						  b*a*(1-cos)+c*sin, b*b*(1-cos)+cos, b*c*(1-cos)-a*sin, 0.0,
+						  c*a*(1-cos)-b*sin, c*b*(1-cos)+a*sin, c*c*(1-cos)+cos, 0.0,
+						  0.0, 0.0, 0.0, 1.0);
+	}
+
+	public static Mat44D orthoProjectionMat44D(double left, double right, double bottom, double top, double near, double far) {
+		double sx = 2.0/(right-left);
+		double sy = 2.0/(top-bottom);
+		double sz = -2.0/(far-near);
+		double tx = (right+left)/(right-left);
+		double ty = (top+bottom)/(top-bottom);
+		double tz = (far+near)/(far-near);
+		return new Mat44D(sx, 0.0, 0.0, -tx,
+						  0.0, sy, 0.0, -ty,
+						  0.0, 0.0, sz, -tz,
+						  0.0, 0.0, 0.0, 1.0);
+	}
+	public static Mat44D perspectiveProjectionMat44D(double fovy, double ratio, double near, double far) {
+		double f = 1.0/Math.tan(fovy/2.0);
+		double sx = f/ratio;
+		double sy = f;
+		double sz = (near+far)/(near-far);
+		double tz = (2*near*far)/(near-far);
+		return new Mat44D(sx, 0.0, 0.0, 0.0,
+						  0.0, sy, 0.0, 0.0,
+						  0.0, 0.0, sz,  tz,
+						  0.0, 0.0, -1.0, 0.0);
+	}
+
+	public static <T extends IVecSpaceD<T>> boolean is(T left, T right) {return left.is(right);}
+	public static <T extends IVecSpaceD<T>> T add(T left, T right) {return left.add(right);}
+	public static <T extends IVecSpaceD<T>> T sub(T left, T right) {return left.sub(right);}
+	public static <T extends IVecSpaceD<T>> T scalar(double scalar, T vector) {return vector.scalar(scalar);}
+	public static <T extends IMatD<T>> T mult(T left, T right) {return left.mult(right);}
+	public static <T extends IVecD<T>> double dot(T left, T right) {return left.dot(right);}
+	public static double cross(Vec2D left, Vec2D right) {return left.cross(right);}
+	public static Vec3D cross(Vec3D left, Vec3D right) {return left.cross(right);}
+
+}

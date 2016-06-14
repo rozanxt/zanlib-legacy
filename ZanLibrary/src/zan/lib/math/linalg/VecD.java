@@ -1,8 +1,8 @@
-package zan.lib.util.math;
+package zan.lib.math.linalg;
 
 import java.util.Arrays;
 
-public final class VecD implements IVecD<VecD> {
+public class VecD implements IVecD<VecD> {
 
 	private final double[] data;
 

@@ -2,10 +2,10 @@ package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
 import zan.lib.core.FramePanel;
-import zan.lib.gfx.obj.ModelObject;
+import zan.lib.gfx.object.ModelObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.view.ViewPort3D;
-import zan.lib.util.math.Vec3D;
+import zan.lib.math.linalg.Vec3D;
 
 public class ModelPanel extends FramePanel {
 

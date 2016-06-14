@@ -1,4 +1,4 @@
-package zan.lib.gfx.obj;
+package zan.lib.gfx.object;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

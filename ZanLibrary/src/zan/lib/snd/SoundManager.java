@@ -1,4 +1,4 @@
-package zan.lib.sound;
+package zan.lib.snd;
 
 import java.io.File;
 import java.net.MalformedURLException;

@@ -1,12 +1,12 @@
-package zan.lib.gfx.obj;
+package zan.lib.gfx.object;
 
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.texture.TextureInfo;
 
 public class SpriteObject extends VertexObject {
 
-	public static final boolean ALIGN_HORIZONTAL = false;
 	public static final boolean ALIGN_VERTICAL = true;
+	public static final boolean ALIGN_HORIZONTAL = false;
 
 	protected TextureInfo spriteTexture;
 

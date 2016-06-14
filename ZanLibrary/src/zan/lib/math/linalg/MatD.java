@@ -1,8 +1,8 @@
-package zan.lib.util.math;
+package zan.lib.math.linalg;
 
 import java.util.Arrays;
 
-public final class MatD implements IMatD<MatD> {
+public class MatD implements IMatD<MatD> {
 
 	private final int rows, cols;
 	private final double[] data;

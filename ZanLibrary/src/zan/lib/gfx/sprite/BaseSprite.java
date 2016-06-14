@@ -1,41 +1,34 @@
 package zan.lib.gfx.sprite;
 
 import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.math.linalg.LinAlgUtil;
+import zan.lib.math.linalg.Vec2D;
+import zan.lib.math.linalg.Vec4D;
 import zan.lib.util.Utility;
-import zan.lib.util.math.MathUtil;
-import zan.lib.util.math.Vec2D;
-import zan.lib.util.math.Vec4D;
-import zan.lib.util.math.VecD;
 
 public abstract class BaseSprite {
 
-	protected Vec4D pos = MathUtil.zeroVec4D;
-	protected Vec4D scale = MathUtil.zeroVec4D;
-	protected Vec2D angle = MathUtil.zeroVec2D;
-	protected VecD color = MathUtil.zeroVecD(8);
+	protected Vec4D pos = LinAlgUtil.zeroVec4D;
+	protected Vec4D scale = LinAlgUtil.zeroVec4D;
+	protected Vec2D angle = LinAlgUtil.zeroVec2D;
+	protected Vec4D color = LinAlgUtil.zeroVec4D;
+	protected Vec4D oldColor = LinAlgUtil.zeroVec4D;
 
 	protected boolean enableInterpolation = false;
 	protected boolean enableTransformation = true;
 	protected boolean enableColor = true;
 
-	public BaseSprite() {
-		loadIdentity();
-		amendState();
-	}
-
-	public void destroy() {}
-
 	public void loadIdentity() {
 		pos = new Vec4D(0.0, 0.0, pos.z, pos.w);
 		scale = new Vec4D(1.0, 1.0, scale.z, scale.w);
 		angle = new Vec2D(0.0, angle.y);
-		color = new VecD(1.0, 1.0, 1.0, 1.0, color.get(4), color.get(5), color.get(6), color.get(7));
+		color = new Vec4D(1.0, 1.0, 1.0, 1.0);
 	}
 	public void amendState() {
 		pos = new Vec4D(pos.x, pos.y, pos.x, pos.y);
 		scale = new Vec4D(scale.x, scale.y, scale.x, scale.y);
 		angle = new Vec2D(angle.x, angle.x);
-		color = new VecD(color.get(0), color.get(1), color.get(2), color.get(3), color.get(0), color.get(1), color.get(2), color.get(3));
+		oldColor = new Vec4D(color.x, color.y, color.z, color.w);
 	}
 
 	public void enableInterpolation(boolean interpolation) {enableInterpolation = interpolation;}
@@ -49,9 +42,9 @@ public abstract class BaseSprite {
 	public void setScaleX(double scaleX) {scale = new Vec4D(scaleX, scale.y, scale.z, scale.w);}
 	public void setScaleY(double scaleY) {scale = new Vec4D(scale.x, scaleY, scale.z, scale.w);}
 	public void setAngle(double angle) {this.angle = new Vec2D(angle, this.angle.y);}
-	public void setColor(double r, double g, double b, double a) {color = new VecD(r, g, b, a, color.get(0), color.get(1), color.get(2), color.get(3));}
-	public void setColor(double r, double g, double b) {color = new VecD(r, g, b, color.get(3), color.get(0), color.get(1), color.get(2), color.get(3));}
-	public void setOpacity(double a) {color = new VecD(color.get(0), color.get(1), color.get(2), a, color.get(0), color.get(1), color.get(2), color.get(3));}
+	public void setColor(double r, double g, double b, double a) {color = new Vec4D(r, g, b, a);}
+	public void setColor(double r, double g, double b) {color = new Vec4D(r, g, b, color.w);}
+	public void setOpacity(double a) {color = new Vec4D(color.x, color.y, color.z, a);}
 
 	public void setFlip(int flip) {
 		if (flip == 1) setScale(-Math.abs(scale.x), Math.abs(scale.y));
@@ -96,6 +89,7 @@ public abstract class BaseSprite {
 		}
 	}
 
+	public abstract void destroy();
 	public abstract void draw(DefaultShader sp);
 
 }

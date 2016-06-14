@@ -1,6 +1,6 @@
-package zan.lib.util.math;
+package zan.lib.math.linalg;
 
-public final class Vec4D implements IVecD<Vec4D> {
+public class Vec4D implements IVecD<Vec4D> {
 
 	public final double x, y, z, w;
 

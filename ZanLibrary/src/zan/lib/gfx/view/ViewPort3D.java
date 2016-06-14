@@ -1,8 +1,8 @@
 package zan.lib.gfx.view;
 
 import zan.lib.gfx.shader.DefaultShader;
-import zan.lib.util.math.MathUtil;
-import zan.lib.util.math.Vec3D;
+import zan.lib.math.linalg.LinAlgUtil;
+import zan.lib.math.linalg.Vec3D;
 
 public class ViewPort3D extends ViewPort {
 
@@ -12,7 +12,6 @@ public class ViewPort3D extends ViewPort {
 
 	public ViewPort3D(int viewPortX, int viewPortY, int viewPortW, int viewPortH) {
 		super(viewPortX, viewPortY, viewPortW, viewPortH);
-		offset = MathUtil.zeroVec3D;
 		setFOVY(120.0);
 		setDepthInterval(0.1, 100.0);
 		setOffset(0.0, 0.0, 0.0);
@@ -40,7 +39,7 @@ public class ViewPort3D extends ViewPort {
 
 	@Override
 	public void adjustView(DefaultShader sp) {
-		sp.setViewMatrix(MathUtil.translationMat44D(-offset.x, -offset.y, -offset.z));
+		sp.setViewMatrix(LinAlgUtil.translationMat44D(-offset.x, -offset.y, -offset.z));
 	}
 
 }

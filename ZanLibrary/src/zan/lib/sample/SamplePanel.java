@@ -1,7 +1,7 @@
 package zan.lib.sample;
 
 import zan.lib.core.FramePanel;
-import zan.lib.gfx.obj.VertexObject;
+import zan.lib.gfx.object.VertexObject;
 import zan.lib.gfx.shader.DefaultShader;
 import zan.lib.gfx.view.ViewPort2D;
 import zan.lib.util.Utility;
