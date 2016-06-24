@@ -35,7 +35,7 @@ public class LinAlgUtil {
 	public static final Vec2D unitYVec2D = new Vec2D(0.0, 1.0);
 	public static final Vec3D unitXVec3D = new Vec3D(1.0, 0.0, 0.0);
 	public static final Vec3D unitYVec3D = new Vec3D(0.0, 1.0, 0.0);
-	public static final Vec3D unitZVec3D = new Vec3D(0.0, 1.0, 0.0);
+	public static final Vec3D unitZVec3D = new Vec3D(0.0, 0.0, 1.0);
 	public static final Vec4D unitXVec4D = new Vec4D(1.0, 0.0, 0.0, 0.0);
 	public static final Vec4D unitYVec4D = new Vec4D(0.0, 1.0, 0.0, 0.0);
 	public static final Vec4D unitZVec4D = new Vec4D(0.0, 0.0, 1.0, 0.0);
@@ -100,7 +100,23 @@ public class LinAlgUtil {
 		return new Mat22D(cos, -sin,
 						  sin, cos);
 	}
-	public static Mat33D rotationMat33D(double angle) {
+	public static Mat33D rotationXMat33D(double angle) {
+		double rad = Math.toRadians(angle);
+		double sin = Math.sin(rad);
+		double cos = Math.cos(rad);
+		return new Mat33D(1.0, 0.0, 0.0,
+						  0.0, cos, -sin,
+						  0.0, sin, cos);
+	}
+	public static Mat33D rotationYMat33D(double angle) {
+		double rad = Math.toRadians(angle);
+		double sin = Math.sin(rad);
+		double cos = Math.cos(rad);
+		return new Mat33D(cos, 0.0, -sin,
+						  0.0, 1.0, 0.0,
+						  sin, 0.0, cos);
+	}
+	public static Mat33D rotationZMat33D(double angle) {
 		double rad = Math.toRadians(angle);
 		double sin = Math.sin(rad);
 		double cos = Math.cos(rad);
@@ -132,6 +148,31 @@ public class LinAlgUtil {
 						  b*a*(1-cos)+c*sin, b*b*(1-cos)+cos, b*c*(1-cos)-a*sin, 0.0,
 						  c*a*(1-cos)-b*sin, c*b*(1-cos)+a*sin, c*c*(1-cos)+cos, 0.0,
 						  0.0, 0.0, 0.0, 1.0);
+	}
+	public static Mat33D rotationMat33D(double angle, Vec3D axis) {return rotationMat33D(angle, axis.x, axis.y, axis.z);}
+	public static Mat44D rotationMat44D(double angle, Vec3D axis) {return rotationMat44D(angle, axis.x, axis.y, axis.z);}
+
+	public static Mat44D orientationMat44D(Vec3D front, Vec3D up) {
+		Vec3D c = front.normalize();
+		Vec3D a = up.cross(c).normalize();
+		Vec3D b = c.cross(a);
+		return new Mat44D(a.x, b.x, c.x, 0.0,
+				  a.y, b.y, c.y, 0.0,
+				  a.z, b.z, c.z, 0.0,
+				  0.0, 0.0, 0.0, 1.0);
+	}
+
+	public static Mat44D lookAtViewMat44D(Vec3D pos, Vec3D lookAt, Vec3D up) {
+		Vec3D c = pos.sub(lookAt).normalize();
+		Vec3D a = up.cross(c).normalize();
+		Vec3D b = c.cross(a);
+		return new Mat44D(a.x, b.x, c.x, 0.0,
+						  a.y, b.y, c.y, 0.0,
+						  a.z, b.z, c.z, 0.0,
+						  0.0, 0.0, 0.0, 1.0).mult(translationMat44D(-pos.x, -pos.y, -pos.z));
+	}
+	public static Mat44D lookAtViewMat44D(double posX, double posY, double posZ, double lookAtX, double lookAtY, double lookAtZ, double upX, double upY, double upZ) {
+		return lookAtViewMat44D(new Vec3D(posX, posY, posZ), new Vec3D(lookAtX, lookAtY, lookAtZ), new Vec3D(upX, upY, upZ));
 	}
 
 	public static Mat44D orthoProjectionMat44D(double left, double right, double bottom, double top, double near, double far) {
