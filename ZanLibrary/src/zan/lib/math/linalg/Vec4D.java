@@ -26,6 +26,7 @@ public class Vec4D implements IVecD<Vec4D> {
 		case 3:
 			return w;
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}

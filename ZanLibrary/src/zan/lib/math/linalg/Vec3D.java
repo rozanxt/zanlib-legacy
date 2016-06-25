@@ -23,6 +23,7 @@ public class Vec3D implements IVecD<Vec3D> {
 		case 2:
 			return z;
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}

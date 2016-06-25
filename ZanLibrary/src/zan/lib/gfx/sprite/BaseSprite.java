@@ -9,10 +9,10 @@ import zan.lib.util.Utility;
 public abstract class BaseSprite {
 
 	protected Vec4D pos = LinAlgUtil.zeroVec4D;
-	protected Vec4D scale = LinAlgUtil.zeroVec4D;
+	protected Vec4D scale = LinAlgUtil.oneVec4D;
 	protected Vec2D angle = LinAlgUtil.zeroVec2D;
-	protected Vec4D color = LinAlgUtil.zeroVec4D;
-	protected Vec4D oldColor = LinAlgUtil.zeroVec4D;
+	protected Vec4D color = LinAlgUtil.oneVec4D;
+	protected Vec4D oldColor = LinAlgUtil.oneVec4D;
 
 	protected boolean enableInterpolation = false;
 	protected boolean enableTransformation = true;
@@ -62,10 +62,10 @@ public abstract class BaseSprite {
 		if (enableInterpolation) iP = ip;
 
 		if (enableColor) {
-			double iRed = Utility.interpolateLinear(color.get(4), color.get(0), iP);
-			double iGreen = Utility.interpolateLinear(color.get(5), color.get(1), iP);
-			double iBlue = Utility.interpolateLinear(color.get(6), color.get(2), iP);
-			double iOpacity = Utility.interpolateLinear(color.get(7), color.get(3), iP);
+			double iRed = Utility.interpolateLinear(oldColor.x, color.x, iP);
+			double iGreen = Utility.interpolateLinear(oldColor.y, color.y, iP);
+			double iBlue = Utility.interpolateLinear(oldColor.z, color.z, iP);
+			double iOpacity = Utility.interpolateLinear(oldColor.w, color.w, iP);
 
 			sc.setColor(iRed, iGreen, iBlue, iOpacity);
 		}

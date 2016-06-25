@@ -51,6 +51,7 @@ public class Mat33D implements IMatD<Mat33D> {
 		case 8:
 			return a33;
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}
@@ -67,6 +68,7 @@ public class Mat33D implements IMatD<Mat33D> {
 			case 2:
 				return a13;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		case 1:
@@ -78,6 +80,7 @@ public class Mat33D implements IMatD<Mat33D> {
 			case 2:
 				return a23;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		case 2:
@@ -89,9 +92,11 @@ public class Mat33D implements IMatD<Mat33D> {
 			case 2:
 				return a33;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}

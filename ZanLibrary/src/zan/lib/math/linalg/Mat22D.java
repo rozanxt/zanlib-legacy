@@ -38,6 +38,7 @@ public class Mat22D implements IMatD<Mat22D> {
 		case 3:
 			return a22;
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}
@@ -52,6 +53,7 @@ public class Mat22D implements IMatD<Mat22D> {
 			case 1:
 				return a12;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		case 1:
@@ -61,9 +63,11 @@ public class Mat22D implements IMatD<Mat22D> {
 			case 1:
 				return a22;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}

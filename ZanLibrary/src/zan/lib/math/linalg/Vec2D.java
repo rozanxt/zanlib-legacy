@@ -20,6 +20,7 @@ public class Vec2D implements IVecD<Vec2D> {
 		case 1:
 			return y;
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}

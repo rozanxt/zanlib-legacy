@@ -68,6 +68,7 @@ public class Mat44D implements IMatD<Mat44D> {
 		case 15:
 			return a44;
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}
@@ -86,6 +87,7 @@ public class Mat44D implements IMatD<Mat44D> {
 			case 3:
 				return a14;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		case 1:
@@ -99,6 +101,7 @@ public class Mat44D implements IMatD<Mat44D> {
 			case 3:
 				return a24;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		case 2:
@@ -112,6 +115,7 @@ public class Mat44D implements IMatD<Mat44D> {
 			case 3:
 				return a34;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		case 3:
@@ -125,9 +129,11 @@ public class Mat44D implements IMatD<Mat44D> {
 			case 3:
 				return a44;
 			default:
+				System.err.println("Warning: Illegal index argument");
 				return 0.0;
 			}
 		default:
+			System.err.println("Warning: Illegal index argument");
 			return 0.0;
 		}
 	}

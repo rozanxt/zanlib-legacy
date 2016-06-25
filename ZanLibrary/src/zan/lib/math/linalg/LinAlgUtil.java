@@ -7,6 +7,11 @@ public class LinAlgUtil {
 		for (int i=0;i<size;i++) data[i] = 0.0;
 		return data;
 	}
+	public static double[] createOneD(int size) {
+		double[] data = new double[size];
+		for (int i=0;i<size;i++) data[i] = 1.0;
+		return data;
+	}
 	public static double[] createUnitD(int size, int unit) {
 		double[] data = new double[size];
 		for (int i=0;i<size;i++) {
@@ -30,6 +35,11 @@ public class LinAlgUtil {
 	public static final Vec3D zeroVec3D = new Vec3D(0.0, 0.0, 0.0);
 	public static final Vec4D zeroVec4D = new Vec4D(0.0, 0.0, 0.0, 0.0);
 	public static VecD zeroVecD(int size) {return new VecD(createZeroD(size));}
+
+	public static final Vec2D oneVec2D = new Vec2D(1.0, 1.0);
+	public static final Vec3D oneVec3D = new Vec3D(1.0, 1.0, 1.0);
+	public static final Vec4D oneVec4D = new Vec4D(1.0, 1.0, 1.0, 1.0);
+	public static VecD oneVecD(int size) {return new VecD(createOneD(size));}
 
 	public static final Vec2D unitXVec2D = new Vec2D(1.0, 0.0);
 	public static final Vec2D unitYVec2D = new Vec2D(0.0, 1.0);
