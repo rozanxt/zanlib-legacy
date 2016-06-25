@@ -1,7 +1,7 @@
 package zan.lib.gfx.sprite;
 
 import zan.lib.gfx.object.SpriteObject;
-import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.scene.DefaultScene;
 
 public class AnimatedSprite extends Sprite {
 
@@ -26,6 +26,6 @@ public class AnimatedSprite extends Sprite {
 	}
 
 	@Override
-	public void draw(DefaultShader sp) {sprite.renderFrame(sp, currentFrame);}
+	public void draw(DefaultScene sc) {sprite.renderFrame(sc, currentFrame);}
 
 }

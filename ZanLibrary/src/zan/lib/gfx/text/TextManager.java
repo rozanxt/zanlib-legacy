@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import zan.lib.gfx.object.SpriteObject;
-import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.scene.DefaultScene;
 import zan.lib.gfx.texture.TextureManager;
 import zan.lib.res.ResourceData;
 import zan.lib.res.ResourceUtil;
@@ -37,7 +37,7 @@ public class TextManager {
 		fontObjects.clear();
 	}
 
-	public static void renderText(DefaultShader sp, String text, String font) {
+	public static void renderText(DefaultScene sc, String text, String font) {
 		FontInfo fontInfo = fontInfos.get(font);
 		SpriteObject fo = fontObjects.get(font);
 
@@ -50,11 +50,11 @@ public class TextManager {
 		for (int i=0;i<text.length();i++) {
 			int ch = chars.indexOf(text.charAt(i));
 			if (ch < 0) continue;
-			sp.pushMatrix();
-			sp.translate(dw, 0.0, 0.0);
-			sp.applyModelMatrix();
-			fo.renderFrame(sp, ch);
-			sp.popMatrix();
+			sc.pushMatrix();
+			sc.translate(dw, 0.0, 0.0);
+			sc.applyModelMatrix();
+			fo.renderFrame(sc, ch);
+			sc.popMatrix();
 			dw += (fontInfo.getCharInfo(ch).width + fontInfo.offset_x) / 32.0;
 		}
 	}

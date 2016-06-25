@@ -1,6 +1,6 @@
 package zan.lib.gfx.object;
 
-import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.scene.DefaultScene;
 import zan.lib.gfx.texture.TextureInfo;
 
 public class SpriteObject extends VertexObject {
@@ -114,24 +114,23 @@ public class SpriteObject extends VertexObject {
 	public int getNumFrames() {return numFrames;}
 
 	@Override
-	public void render(DefaultShader sp) {
-		sp.bindTexture(spriteTexture.id);
-		sp.bindMatrix();
-		sp.bindBuffer(vertexBuffer, indexBuffer);
+	public void render(DefaultScene sc) {
+		sc.bindTexture(spriteTexture.id);
+		sc.bindMatrix();
+		sc.bindBuffer(vertexBuffer, indexBuffer);
 
-		sp.setPositionPointer(numCoords, numData, coordOffset);
-		sp.enablePositionPointer();
-		sp.setTexCoordPointer(numTexCoords, numData, texCoordOffset);
-		sp.enableTexCoordPointer();
-		sp.disableNormalPointer();
-		sp.disableColorPointer();
+		sc.setPositionPointer(numCoords, numData, coordOffset);
+		sc.enablePositionPointer();
+		sc.setTexCoordPointer(numTexCoords, numData, texCoordOffset);
+		sc.enableTexCoordPointer();
+		sc.disableColorPointer();
 
-		sp.drawElements(drawMode, numVertices, indexOffset);
+		sc.drawElements(drawMode, numVertices, indexOffset);
 	}
 
-	public void renderFrame(DefaultShader sp, int frame) {
+	public void renderFrame(DefaultScene sc, int frame) {
 		setFrame(frame);
-		render(sp);
+		render(sc);
 	}
 
 }

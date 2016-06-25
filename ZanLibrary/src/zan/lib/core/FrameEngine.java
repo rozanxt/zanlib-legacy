@@ -22,6 +22,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.BufferUtils;
 
+import zan.lib.gfx.Gfx;
 import zan.lib.input.InputManager;
 
 public abstract class FrameEngine extends RawEngine {
@@ -300,7 +301,7 @@ public abstract class FrameEngine extends RawEngine {
 	}
 
 	private void render(double ip) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Gfx.clear();
 		onRender(ip);
 		glfwSwapBuffers(currentWindow);
 	}

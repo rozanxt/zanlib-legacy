@@ -2,19 +2,19 @@ package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
 import zan.lib.core.FramePanel;
+import zan.lib.gfx.camera.CameraScreen;
 import zan.lib.gfx.object.SpriteObject;
-import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.scene.Scene2D;
 import zan.lib.gfx.sprite.AnimatedSprite;
 import zan.lib.gfx.sprite.Sprite;
 import zan.lib.gfx.texture.TextureManager;
-import zan.lib.gfx.view.ViewPortScreen;
 
 public class SpritePanel extends FramePanel {
 
 	private SampleCore core;
 
-	private DefaultShader shader;
-	private ViewPortScreen viewPort;
+	private Scene2D scene;
+	private CameraScreen camera;
 
 	private Sprite spriteA;
 	private AnimatedSprite spriteB;
@@ -27,15 +27,14 @@ public class SpritePanel extends FramePanel {
 
 	@Override
 	public void create() {
-		shader = new DefaultShader();
-		shader.loadProgram();
-		shader.enableBlend(true);
-
-		viewPort = new ViewPortScreen(core.getScreenWidth(), core.getScreenHeight());
-		viewPort.showView();
-		viewPort.projectView(shader);
-
 		TextureManager.create();
+
+		scene = new Scene2D();
+		scene.create();
+		scene.enableBlend(true);
+
+		camera = new CameraScreen(core.getScreenWidth(), core.getScreenHeight());
+		camera.apply(scene);
 
 		spriteA = new Sprite(TextureManager.loadTexture("image", "res/img/sample_image.png"));
 		spriteA.setPos(320.0, 240.0);
@@ -53,7 +52,7 @@ public class SpritePanel extends FramePanel {
 	public void destroy() {
 		spriteA.destroy();
 		spriteB.destroy();
-		shader.destroy();
+		scene.destroy();
 		TextureManager.destroy();
 	}
 
@@ -79,22 +78,21 @@ public class SpritePanel extends FramePanel {
 
 	@Override
 	public void render(double ip) {
-		shader.bind();
-		viewPort.adjustView(shader);
+		scene.begin();
 
-		spriteA.render(shader, ip);
-		spriteB.render(shader, ip);
+		camera.apply(scene);
 
-		shader.unbind();
+		spriteA.render(scene, ip);
+		spriteB.render(scene, ip);
+
+		scene.end();
 	}
 
 	@Override
 	public void onScreenResize(int width, int height) {
-		shader.bindState();
-		viewPort.setScreenSize(width, height);
-		viewPort.setViewPort(0, 0, width, height);
-		viewPort.showView();
-		viewPort.projectView(shader);
+		camera.setScreen(width, height);
+		camera.setViewPort(0, 0, width, height);
+		camera.apply(scene);
 	}
 
 }

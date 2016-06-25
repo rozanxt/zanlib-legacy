@@ -1,6 +1,6 @@
 package zan.lib.gfx.sprite;
 
-import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.scene.DefaultScene;
 import zan.lib.math.linalg.LinAlgUtil;
 import zan.lib.math.linalg.Vec2D;
 import zan.lib.math.linalg.Vec4D;
@@ -57,7 +57,7 @@ public abstract class BaseSprite {
 		amendState();
 	}
 
-	public void render(DefaultShader sp, double ip) {
+	public void render(DefaultScene sc, double ip) {
 		double iP = 1.0;
 		if (enableInterpolation) iP = ip;
 
@@ -67,7 +67,7 @@ public abstract class BaseSprite {
 			double iBlue = Utility.interpolateLinear(color.get(6), color.get(2), iP);
 			double iOpacity = Utility.interpolateLinear(color.get(7), color.get(3), iP);
 
-			sp.setColor(iRed, iGreen, iBlue, iOpacity);
+			sc.setColor(iRed, iGreen, iBlue, iOpacity);
 		}
 
 		if (enableTransformation) {
@@ -77,19 +77,19 @@ public abstract class BaseSprite {
 			double iScaleY = Utility.interpolateLinear(scale.w, scale.y, iP);
 			double iAngle = Utility.interpolateLinear(angle.get(1), angle.get(0), iP);
 
-			sp.pushMatrix();
-			sp.translate(iPosX, iPosY, 0.0);
-			sp.rotate(iAngle, 0.0, 0.0, 1.0);
-			sp.scale(iScaleX, iScaleY, 1.0);
-			sp.applyModelMatrix();
-			draw(sp);
-			sp.popMatrix();
+			sc.pushMatrix();
+			sc.translate(iPosX, iPosY, 0.0);
+			sc.rotate(iAngle, 0.0, 0.0, 1.0);
+			sc.scale(iScaleX, iScaleY, 1.0);
+			sc.applyModelMatrix();
+			draw(sc);
+			sc.popMatrix();
 		} else {
-			draw(sp);
+			draw(sc);
 		}
 	}
 
 	public abstract void destroy();
-	public abstract void draw(DefaultShader sp);
+	public abstract void draw(DefaultScene sc);
 
 }

@@ -2,11 +2,12 @@ package zan.lib.sample;
 
 import static zan.lib.input.InputManager.*;
 import zan.lib.core.FramePanel;
+import zan.lib.gfx.Gfx;
+import zan.lib.gfx.camera.Camera3D;
 import zan.lib.gfx.object.ModelObject;
 import zan.lib.gfx.object.VertexObject;
-import zan.lib.gfx.shader.DefaultShader;
+import zan.lib.gfx.scene.Scene3D;
 import zan.lib.gfx.texture.TextureManager;
-import zan.lib.gfx.view.ViewPort3D;
 import zan.lib.math.linalg.LinAlgUtil;
 import zan.lib.math.linalg.Vec3D;
 
@@ -14,8 +15,8 @@ public class CubePanel extends FramePanel {
 
 	private SampleCore core;
 
-	private DefaultShader shader;
-	private ViewPort3D viewPort;
+	private Scene3D scene;
+	private Camera3D camera;
 
 	private VertexObject[] cubes;
 
@@ -28,19 +29,19 @@ public class CubePanel extends FramePanel {
 
 	@Override
 	public void create() {
-		shader = new Sample3DShader();
-		shader.loadProgram();
-		shader.setClearColor(0.2, 0.2, 0.2, 1.0);
-		shader.enableDepthTest(true);
-		shader.enableCullFace(true);
-
-		viewPort = new ViewPort3D(0, 0, core.getScreenWidth(), core.getScreenHeight());
-		viewPort.setOffset(0.0, 0.0, 5.0);
-		viewPort.showView();
-		viewPort.projectView(shader);
+		Gfx.setClearColor(0.2, 0.2, 0.2, 1.0);
 
 		TextureManager.create();
 		TextureManager.loadTexture("card", "res/img/sample_card.png");
+
+		scene = new Scene3D();
+		scene.create();
+		scene.enableDepthTest(true);
+		scene.enableCullFace(true);
+
+		camera = new Camera3D(core.getScreenWidth(), core.getScreenHeight());
+		camera.setPos(0.0, 0.0, 5.0);
+		camera.apply(scene);
 
 		final int[] ind = {
 			0, 1, 3, 1, 2, 3,
@@ -94,7 +95,7 @@ public class CubePanel extends FramePanel {
 	@Override
 	public void destroy() {
 		for (int i=0;i<cubes.length;i++) cubes[i].destroy();
-		shader.destroy();
+		scene.destroy();
 		TextureManager.destroy();
 	}
 
@@ -112,29 +113,28 @@ public class CubePanel extends FramePanel {
 
 	@Override
 	public void render(double ip) {
-		shader.bind();
-		viewPort.adjustView(shader);
+		scene.begin();
 
-		shader.pushMatrix();
-		shader.rotate(rotation.y, 0.0, 1.0, 0.0);
-		shader.rotate(rotation.x, 1.0, 0.0, 0.0);
-		shader.scale(0.8, 0.8, 0.8);
-		shader.applyModelMatrix();
-		shader.setColor(0.0, 0.5, 0.8, 0.8);
-		if (mode == 1) shader.bindTexture(TextureManager.getTextureID("card"));
-		cubes[mode].render(shader);
-		shader.popMatrix();
+		camera.apply(scene);
 
-		shader.unbind();
+		scene.pushMatrix();
+		scene.rotate(rotation.y, 0.0, 1.0, 0.0);
+		scene.rotate(rotation.x, 1.0, 0.0, 0.0);
+		scene.scale(0.8, 0.8, 0.8);
+		scene.applyModelMatrix();
+		scene.setColor(0.0, 0.5, 0.8, 0.8);
+		if (mode == 1) scene.bindTexture(TextureManager.getTextureID("card"));
+		cubes[mode].render(scene);
+		scene.popMatrix();
+
+		scene.end();
 	}
 
 	@Override
 	public void onScreenResize(int width, int height) {
-		shader.bindState();
-		viewPort.setScreenSize(width, height);
-		viewPort.setViewPort(0, 0, width, height);
-		viewPort.showView();
-		viewPort.projectView(shader);
+		camera.setScreen(width, height);
+		camera.setViewPort(0, 0, width, height);
+		camera.apply(scene);
 	}
 
 }

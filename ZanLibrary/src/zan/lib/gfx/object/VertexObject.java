@@ -7,9 +7,9 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL15.*;
-import static zan.lib.gfx.shader.ShaderProgram.BYTES_PER_FLOAT;
-import static zan.lib.gfx.shader.ShaderProgram.BYTES_PER_INT;
-import zan.lib.gfx.shader.DefaultShader;
+
+import zan.lib.gfx.Gfx;
+import zan.lib.gfx.scene.DefaultScene;
 
 public class VertexObject {
 
@@ -73,38 +73,38 @@ public class VertexObject {
 	public void setIndexOffset(int offset) {indexOffset = offset;}
 	public void setDrawMode(int mode) {drawMode = mode;}
 
-	public void render(DefaultShader sp) {
-		sp.bindMatrix();
-		sp.bindBuffer(vertexBuffer, indexBuffer);
+	public void render(DefaultScene sc) {
+		sc.bindMatrix();
+		sc.bindBuffer(vertexBuffer, indexBuffer);
 
 		if (numCoords > 0) {
-			sp.setPositionPointer(numCoords, numData, coordOffset);
-			sp.enablePositionPointer();
-		} else sp.disablePositionPointer();
+			sc.setPositionPointer(numCoords, numData, coordOffset);
+			sc.enablePositionPointer();
+		} else sc.disablePositionPointer();
 		if (numNormals > 0) {
-			sp.setNormalPointer(numNormals, numData, normalOffset);
-			sp.enableNormalPointer();
-		} else sp.disableNormalPointer();
+			sc.setNormalPointer(numNormals, numData, normalOffset);
+			sc.enableNormalPointer();
+		} else sc.disableNormalPointer();
 		if (numColors > 0) {
-			sp.setColorPointer(numColors, numData, colorOffset);
-			sp.enableColorPointer();
-		} else sp.disableColorPointer();
+			sc.setColorPointer(numColors, numData, colorOffset);
+			sc.enableColorPointer();
+		} else sc.disableColorPointer();
 		if (numTexCoords > 0) {
-			sp.setTexCoordPointer(numTexCoords, numData, texCoordOffset);
-			sp.enableTexCoordPointer();
-		} else sp.disableTexCoordPointer();
+			sc.setTexCoordPointer(numTexCoords, numData, texCoordOffset);
+			sc.enableTexCoordPointer();
+		} else sc.disableTexCoordPointer();
 
-		sp.drawElements(drawMode, numVertices, indexOffset);
+		sc.drawElements(drawMode, numVertices, indexOffset);
 	}
 
 	public int createVBO(float[] vertices) {
-		FloatBuffer buffer = ByteBuffer.allocateDirect(vertices.length * BYTES_PER_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		FloatBuffer buffer = ByteBuffer.allocateDirect(vertices.length * Gfx.BYTES_PER_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		buffer.put(vertices);
 		buffer.flip();
 		return createVBO(buffer);
 	}
 	public int createIBO(int[] indices) {
-		IntBuffer buffer = ByteBuffer.allocateDirect(indices.length * BYTES_PER_INT).order(ByteOrder.nativeOrder()).asIntBuffer();
+		IntBuffer buffer = ByteBuffer.allocateDirect(indices.length * Gfx.BYTES_PER_INT).order(ByteOrder.nativeOrder()).asIntBuffer();
 		buffer.put(indices);
 		buffer.flip();
 		return createIBO(buffer);

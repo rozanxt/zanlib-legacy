@@ -3,41 +3,18 @@ package zan.lib.gfx.shader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-public abstract class ShaderProgram {
+import zan.lib.gfx.Gfx;
+import zan.lib.res.ResourceUtil;
 
-	public static final int BYTES_PER_FLOAT = 4;
-	public static final int BYTES_PER_INT = 4;
+public class ShaderProgram {
 
-	protected int programID = 0;
+	private int programID = 0;
 
-	public abstract void bindState();
-	public abstract void loadProgram();
-	protected abstract void fetchLocations();
-
-	public void bind() {glUseProgram(programID);}
-	public void unbind() {glUseProgram(0);}
-
-	public void destroy() {
-		glDeleteProgram(programID);
-		programID = 0;
+	public boolean loadProgramFromFile(String vertexShaderPath, String fragmentShaderPath) {
+		return loadProgram(ResourceUtil.readFileAsString(vertexShaderPath), ResourceUtil.readFileAsString(fragmentShaderPath));
 	}
 
-	protected void enableVertexPointer(int attrib) {glEnableVertexAttribArray(attrib);}
-	protected void disableVertexPointer(int attrib) {glDisableVertexAttribArray(attrib);}
-	protected void setVertexPointer(int attrib, int size, int stride, int offset) {glVertexAttribPointer(attrib, size, GL_FLOAT, false, stride * BYTES_PER_FLOAT, offset * BYTES_PER_FLOAT);}
-
-	protected int fetchAttribLocation(String variable) {
-		int location = glGetAttribLocation(programID, variable);
-		if (location == -1) System.err.println(variable + " is not a valid GLSL program variable!");
-		return location;
-	}
-	protected int fetchUniformLocation(String variable) {
-		int location = glGetUniformLocation(programID, variable);
-		if (location == -1) System.err.println(variable + " is not a valid GLSL program variable!");
-		return location;
-	}
-
-	protected boolean loadProgram(String vertexShader, String fragmentShader) {
+	public boolean loadProgram(String vertexShader, String fragmentShader) {
 		programID = glCreateProgram();
 		loadShader(vertexShader, GL_VERTEX_SHADER);
 		loadShader(fragmentShader, GL_FRAGMENT_SHADER);
@@ -48,9 +25,6 @@ public abstract class ShaderProgram {
 			destroy();
 			return false;
 		}
-
-		fetchLocations();
-		bindState();
 		return true;
 	}
 
@@ -68,5 +42,30 @@ public abstract class ShaderProgram {
 		glDeleteShader(shader);
 		return true;
 	}
+
+	public void destroy() {
+		glDeleteProgram(programID);
+		programID = 0;
+	}
+
+	public void bind() {glUseProgram(programID);}
+	public void unbind() {glUseProgram(0);}
+
+	public void enableVertexPointer(int attrib) {glEnableVertexAttribArray(attrib);}
+	public void disableVertexPointer(int attrib) {glDisableVertexAttribArray(attrib);}
+	public void setVertexPointer(int attrib, int size, int stride, int offset) {glVertexAttribPointer(attrib, size, GL_FLOAT, false, stride * Gfx.BYTES_PER_FLOAT, offset * Gfx.BYTES_PER_FLOAT);}
+
+	public int fetchAttribLocation(String variable) {
+		int location = glGetAttribLocation(programID, variable);
+		if (location == -1) System.err.println(variable + " is not a valid GLSL program variable!");
+		return location;
+	}
+	public int fetchUniformLocation(String variable) {
+		int location = glGetUniformLocation(programID, variable);
+		if (location == -1) System.err.println(variable + " is not a valid GLSL program variable!");
+		return location;
+	}
+
+	public int getProgramID() {return programID;}
 
 }
