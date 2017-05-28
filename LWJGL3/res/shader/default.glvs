@@ -1,0 +1,17 @@
+#version 110
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+attribute vec3 vertexPos;
+attribute vec4 vertexColor;
+attribute vec2 texCoord;
+
+varying vec4 fragColor;
+varying vec2 fragTexCoord;
+
+void main() {
+	fragColor = vertexColor;
+	fragTexCoord = texCoord;
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 1.0);
+}

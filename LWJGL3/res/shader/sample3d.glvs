@@ -1,0 +1,22 @@
+#version 110
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+attribute vec3 vertexPos;
+attribute vec3 vertexNormal;
+attribute vec4 vertexColor;
+attribute vec2 texCoord;
+
+varying vec3 fragPos;
+varying vec3 fragNormal;
+varying vec4 fragColor;
+varying vec2 fragTexCoord;
+
+void main() {
+	fragPos = vec3(modelViewMatrix * vec4(vertexPos, 1.0));
+	fragNormal = vec3(modelViewMatrix * vec4(vertexNormal, 0.0));
+	fragColor = vertexColor;
+	fragTexCoord = texCoord;
+	gl_Position = projectionMatrix * modelViewMatrix * vec4(vertexPos, 1.0);
+}
