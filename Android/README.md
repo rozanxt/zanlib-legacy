@@ -6,4 +6,4 @@ without dealing with setups such as window creation or input handling first.
 It also includes a wrapper which simplifies the use of OpenGL.
 
 This is the Android port for ZanLibrary.
-Check out the original project: https://github.com/rozanxt/zanlib
+Check out the original project: https://github.com/rozanxt/zanlib-legacy
