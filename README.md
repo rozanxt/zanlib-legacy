@@ -15,6 +15,6 @@ Main Features:
 - Easy-to-use OpenGL wrapper methods for 2D and 3D graphics
 - Audio playback
 - Socket programming
-- Maths library
+- Math library
 
 ZanLibrary uses [LWJGL](http://www.lwjgl.org/) and [Paul Lamb's Sound System](http://www.paulscode.com/).
