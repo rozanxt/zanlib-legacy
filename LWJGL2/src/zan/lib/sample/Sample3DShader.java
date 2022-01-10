@@ -7,8 +7,8 @@ public class Sample3DShader extends DefaultShader {
 
 	@Override
 	public void loadProgram() {
-		String vertexShaderSource = ResourceUtil.readFileAsString("res/shader/sample3d.glvs");
-		String fragmentShaderSource = ResourceUtil.readFileAsString("res/shader/sample3d.glfs");
+		String vertexShaderSource = ResourceUtil.readFileAsString("res/shd/sample3d.glvs");
+		String fragmentShaderSource = ResourceUtil.readFileAsString("res/shd/sample3d.glfs");
 		loadProgram(vertexShaderSource, fragmentShaderSource);
 	}
 

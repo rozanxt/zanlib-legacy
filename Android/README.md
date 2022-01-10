@@ -1,4 +1,5 @@
-## ZanLibrary for Android
+ZanLibrary for Android
+======================
 
 ZanLibrary is a framework and library for simple Java game development.
 This project was created to enable programmers to work on a game directly,
